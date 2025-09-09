@@ -1,0 +1,11 @@
+/mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/CMakeFiles/the_imgui.dir
+/mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/CMakeFiles/the_stb.dir
+/mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/CMakeFiles/edit_cache.dir
+/mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/CMakeFiles/rebuild_cache.dir
+/mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/gsl-build/CMakeFiles/edit_cache.dir
+/mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/gsl-build/CMakeFiles/rebuild_cache.dir
+/mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/gsl-build/include/CMakeFiles/edit_cache.dir
+/mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/gsl-build/include/CMakeFiles/rebuild_cache.dir
+/mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/source/CMakeFiles/cs200_fun.dir
+/mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/source/CMakeFiles/edit_cache.dir
+/mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/source/CMakeFiles/rebuild_cache.dir

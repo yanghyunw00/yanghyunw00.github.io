@@ -1,0 +1,12 @@
+# This is a generated file and its contents are an internal implementation detail.
+# The download step will be re-executed if anything in this file changes.
+# No other meaning or use of this file is supported.
+
+method=url
+command=/usr/bin/cmake;-P;/mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/gsl-subbuild/gsl-populate-prefix/src/gsl-populate-stamp/download-gsl-populate.cmake;COMMAND;/usr/bin/cmake;-P;/mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/gsl-subbuild/gsl-populate-prefix/src/gsl-populate-stamp/verify-gsl-populate.cmake;COMMAND;/usr/bin/cmake;-P;/mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/gsl-subbuild/gsl-populate-prefix/src/gsl-populate-stamp/extract-gsl-populate.cmake
+source_dir=/mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/gsl-src
+work_dir=/mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps
+url(s)=https://github.com/microsoft/GSL/archive/refs/tags/v4.2.0.tar.gz
+hash=MD5=5f3d2f7ef9c6351503c0c8f1f9390144
+no_extract=
+

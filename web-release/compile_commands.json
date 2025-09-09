@@ -1,0 +1,98 @@
+[
+{
+  "directory": "/mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release",
+  "command": "/home/hyunwooyang/emsdk/upstream/emscripten/em++ -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/dearimgui-src -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/dearimgui-src/backends -O3 -DNDEBUG -std=c++20 --use-port=sdl2 -o CMakeFiles/the_imgui.dir/_deps/dearimgui-src/imgui.cpp.o -c /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/dearimgui-src/imgui.cpp",
+  "file": "/mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/dearimgui-src/imgui.cpp",
+  "output": "CMakeFiles/the_imgui.dir/_deps/dearimgui-src/imgui.cpp.o"
+},
+{
+  "directory": "/mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release",
+  "command": "/home/hyunwooyang/emsdk/upstream/emscripten/em++ -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/dearimgui-src -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/dearimgui-src/backends -O3 -DNDEBUG -std=c++20 --use-port=sdl2 -o CMakeFiles/the_imgui.dir/_deps/dearimgui-src/imgui_draw.cpp.o -c /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/dearimgui-src/imgui_draw.cpp",
+  "file": "/mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/dearimgui-src/imgui_draw.cpp",
+  "output": "CMakeFiles/the_imgui.dir/_deps/dearimgui-src/imgui_draw.cpp.o"
+},
+{
+  "directory": "/mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release",
+  "command": "/home/hyunwooyang/emsdk/upstream/emscripten/em++ -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/dearimgui-src -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/dearimgui-src/backends -O3 -DNDEBUG -std=c++20 --use-port=sdl2 -o CMakeFiles/the_imgui.dir/_deps/dearimgui-src/imgui_tables.cpp.o -c /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/dearimgui-src/imgui_tables.cpp",
+  "file": "/mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/dearimgui-src/imgui_tables.cpp",
+  "output": "CMakeFiles/the_imgui.dir/_deps/dearimgui-src/imgui_tables.cpp.o"
+},
+{
+  "directory": "/mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release",
+  "command": "/home/hyunwooyang/emsdk/upstream/emscripten/em++ -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/dearimgui-src -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/dearimgui-src/backends -O3 -DNDEBUG -std=c++20 --use-port=sdl2 -o CMakeFiles/the_imgui.dir/_deps/dearimgui-src/imgui_widgets.cpp.o -c /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/dearimgui-src/imgui_widgets.cpp",
+  "file": "/mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/dearimgui-src/imgui_widgets.cpp",
+  "output": "CMakeFiles/the_imgui.dir/_deps/dearimgui-src/imgui_widgets.cpp.o"
+},
+{
+  "directory": "/mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release",
+  "command": "/home/hyunwooyang/emsdk/upstream/emscripten/em++ -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/dearimgui-src -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/dearimgui-src/backends -O3 -DNDEBUG -std=c++20 --use-port=sdl2 -o CMakeFiles/the_imgui.dir/_deps/dearimgui-src/backends/imgui_impl_opengl3.cpp.o -c /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/dearimgui-src/backends/imgui_impl_opengl3.cpp",
+  "file": "/mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/dearimgui-src/backends/imgui_impl_opengl3.cpp",
+  "output": "CMakeFiles/the_imgui.dir/_deps/dearimgui-src/backends/imgui_impl_opengl3.cpp.o"
+},
+{
+  "directory": "/mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release",
+  "command": "/home/hyunwooyang/emsdk/upstream/emscripten/em++ -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/dearimgui-src -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/dearimgui-src/backends -O3 -DNDEBUG -std=c++20 --use-port=sdl2 -o CMakeFiles/the_imgui.dir/_deps/dearimgui-src/backends/imgui_impl_sdl2.cpp.o -c /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/dearimgui-src/backends/imgui_impl_sdl2.cpp",
+  "file": "/mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/dearimgui-src/backends/imgui_impl_sdl2.cpp",
+  "output": "CMakeFiles/the_imgui.dir/_deps/dearimgui-src/backends/imgui_impl_sdl2.cpp.o"
+},
+{
+  "directory": "/mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release",
+  "command": "/home/hyunwooyang/emsdk/upstream/emscripten/em++ -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/stb_github-src -O3 -DNDEBUG -std=c++20 -o CMakeFiles/the_stb.dir/stb_implementation.cpp.o -c /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/stb_implementation.cpp",
+  "file": "/mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/stb_implementation.cpp",
+  "output": "CMakeFiles/the_stb.dir/stb_implementation.cpp.o"
+},
+{
+  "directory": "/mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release",
+  "command": "/home/hyunwooyang/emsdk/upstream/emscripten/em++ -DIS_WEBGL2 -I/mnt/c/Users/Owner/Desktop/cs200-hw1/source/. -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/dearimgui-src -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/dearimgui-src/backends -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/stb_github-src -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/gsl-src/include -isystem /home/hyunwooyang/emsdk/upstream/emscripten/cache/sysroot/include/AL -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -Werror --use-port=sdl2 -o source/CMakeFiles/cs200_fun.dir/CS200/ImGuiHelper.cpp.o -c /mnt/c/Users/Owner/Desktop/cs200-hw1/source/CS200/ImGuiHelper.cpp",
+  "file": "/mnt/c/Users/Owner/Desktop/cs200-hw1/source/CS200/ImGuiHelper.cpp",
+  "output": "source/CMakeFiles/cs200_fun.dir/CS200/ImGuiHelper.cpp.o"
+},
+{
+  "directory": "/mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release",
+  "command": "/home/hyunwooyang/emsdk/upstream/emscripten/em++ -DIS_WEBGL2 -I/mnt/c/Users/Owner/Desktop/cs200-hw1/source/. -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/dearimgui-src -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/dearimgui-src/backends -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/stb_github-src -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/gsl-src/include -isystem /home/hyunwooyang/emsdk/upstream/emscripten/cache/sysroot/include/AL -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -Werror --use-port=sdl2 -o source/CMakeFiles/cs200_fun.dir/CS200/RenderingAPI.cpp.o -c /mnt/c/Users/Owner/Desktop/cs200-hw1/source/CS200/RenderingAPI.cpp",
+  "file": "/mnt/c/Users/Owner/Desktop/cs200-hw1/source/CS200/RenderingAPI.cpp",
+  "output": "source/CMakeFiles/cs200_fun.dir/CS200/RenderingAPI.cpp.o"
+},
+{
+  "directory": "/mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release",
+  "command": "/home/hyunwooyang/emsdk/upstream/emscripten/em++ -DIS_WEBGL2 -I/mnt/c/Users/Owner/Desktop/cs200-hw1/source/. -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/dearimgui-src -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/dearimgui-src/backends -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/stb_github-src -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/gsl-src/include -isystem /home/hyunwooyang/emsdk/upstream/emscripten/cache/sysroot/include/AL -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -Werror --use-port=sdl2 -o source/CMakeFiles/cs200_fun.dir/Engine/Engine.cpp.o -c /mnt/c/Users/Owner/Desktop/cs200-hw1/source/Engine/Engine.cpp",
+  "file": "/mnt/c/Users/Owner/Desktop/cs200-hw1/source/Engine/Engine.cpp",
+  "output": "source/CMakeFiles/cs200_fun.dir/Engine/Engine.cpp.o"
+},
+{
+  "directory": "/mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release",
+  "command": "/home/hyunwooyang/emsdk/upstream/emscripten/em++ -DIS_WEBGL2 -I/mnt/c/Users/Owner/Desktop/cs200-hw1/source/. -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/dearimgui-src -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/dearimgui-src/backends -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/stb_github-src -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/gsl-src/include -isystem /home/hyunwooyang/emsdk/upstream/emscripten/cache/sysroot/include/AL -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -Werror --use-port=sdl2 -o source/CMakeFiles/cs200_fun.dir/Engine/Input.cpp.o -c /mnt/c/Users/Owner/Desktop/cs200-hw1/source/Engine/Input.cpp",
+  "file": "/mnt/c/Users/Owner/Desktop/cs200-hw1/source/Engine/Input.cpp",
+  "output": "source/CMakeFiles/cs200_fun.dir/Engine/Input.cpp.o"
+},
+{
+  "directory": "/mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release",
+  "command": "/home/hyunwooyang/emsdk/upstream/emscripten/em++ -DIS_WEBGL2 -I/mnt/c/Users/Owner/Desktop/cs200-hw1/source/. -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/dearimgui-src -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/dearimgui-src/backends -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/stb_github-src -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/gsl-src/include -isystem /home/hyunwooyang/emsdk/upstream/emscripten/cache/sysroot/include/AL -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -Werror --use-port=sdl2 -o source/CMakeFiles/cs200_fun.dir/Engine/Logger.cpp.o -c /mnt/c/Users/Owner/Desktop/cs200-hw1/source/Engine/Logger.cpp",
+  "file": "/mnt/c/Users/Owner/Desktop/cs200-hw1/source/Engine/Logger.cpp",
+  "output": "source/CMakeFiles/cs200_fun.dir/Engine/Logger.cpp.o"
+},
+{
+  "directory": "/mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release",
+  "command": "/home/hyunwooyang/emsdk/upstream/emscripten/em++ -DIS_WEBGL2 -I/mnt/c/Users/Owner/Desktop/cs200-hw1/source/. -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/dearimgui-src -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/dearimgui-src/backends -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/stb_github-src -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/gsl-src/include -isystem /home/hyunwooyang/emsdk/upstream/emscripten/cache/sysroot/include/AL -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -Werror --use-port=sdl2 -o source/CMakeFiles/cs200_fun.dir/Engine/Path.cpp.o -c /mnt/c/Users/Owner/Desktop/cs200-hw1/source/Engine/Path.cpp",
+  "file": "/mnt/c/Users/Owner/Desktop/cs200-hw1/source/Engine/Path.cpp",
+  "output": "source/CMakeFiles/cs200_fun.dir/Engine/Path.cpp.o"
+},
+{
+  "directory": "/mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release",
+  "command": "/home/hyunwooyang/emsdk/upstream/emscripten/em++ -DIS_WEBGL2 -I/mnt/c/Users/Owner/Desktop/cs200-hw1/source/. -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/dearimgui-src -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/dearimgui-src/backends -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/stb_github-src -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/gsl-src/include -isystem /home/hyunwooyang/emsdk/upstream/emscripten/cache/sysroot/include/AL -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -Werror --use-port=sdl2 -o source/CMakeFiles/cs200_fun.dir/Engine/Vec2.cpp.o -c /mnt/c/Users/Owner/Desktop/cs200-hw1/source/Engine/Vec2.cpp",
+  "file": "/mnt/c/Users/Owner/Desktop/cs200-hw1/source/Engine/Vec2.cpp",
+  "output": "source/CMakeFiles/cs200_fun.dir/Engine/Vec2.cpp.o"
+},
+{
+  "directory": "/mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release",
+  "command": "/home/hyunwooyang/emsdk/upstream/emscripten/em++ -DIS_WEBGL2 -I/mnt/c/Users/Owner/Desktop/cs200-hw1/source/. -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/dearimgui-src -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/dearimgui-src/backends -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/stb_github-src -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/gsl-src/include -isystem /home/hyunwooyang/emsdk/upstream/emscripten/cache/sysroot/include/AL -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -Werror --use-port=sdl2 -o source/CMakeFiles/cs200_fun.dir/Engine/Window.cpp.o -c /mnt/c/Users/Owner/Desktop/cs200-hw1/source/Engine/Window.cpp",
+  "file": "/mnt/c/Users/Owner/Desktop/cs200-hw1/source/Engine/Window.cpp",
+  "output": "source/CMakeFiles/cs200_fun.dir/Engine/Window.cpp.o"
+},
+{
+  "directory": "/mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release",
+  "command": "/home/hyunwooyang/emsdk/upstream/emscripten/em++ -DIS_WEBGL2 -I/mnt/c/Users/Owner/Desktop/cs200-hw1/source/. -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/dearimgui-src -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/dearimgui-src/backends -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/stb_github-src -isystem /mnt/c/Users/Owner/Desktop/cs200-hw1/build/web-release/_deps/gsl-src/include -isystem /home/hyunwooyang/emsdk/upstream/emscripten/cache/sysroot/include/AL -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -Werror --use-port=sdl2 -o source/CMakeFiles/cs200_fun.dir/main.cpp.o -c /mnt/c/Users/Owner/Desktop/cs200-hw1/source/main.cpp",
+  "file": "/mnt/c/Users/Owner/Desktop/cs200-hw1/source/main.cpp",
+  "output": "source/CMakeFiles/cs200_fun.dir/main.cpp.o"
+}
+]
