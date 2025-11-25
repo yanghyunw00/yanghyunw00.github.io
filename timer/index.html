@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retro Pixel Timer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Press Start 2P', cursive;
+            background-color: #2d1b2e;
+            color: #fff;
+            overflow: hidden;
+        }
+        
+        .retro-shadow {
+            box-shadow: 6px 6px 0px 0px rgba(0,0,0,0.5);
+        }
+        
+        .retro-button {
+            transition: all 0.1s;
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .retro-button:active {
+            transform: translate(3px, 3px);
+            box-shadow: 2px 2px 0px 0px rgba(0,0,0,0.5);
+        }
+
+        .crt-overlay {
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+
+        .screen-glow {
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 15px #4ade80, 0 0 30px #4ade80 inset; }
+            to { box-shadow: 0 0 20px #22c55e, 0 0 35px #22c55e inset; }
+        }
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .mode-badge {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body class="h-screen w-full flex items-center justify-center relative">
+    
+    <div class="fixed inset-0 crt-overlay z-50"></div>
+
+    <div class="bg-slate-700 p-3 rounded-xl retro-shadow border-4 border-slate-600 relative z-10 w-[95%] max-w-2xl transform scale-105 md:scale-100">
+        
+        <div class="bg-black border-4 border-slate-500 rounded-lg p-8 mb-6 screen-glow relative overflow-hidden">
+            <div class="absolute top-3 left-3 flex gap-2 items-center">
+                <div id="recDot" class="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+                <div id="modeDisplay" class="text-xs text-green-400 ml-1">MANUAL MODE</div>
+            </div>
+            
+            <div class="text-center mt-6">
+                <div id="timerDisplay" class="text-5xl md:text-7xl text-green-400 mb-4 tracking-widest font-bold">00:00</div>
+                <div id="statusText" class="text-sm md:text-base text-green-600 uppercase tracking-widest min-h-[1.5em] mb-2">READY</div>
+            </div>
+
+            <div class="w-full h-6 border-4 border-green-800 mt-8 rounded p-0.5">
+                <div id="progressBar" class="h-full bg-green-500 w-0 transition-all duration-1000 ease-linear"></div>
+            </div>
+        </div>
+
+        <div class="bg-slate-200 p-6 rounded-lg border-2 border-slate-400 text-slate-800 shadow-inner">
+            
+            <div class="grid grid-cols-3 gap-3 mb-6">
+                <button onclick="setPreset(5)" class="retro-button bg-yellow-400 border-b-4 border-r-4 border-yellow-700 text-xs md:text-sm py-4 rounded hover:bg-yellow-300 font-bold">
+                    ⏱ 5분
+                </button>
+                <button onclick="setPreset(10)" class="retro-button bg-orange-400 border-b-4 border-r-4 border-orange-700 text-xs md:text-sm py-4 rounded hover:bg-orange-300 font-bold">
+                    ⏱ 10분
+                </button>
+                <button onclick="startPomodoroSequence()" class="retro-button bg-purple-400 border-b-4 border-r-4 border-purple-700 text-xs md:text-sm py-4 rounded hover:bg-purple-300 font-bold text-white relative overflow-hidden group">
+                    <span class="relative z-10">🔄 AUTO</span>
+                    <div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity"></div>
+                </button>
+            </div>
+
+            <div class="flex items-center justify-between bg-slate-300 p-3 rounded border-2 border-slate-400 mb-6 shadow-sm">
+                <span class="text-xs md:text-sm mr-2 font-bold text-slate-600">CUSTOM</span>
+                <div class="flex items-center gap-2">
+                    <input type="number" id="inputMin" placeholder="00" min="0" max="99" class="w-16 bg-white border-2 border-slate-500 text-center py-2 text-base outline-none focus:border-blue-500 rounded shadow-sm">
+                    <span class="text-sm font-bold">:</span>
+                    <input type="number" id="inputSec" placeholder="00" min="0" max="59" class="w-16 bg-white border-2 border-slate-500 text-center py-2 text-base outline-none focus:border-blue-500 rounded shadow-sm">
+                    <button onclick="setCustom()" class="retro-button ml-2 bg-blue-500 text-white text-xs px-4 py-2 rounded border-b-4 border-blue-700 hover:bg-blue-400 font-bold">SET</button>
+                </div>
+            </div>
+
+            <div class="flex gap-3">
+                <button id="startBtn" onclick="startTimer()" class="retro-button flex-1 bg-green-500 border-b-4 border-r-4 border-green-700 text-white py-4 rounded text-base hover:bg-green-400 font-bold shadow-lg">
+                    START
+                </button>
+                <button id="stopBtn" onclick="stopTimer()" class="retro-button flex-1 bg-red-500 border-b-4 border-r-4 border-red-700 text-white py-4 rounded text-base hover:bg-red-400 hidden font-bold shadow-lg">
+                    STOP
+                </button>
+                <button onclick="resetTimer()" class="retro-button w-1/4 bg-gray-400 border-b-4 border-r-4 border-gray-600 text-white py-4 rounded text-base hover:bg-gray-300 font-bold shadow-lg">
+                    R
+                </button>
+            </div>
+
+        </div>
+        
+        <div class="absolute -bottom-10 right-2 text-xs text-gray-500 opacity-50 font-sans">
+            SYSTEM V.2.0 (POMODORO EDITION)
+        </div>
+    </div>
+
+    <script>
+        let timerInterval;
+        let totalSeconds = 0;
+        let remainingSeconds = 0;
+        let isRunning = false;
+        let isPomodoroMode = false;
+        let isWorkSession = true; 
+        
+        const display = document.getElementById('timerDisplay');
+        const progressBar = document.getElementById('progressBar');
+        const statusText = document.getElementById('statusText');
+        const modeDisplay = document.getElementById('modeDisplay');
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const recDot = document.getElementById('recDot');
+        
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playBeep() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.type = 'square';
+            oscillator.frequency.setValueAtTime(440, audioCtx.currentTime); 
+            oscillator.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.1);
+            gainNode.gain.setValueAtTime(0.05, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 0.1);
+        }
+
+        function playAlarm() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const now = audioCtx.currentTime;
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.type = 'sawtooth';
+            oscillator.frequency.setValueAtTime(523.25, now);
+            oscillator.frequency.setValueAtTime(659.25, now + 0.2);
+            oscillator.frequency.setValueAtTime(783.99, now + 0.4);
+            oscillator.frequency.setValueAtTime(1046.50, now + 0.6);
+            gainNode.gain.setValueAtTime(0.2, now);
+            gainNode.gain.linearRampToValueAtTime(0, now + 0.8);
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.start(now);
+            oscillator.stop(now + 0.8);
+        }
+
+        function updateDisplay() {
+            const m = Math.floor(remainingSeconds / 60);
+            const s = remainingSeconds % 60;
+            display.textContent = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            
+            const progress = totalSeconds > 0 ? ((totalSeconds - remainingSeconds) / totalSeconds) * 100 : 0;
+            progressBar.style.width = `${progress}%`;
+            
+            if (remainingSeconds <= 10 && remainingSeconds > 0 && isRunning) {
+                display.classList.add('text-red-500');
+                display.classList.remove('text-green-400');
+            } else {
+                display.classList.add('text-green-400');
+                display.classList.remove('text-red-500');
+            }
+        }
+
+        function setPreset(minutes) {
+            isPomodoroMode = false;
+            stopTimer();
+            totalSeconds = minutes * 60;
+            remainingSeconds = totalSeconds;
+            updateDisplay();
+            statusText.textContent = `SET: ${minutes} MIN`;
+            modeDisplay.textContent = "MANUAL MODE";
+            recDot.classList.remove('bg-purple-500');
+            recDot.classList.add('bg-red-500');
+            playBeep();
+        }
+
+        function setCustom() {
+            isPomodoroMode = false;
+            const min = parseInt(document.getElementById('inputMin').value) || 0;
+            const sec = parseInt(document.getElementById('inputSec').value) || 0;
+            if (min === 0 && sec === 0) return;
+            
+            stopTimer();
+            totalSeconds = min * 60 + sec;
+            remainingSeconds = totalSeconds;
+            updateDisplay();
+            statusText.textContent = 'CUSTOM SET';
+            modeDisplay.textContent = "MANUAL MODE";
+            recDot.classList.remove('bg-purple-500');
+            recDot.classList.add('bg-red-500');
+            playBeep();
+            document.getElementById('inputMin').value = '';
+            document.getElementById('inputSec').value = '';
+        }
+
+        function startPomodoroSequence() {
+            stopTimer();
+            isPomodoroMode = true;
+            isWorkSession = true;
+            totalSeconds = 25 * 60; 
+            remainingSeconds = totalSeconds;
+            
+            modeDisplay.textContent = "AUTO POMODORO";
+            statusText.textContent = "WORK TIME (25M)";
+            recDot.classList.remove('bg-red-500');
+            recDot.classList.add('bg-purple-500');
+            
+            updateDisplay();
+            playBeep();
+            startTimer(); 
+        }
+
+        function handlePomodoroTransition() {
+            playAlarm();
+            
+            if (isWorkSession) {
+                isWorkSession = false;
+                totalSeconds = 5 * 60; 
+                statusText.textContent = "BREAK TIME (5M)";
+                display.classList.add('text-blue-400');
+                display.classList.remove('text-green-400', 'text-red-500');
+            } else {
+                isWorkSession = true;
+                totalSeconds = 25 * 60; 
+                statusText.textContent = "WORK TIME (25M)";
+                display.classList.add('text-green-400');
+                display.classList.remove('text-blue-400', 'text-red-500');
+            }
+            
+            remainingSeconds = totalSeconds;
+            progressBar.style.width = '0%';
+            
+            setTimeout(() => {
+                startTimer();
+            }, 2000); 
+        }
+
+        function startTimer() {
+            if (remainingSeconds <= 0) return;
+            if (isRunning) return;
+
+            isRunning = true;
+            if (!isPomodoroMode) statusText.textContent = 'RUNNING...';
+            startBtn.classList.add('hidden');
+            stopBtn.classList.remove('hidden');
+            playBeep();
+
+            timerInterval = setInterval(() => {
+                remainingSeconds--;
+                updateDisplay();
+
+                if (remainingSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    isRunning = false;
+                    
+                    if (isPomodoroMode) {
+                        handlePomodoroTransition();
+                    } else {
+                        statusText.textContent = 'TIME UP!';
+                        statusText.classList.add('animate-pulse');
+                        startBtn.classList.remove('hidden');
+                        stopBtn.classList.add('hidden');
+                        playAlarm();
+                        progressBar.style.width = '100%';
+                    }
+                }
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+            isRunning = false;
+            statusText.textContent = isPomodoroMode ? 'PAUSED (AUTO)' : 'PAUSED';
+            statusText.classList.remove('animate-pulse');
+            startBtn.classList.remove('hidden');
+            stopBtn.classList.add('hidden');
+        }
+
+        function resetTimer() {
+            stopTimer();
+            isPomodoroMode = false;
+            modeDisplay.textContent = "MANUAL MODE";
+            recDot.classList.remove('bg-purple-500');
+            recDot.classList.add('bg-red-500');
+            display.classList.remove('text-blue-400');
+            display.classList.add('text-green-400');
+            remainingSeconds = totalSeconds;
+            updateDisplay();
+            statusText.textContent = 'RESET';
+            playBeep();
+        }
+    </script>
+</body>
+</html>
