@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Swiss Christmas Pomodoro</title>
+    <title>Digipen Hangout Pomodoro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.youtube.com/iframe_api"></script>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -449,6 +449,41 @@
             border: 1px solid rgba(251, 191, 36, 0.3);
         }
         
+        .yt-video-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            padding: 6px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 6px;
+        }
+        
+        .yt-video-toggle-btn {
+            background: #ef4444;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 8px;
+            cursor: pointer;
+            border: 2px solid #991b1b;
+            transition: all 0.2s;
+        }
+        
+        .yt-video-toggle-btn:hover {
+            background: #dc2626;
+        }
+        
+        .yt-video-toggle-btn.active {
+            background: #22c55e;
+            border-color: #166534;
+        }
+        
+        .yt-video-toggle-label {
+            font-size: 8px;
+            color: #fbbf24;
+        }
+        
         .yt-progress-bar {
             width: 100%;
             height: 4px;
@@ -471,6 +506,34 @@
             color: #fbbf24;
             letter-spacing: 1px;
         }
+        
+        .yt-video-container {
+            width: 100%;
+            margin-top: 8px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid #fbbf24;
+            display: none;
+        }
+        
+        .yt-video-container.visible {
+            display: block;
+        }
+        
+        .yt-video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+        }
+        
+        .yt-video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
     </style>
 </head>
 <body class="w-full h-screen flex items-center justify-center">
@@ -479,9 +542,9 @@
         <div class="interior-wall"></div>
         
         <div class="wall-decoration">
-            <span class="letter-red">M</span><span class="letter-green">E</span><span class="letter-red">R</span><span class="letter-green">R</span><span class="letter-red">Y</span>
+            <span class="letter-red">D</span><span class="letter-green">i</span><span class="letter-red">g</span><span class="letter-green">i</span><span class="letter-red">p</span><span class="letter-green">e</span><span class="letter-red">n</span>
             &nbsp;
-            <span class="letter-green">C</span><span class="letter-red">H</span><span class="letter-green">R</span><span class="letter-red">I</span><span class="letter-green">S</span><span class="letter-red">T</span><span class="letter-green">M</span><span class="letter-red">A</span><span class="letter-green">S</span>
+            <span class="letter-green">H</span><span class="letter-red">a</span><span class="letter-green">n</span><span class="letter-red">g</span><span class="letter-green">o</span><span class="letter-red">u</span><span class="letter-green">t</span>
         </div>
 
         <div class="window-frame">
@@ -561,6 +624,14 @@
                 
                 <!-- YouTube 오디오 컨트롤 -->
                 <div id="ytAudioControls" class="yt-audio-controls hidden">
+                    <!-- 비디오 표시 토글 -->
+                    <div class="yt-video-toggle">
+                        <button id="ytVideoToggleBtn" onclick="toggleYoutubeVideo()" class="yt-video-toggle-btn">
+                            📺 VIDEO OFF
+                        </button>
+                        <span class="yt-video-toggle-label">Toggle video display</span>
+                    </div>
+                    
                     <div class="flex items-center gap-3 mb-2">
                         <button id="ytPlayBtn" onclick="toggleYoutubePlay()" class="retro-button w-10 h-10 bg-red-600 rounded-full flex items-center justify-center text-xs border-b-4 border-red-800 hover:bg-red-500 shadow-lg">▶</button>
                         <div class="flex-1">
@@ -571,9 +642,16 @@
                         <div class="yt-time-display" id="ytTimeDisplay">0:00 / 0:00</div>
                     </div>
                     <div class="text-[9px] text-amber-300 truncate" id="ytVideoTitle">YouTube Audio Player</div>
+                    
+                    <!-- 비디오 표시 영역 -->
+                    <div id="ytVideoContainer" class="yt-video-container">
+                        <div class="yt-video-wrapper">
+                            <div id="ytPlayerVisible"></div>
+                        </div>
+                    </div>
                 </div>
                 
-                <!-- 숨겨진 YouTube iframe -->
+                <!-- 숨겨진 YouTube iframe (오디오 전용) -->
                 <div id="ytPlayerContainer" style="position: absolute; left: -9999px; width: 1px; height: 1px;">
                     <div id="ytPlayer"></div>
                 </div>
@@ -740,8 +818,11 @@
 
         // YouTube Player variables
         let ytPlayer = null;
+        let ytPlayerVisible = null;
         let ytUpdateInterval = null;
         let isYouTubeAPIReady = false;
+        let isVideoVisible = false;
+        let currentVideoId = '';
         
         // Todo List variables
         let todoItems = [];
@@ -871,8 +952,21 @@
                     if (ytPlayer && ytPlayer.pauseVideo) {
                         ytPlayer.pauseVideo();
                     }
+                    if (ytPlayerVisible && ytPlayerVisible.pauseVideo) {
+                        ytPlayerVisible.pauseVideo();
+                    }
                     if (ytUpdateInterval) {
                         clearInterval(ytUpdateInterval);
+                    }
+                    
+                    // 비디오 숨기기
+                    if (isVideoVisible) {
+                        const videoContainer = document.getElementById('ytVideoContainer');
+                        const toggleBtn = document.getElementById('ytVideoToggleBtn');
+                        videoContainer.classList.remove('visible');
+                        toggleBtn.classList.remove('active');
+                        toggleBtn.innerHTML = '📺 VIDEO OFF';
+                        isVideoVisible = false;
                     }
                 } catch(e) {
                     console.error('YouTube pause error:', e);
@@ -944,12 +1038,17 @@
         }
         
         function loadYoutubePlayer(videoId) {
+            currentVideoId = videoId;
+            
             // 기존 플레이어 제거
             if (ytPlayer) {
                 ytPlayer.destroy();
             }
+            if (ytPlayerVisible) {
+                ytPlayerVisible.destroy();
+            }
             
-            // 새 플레이어 생성
+            // 오디오 전용 플레이어 (숨김)
             ytPlayer = new YT.Player('ytPlayer', {
                 height: '1',
                 width: '1',
@@ -967,11 +1066,71 @@
                     'onStateChange': onYoutubePlayerStateChange
                 }
             });
+            
+            // 비디오 표시용 플레이어 (초기에는 숨김)
+            ytPlayerVisible = new YT.Player('ytPlayerVisible', {
+                height: '360',
+                width: '640',
+                videoId: videoId,
+                playerVars: {
+                    'autoplay': 0,
+                    'controls': 1,
+                    'modestbranding': 1,
+                    'rel': 0
+                }
+            });
+        }
+        
+        function toggleYoutubeVideo() {
+            const videoContainer = document.getElementById('ytVideoContainer');
+            const toggleBtn = document.getElementById('ytVideoToggleBtn');
+            
+            isVideoVisible = !isVideoVisible;
+            
+            if (isVideoVisible) {
+                videoContainer.classList.add('visible');
+                toggleBtn.classList.add('active');
+                toggleBtn.innerHTML = '📺 VIDEO ON';
+                
+                // 비디오 플레이어와 오디오 플레이어 동기화
+                if (ytPlayer && ytPlayerVisible) {
+                    const currentTime = ytPlayer.getCurrentTime();
+                    const state = ytPlayer.getPlayerState();
+                    
+                    ytPlayerVisible.seekTo(currentTime);
+                    if (state === YT.PlayerState.PLAYING) {
+                        ytPlayerVisible.playVideo();
+                    }
+                }
+            } else {
+                videoContainer.classList.remove('visible');
+                toggleBtn.classList.remove('active');
+                toggleBtn.innerHTML = '📺 VIDEO OFF';
+                
+                // 비디오 플레이어 일시정지
+                if (ytPlayerVisible) {
+                    ytPlayerVisible.pauseVideo();
+                }
+            }
+            
+            playBeep();
         }
 
         function onYoutubePlayerReady(event) {
             document.getElementById('ytAudioControls').classList.remove('hidden');
-            document.getElementById('ytVideoTitle').textContent = 'YouTube Audio Loaded';
+            
+            // 비디오 제목 가져오기 시도
+            try {
+                const videoData = event.target.getVideoData();
+                if (videoData && videoData.title) {
+                    document.getElementById('ytVideoTitle').textContent = videoData.title;
+                } else {
+                    document.getElementById('ytVideoTitle').textContent = 'YouTube Audio Loaded';
+                }
+            } catch(e) {
+                document.getElementById('ytVideoTitle').textContent = 'YouTube Audio Loaded';
+            }
+            
             updateYoutubeProgress();
         }
 
@@ -1007,8 +1166,17 @@
                 const state = ytPlayer.getPlayerState();
                 if (state === YT.PlayerState.PLAYING) {
                     ytPlayer.pauseVideo();
+                    if (isVideoVisible && ytPlayerVisible) {
+                        ytPlayerVisible.pauseVideo();
+                    }
                 } else {
                     ytPlayer.playVideo();
+                    if (isVideoVisible && ytPlayerVisible) {
+                        // 시간 동기화
+                        const currentTime = ytPlayer.getCurrentTime();
+                        ytPlayerVisible.seekTo(currentTime);
+                        ytPlayerVisible.playVideo();
+                    }
                 }
             } catch(e) {
                 console.error('YouTube player error:', e);
@@ -1065,6 +1233,11 @@
                 const seekTime = duration * percentage;
                 
                 ytPlayer.seekTo(seekTime);
+                
+                // 비디오가 보이는 경우 비디오 플레이어도 동기화
+                if (isVideoVisible && ytPlayerVisible) {
+                    ytPlayerVisible.seekTo(seekTime);
+                }
             } catch(e) {
                 console.error('YouTube seek error:', e);
             }
