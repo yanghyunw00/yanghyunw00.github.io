@@ -6,6 +6,11 @@
     <title>Digipen Hangout Pomodoro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.youtube.com/iframe_api"></script>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         body {
@@ -684,6 +689,202 @@
             background: #fbbf24;
         }
 
+        /* 채팅 컨테이너 스타일 */
+        .chat-container {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 350px;
+            height: 450px;
+            z-index: 110;
+            background: rgba(40, 20, 10, 0.95);
+            border: 4px solid #5d3a2a;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            backdrop-filter: blur(8px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-container.minimized {
+            height: 60px;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #fbbf24;
+            flex-shrink: 0;
+        }
+
+        .chat-title {
+            font-size: 12px;
+            color: #fbbf24;
+            text-shadow: 2px 2px 0 #000;
+            letter-spacing: 1px;
+        }
+
+        .chat-toggle-btn {
+            background: #3b82f6;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 0 #1e40af;
+            transition: all 0.1s;
+        }
+
+        .chat-toggle-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 0 0 #1e40af;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding-right: 4px;
+        }
+
+        .chat-message {
+            background: rgba(0,0,0,0.3);
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: 2px solid #78350f;
+            animation: messageSlideIn 0.3s ease-out;
+            word-wrap: break-word;
+        }
+
+        @keyframes messageSlideIn {
+            from {
+                transform: translateX(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .chat-message-user {
+            font-size: 9px;
+            color: #22c55e;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .chat-message-text {
+            font-size: 8px;
+            color: #fbbf24;
+            line-height: 1.4;
+        }
+
+        .chat-message-time {
+            font-size: 7px;
+            color: #78350f;
+            margin-top: 4px;
+        }
+
+        .chat-input-area {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .chat-username-input {
+            width: 100%;
+            background: rgba(0,0,0,0.5);
+            border: 2px solid #fbbf24;
+            padding: 8px;
+            border-radius: 6px;
+            color: white;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 9px;
+            outline: none;
+            margin-bottom: 8px;
+        }
+
+        .chat-username-input::placeholder {
+            color: #78350f;
+        }
+
+        .chat-input {
+            flex: 1;
+            background: rgba(0,0,0,0.5);
+            border: 2px solid #fbbf24;
+            padding: 8px;
+            border-radius: 6px;
+            color: white;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 9px;
+            outline: none;
+        }
+
+        .chat-input::placeholder {
+            color: #78350f;
+        }
+
+        .chat-send-btn {
+            background: #22c55e;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: none;
+            font-size: 10px;
+            cursor: pointer;
+            box-shadow: 0 3px 0 #166534;
+            transition: all 0.1s;
+            font-family: 'Press Start 2P', cursive;
+            white-space: nowrap;
+        }
+
+        .chat-send-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 0 0 #166534;
+        }
+
+        .chat-send-btn:disabled {
+            background: #666;
+            box-shadow: 0 3px 0 #333;
+            cursor: not-allowed;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.3);
+            border-radius: 4px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: #78350f;
+            border-radius: 4px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb:hover {
+            background: #fbbf24;
+        }
+
+        body.focus-mode .chat-container {
+            display: none !important;
+        }
+
         /* YouTube 오디오 플레이어 스타일 */
         .yt-audio-controls {
             background: rgba(0,0,0,0.3);
@@ -868,6 +1069,25 @@
         </div>
     </div>
 
+    <!-- 실시간 채팅 -->
+    <div class="chat-container" id="chatContainer">
+        <div class="chat-header">
+            <div class="chat-title">💬 LIVE CHAT</div>
+            <button class="chat-toggle-btn" onclick="toggleChat()">−</button>
+        </div>
+        <input type="text" id="chatUsername" class="chat-username-input" placeholder="Your name..." maxlength="20">
+        <div class="chat-messages" id="chatMessages">
+            <div class="chat-message">
+                <div class="chat-message-user">System</div>
+                <div class="chat-message-text">Welcome to Digipen Hangout! 🎮</div>
+            </div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="chatInput" class="chat-input" placeholder="Type message..." maxlength="200" onkeypress="handleChatKeyPress(event)">
+            <button class="chat-send-btn" onclick="sendMessage()">SEND</button>
+        </div>
+    </div>
+
     <div id="ui-container" class="p-6 md:p-8 rounded-xl w-[95%] sm:w-[85%] text-white transition-opacity duration-500">
         
         <div class="flex justify-between items-end mb-6 border-b-2 border-amber-900/50 pb-4">
@@ -999,6 +1219,171 @@
     </div>
 
     <script>
+        // ==========================================
+        // Firebase 설정 및 초기화
+        // ==========================================
+
+        // 여기에 Firebase 설정을 입력하세요
+        // Firebase Console에서 프로젝트를 만들고 아래 설정을 복사해서 붙여넣으세요
+        const firebaseConfig = {
+  apiKey: "AIzaSyBa2FDJ0iNsD67G1LvjFxMWN8bzJveQ6yI",
+  authDomain: "mytimer-4add6.firebaseapp.com",
+  databaseURL: "https://mytimer-4add6-default-rtdb.firebaseio.com",
+  projectId: "mytimer-4add6",
+  storageBucket: "mytimer-4add6.firebasestorage.app",
+  messagingSenderId: "515788166314",
+  appId: "1:515788166314:web:d79ed7df9924283e76acd3",
+  measurementId: "G-WXR0K507LE"
+};
+
+        // Firebase 초기화
+        let database = null;
+        let chatRef = null;
+
+        try {
+            firebase.initializeApp(firebaseConfig);
+            database = firebase.database();
+            chatRef = database.ref('messages');
+            console.log('Firebase connected successfully!');
+
+            // 실시간 메시지 리스너
+            chatRef.limitToLast(50).on('child_added', function(snapshot) {
+                const message = snapshot.val();
+                displayMessage(message, false);
+            });
+        } catch (error) {
+            console.error('Firebase initialization error:', error);
+            document.getElementById('chatMessages').innerHTML = `
+                <div class="chat-message">
+                    <div class="chat-message-user">System</div>
+                    <div class="chat-message-text" style="color: #ef4444;">Firebase not configured. Please set up your Firebase project.</div>
+                </div>
+            `;
+        }
+
+        // ==========================================
+        // 채팅 기능
+        // ==========================================
+
+        function toggleChat() {
+            const chatContainer = document.getElementById('chatContainer');
+            const toggleBtn = chatContainer.querySelector('.chat-toggle-btn');
+
+            if (chatContainer.classList.contains('minimized')) {
+                chatContainer.classList.remove('minimized');
+                toggleBtn.textContent = '−';
+            } else {
+                chatContainer.classList.add('minimized');
+                toggleBtn.textContent = '+';
+            }
+
+            if (!isMuted) playBeep();
+        }
+
+        function sendMessage() {
+            if (!chatRef) {
+                alert('Firebase is not configured. Please check the console for instructions.');
+                return;
+            }
+
+            const username = document.getElementById('chatUsername').value.trim();
+            const messageText = document.getElementById('chatInput').value.trim();
+
+            if (!username) {
+                alert('Please enter your name!');
+                document.getElementById('chatUsername').focus();
+                return;
+            }
+
+            if (!messageText) {
+                return;
+            }
+
+            // 메시지 객체 생성
+            const message = {
+                username: username,
+                text: messageText,
+                timestamp: Date.now()
+            };
+
+            // Firebase에 메시지 저장
+            chatRef.push(message)
+                .then(() => {
+                    document.getElementById('chatInput').value = '';
+                    if (!isMuted) playBeep();
+                })
+                .catch((error) => {
+                    console.error('Error sending message:', error);
+                    alert('Failed to send message. Please try again.');
+                });
+        }
+
+        function displayMessage(message, skipScroll = false) {
+            const messagesContainer = document.getElementById('chatMessages');
+
+            // 시스템 메시지 제거 (첫 메시지가 들어올 때)
+            const systemMsg = messagesContainer.querySelector('.chat-message');
+            if (systemMsg && systemMsg.querySelector('.chat-message-user').textContent === 'System') {
+                // 실제 메시지가 있는지 확인
+                if (messagesContainer.children.length === 1 && message.username !== 'System') {
+                    systemMsg.remove();
+                }
+            }
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'chat-message';
+
+            const time = new Date(message.timestamp);
+            const timeString = time.getHours().toString().padStart(2, '0') + ':' +
+                               time.getMinutes().toString().padStart(2, '0');
+
+            messageDiv.innerHTML = `
+                <div class="chat-message-user">${escapeHtml(message.username)}</div>
+                <div class="chat-message-text">${escapeHtml(message.text)}</div>
+                <div class="chat-message-time">${timeString}</div>
+            `;
+
+            messagesContainer.appendChild(messageDiv);
+
+            // 메시지 개수 제한 (최대 50개)
+            while (messagesContainer.children.length > 50) {
+                messagesContainer.removeChild(messagesContainer.firstChild);
+            }
+
+            // 스크롤을 맨 아래로
+            if (!skipScroll) {
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+        }
+
+        function handleChatKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // 사용자 이름을 로컬 스토리지에 저장
+        window.addEventListener('DOMContentLoaded', function() {
+            const savedUsername = localStorage.getItem('digipen_chat_username');
+            if (savedUsername) {
+                document.getElementById('chatUsername').value = savedUsername;
+            }
+
+            document.getElementById('chatUsername').addEventListener('change', function() {
+                localStorage.setItem('digipen_chat_username', this.value);
+            });
+        });
+
+        // ==========================================
+        // 기존 코드
+        // ==========================================
+
         const scene = document.getElementById('scene-container');
         
         function createTree() {
