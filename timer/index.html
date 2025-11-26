@@ -1521,7 +1521,14 @@
 
             document.getElementById('chatUsername').addEventListener('change', function() {
                 localStorage.setItem('digipen_chat_username', this.value);
-                updateMyUserStatus(); // 이름 변경 시 Firebase 업데이트
+                registerUser(); // 이름 변경 시 사용자 등록
+            });
+
+            document.getElementById('chatUsername').addEventListener('blur', function() {
+                if (this.value.trim()) {
+                    localStorage.setItem('digipen_chat_username', this.value);
+                    registerUser(); // 포커스 벗어날 때도 등록
+                }
             });
         });
 
@@ -1531,14 +1538,23 @@
 
         // 현재 사용자를 Firebase에 등록
         function registerUser() {
-            if (!usersRef) return;
+            console.log('registerUser called');
+            if (!usersRef) {
+                console.log('usersRef not available');
+                return;
+            }
 
             const username = document.getElementById('chatUsername').value.trim();
-            if (!username) return;
+            console.log('Username:', username);
+            if (!username) {
+                console.log('No username entered');
+                return;
+            }
 
             // 고유 ID 생성 (없으면)
             if (!myUserId) {
                 myUserId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                console.log('Generated user ID:', myUserId);
             }
 
             myUserRef = usersRef.child(myUserId);
@@ -1547,18 +1563,24 @@
             myUserRef.onDisconnect().remove();
 
             // 초기 상태 등록
+            console.log('Calling updateMyUserStatus');
             updateMyUserStatus();
         }
 
         // 내 타이머 상태 업데이트
         function updateMyUserStatus() {
+            console.log('updateMyUserStatus called, myUserRef:', myUserRef);
             if (!myUserRef) {
+                console.log('No myUserRef, calling registerUser');
                 registerUser();
                 return;
             }
 
             const username = document.getElementById('chatUsername').value.trim();
-            if (!username) return;
+            if (!username) {
+                console.log('No username in updateMyUserStatus');
+                return;
+            }
 
             const m = Math.floor(remainingSeconds / 60);
             const s = remainingSeconds % 60;
@@ -1575,17 +1597,22 @@
                 lastUpdate: Date.now()
             };
 
-            myUserRef.set(userStatus).catch(err => {
+            console.log('Setting user status:', userStatus);
+            myUserRef.set(userStatus).then(() => {
+                console.log('User status updated successfully');
+            }).catch(err => {
                 console.error('Failed to update user status:', err);
             });
         }
 
         // 온라인 사용자 목록 업데이트
         function updateOnlineUsers(users) {
+            console.log('updateOnlineUsers called with:', users);
             const usersList = document.getElementById('onlineUsersList');
             const onlineCount = document.getElementById('onlineCount');
 
             if (!users) {
+                console.log('No users data');
                 usersList.innerHTML = '<div style="text-align: center; padding: 10px; font-size: 7px; color: #78350f;">No users online</div>';
                 onlineCount.textContent = '0';
                 return;
@@ -1602,6 +1629,7 @@
                 }
             });
 
+            console.log('Active users:', activeUsers.length, activeUsers);
             onlineCount.textContent = activeUsers.length;
 
             if (activeUsers.length === 0) {
@@ -1807,13 +1835,13 @@
             loadMuteState();
             handleUrlParams();
 
-            // 사용자 등록 (username이 있으면)
+            // 사용자 등록 (username이 있으면) - Firebase 초기화 후 실행
             setTimeout(() => {
                 const username = document.getElementById('chatUsername').value.trim();
-                if (username) {
+                if (username && database) {
                     registerUser();
                 }
-            }, 1000);
+            }, 1500);
         });
         
         // URL 파라미터 처리
