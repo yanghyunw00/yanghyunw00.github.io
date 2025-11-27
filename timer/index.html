@@ -2462,7 +2462,9 @@
         let remainingSeconds = 0;
         let isRunning = false;
         let isPomodoroMode = false;
-        let isWorkSession = true; 
+        let isWorkSession = true;
+        let startTime = null; // 타이머 시작 시간 저장
+        let pausedTime = 0; // 일시정지된 시간 저장 
         
         const display = document.getElementById('timerDisplay');
         const progressBar = document.getElementById('progressBar');
@@ -3590,11 +3592,20 @@
             stopBtn.classList.remove('hidden');
             if (!isMuted) playBeep();
 
+            // 타이머 시작 시간 기록 (백그라운드에서도 정확한 시간 추적)
+            startTime = Date.now();
+            pausedTime = remainingSeconds;
+
             // Firebase 상태 업데이트
             updateMyUserStatus();
 
             timerInterval = setInterval(() => {
-                remainingSeconds--;
+                // 실제 경과 시간 계산 (백그라운드에서도 정확함)
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                remainingSeconds = pausedTime - elapsed;
+
+                if (remainingSeconds < 0) remainingSeconds = 0;
+
                 updateDisplay();
 
                 // 매초마다 Firebase 업데이트 (너무 자주 업데이트되지 않도록 3초마다 업데이트)
@@ -3663,6 +3674,8 @@
             }
 
             remainingSeconds = totalSeconds;
+            startTime = null; // 시작 시간 초기화
+            pausedTime = 0; // 일시정지 시간 초기화
             updateDisplay();
             statusText.textContent = 'RESET';
 
