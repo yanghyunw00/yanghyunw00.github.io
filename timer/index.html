@@ -13,7 +13,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Noto+Sans+KR:wght@500;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Press Start 2P', cursive;
@@ -331,113 +331,9 @@
             border-color: #991b1b;
         }
         
-        /* URL 공유 모달 */
-        .share-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 200;
-            display: none;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .share-modal.active {
-            display: flex;
-        }
-        
-        .share-content {
-            background: rgba(40, 20, 10, 0.95);
-            border: 4px solid #fbbf24;
-            border-radius: 12px;
-            padding: 30px;
-            max-width: 500px;
-            width: 90%;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
-        }
-        
-        .share-title {
-            font-size: 16px;
-            color: #fbbf24;
-            text-align: center;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 0 #000;
-        }
-        
-        .share-option {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            border: 2px solid #78350f;
-        }
-        
-        .share-option-title {
-            font-size: 10px;
-            color: #fbbf24;
-            margin-bottom: 8px;
-        }
-        
-        .share-url-box {
-            background: rgba(0, 0, 0, 0.5);
-            padding: 10px;
-            border-radius: 6px;
-            border: 2px solid #fbbf24;
-            font-size: 9px;
-            color: #fff;
-            word-break: break-all;
-            margin-bottom: 8px;
-            max-height: 60px;
-            overflow-y: auto;
-        }
-        
-        .share-button {
-            background: #22c55e;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-size: 10px;
-            cursor: pointer;
-            border: none;
-            box-shadow: 0 3px 0 #166534;
-            transition: all 0.1s;
-            width: 100%;
-        }
-        
-        .share-button:active {
-            transform: translateY(3px);
-            box-shadow: 0 0 0 #166534;
-        }
-        
-        .share-button.copied {
-            background: #3b82f6;
-            box-shadow: 0 3px 0 #1e40af;
-        }
-        
-        .share-close {
-            background: #ef4444;
-            margin-top: 15px;
-            box-shadow: 0 3px 0 #991b1b;
-        }
-        
-        .share-time-input {
-            background: rgba(0, 0, 0, 0.5);
-            border: 2px solid #fbbf24;
-            padding: 8px;
-            border-radius: 6px;
-            color: white;
-            font-family: 'Press Start 2P', cursive;
-            font-size: 10px;
-            width: 100%;
-            margin-bottom: 8px;
-        }
 
         /* 집중 모드 스타일 */
         body.focus-mode #ui-container,
-        body.focus-mode .todo-container,
         body.focus-mode .window-frame,
         body.focus-mode .wall-decoration,
         body.focus-mode .fireplace,
@@ -514,223 +410,13 @@
             box-shadow: 0 6px 0 #991b1b;
         }
 
-        /* 투두 리스트 스타일 */
-        .todo-container {
-            position: fixed;
-            top: 80px;
-            right: 20px;
-            width: 320px;
-            z-index: 100;
-            background: rgba(40, 20, 10, 0.9);
-            border: 4px solid #5d3a2a;
-            border-radius: 12px;
-            padding: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            backdrop-filter: blur(8px);
-        }
-
-        .todo-container.minimized {
-            height: 60px;
-            overflow: hidden;
-        }
-        
-        .todo-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid #fbbf24;
-            cursor: move;
-            user-select: none;
-        }
-        
-        .todo-title {
-            font-size: 14px;
-            color: #fbbf24;
-            text-shadow: 2px 2px 0 #000;
-            letter-spacing: 1px;
-        }
-        
-        .todo-header-buttons {
-            display: flex;
-            gap: 8px;
-        }
-
-        .todo-toggle-btn {
-            background: #3b82f6;
-            color: white;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            border: none;
-            font-size: 14px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 3px 0 #1e40af;
-            transition: all 0.1s;
-        }
-
-        .todo-toggle-btn:active {
-            transform: translateY(3px);
-            box-shadow: 0 0 0 #1e40af;
-        }
-
-        .todo-add-btn {
-            background: #22c55e;
-            color: white;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            border: none;
-            font-size: 18px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 3px 0 #166534;
-            transition: all 0.1s;
-        }
-
-        .todo-add-btn:active {
-            transform: translateY(3px);
-            box-shadow: 0 0 0 #166534;
-        }
-        
-        .todo-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            max-height: 300px;
-            overflow-y: auto;
-        }
-        
-        .todo-item {
-            background: rgba(0,0,0,0.3);
-            padding: 10px;
-            border-radius: 6px;
-            border: 2px solid #78350f;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            animation: slideIn 0.3s ease-out;
-        }
-        
-        @keyframes slideIn {
-            from {
-                transform: translateX(20px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-        
-        .todo-checkbox {
-            width: 20px;
-            height: 20px;
-            min-width: 20px;
-            appearance: none;
-            border: 3px solid #fbbf24;
-            border-radius: 4px;
-            cursor: pointer;
-            position: relative;
-            background: #2c1a13;
-        }
-        
-        .todo-checkbox:checked {
-            background: #22c55e;
-            border-color: #22c55e;
-        }
-        
-        .todo-checkbox:checked::after {
-            content: '✓';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-            font-size: 14px;
-            font-weight: bold;
-        }
-        
-        .todo-text {
-            flex: 1;
-            background: transparent;
-            border: none;
-            color: #fbbf24;
-            font-family: 'Press Start 2P', cursive;
-            font-size: 9px;
-            outline: none;
-            line-height: 1.4;
-        }
-        
-        .todo-text::placeholder {
-            color: #78350f;
-        }
-        
-        .todo-text.completed {
-            text-decoration: line-through;
-            opacity: 0.5;
-        }
-        
-        .todo-delete-btn {
-            background: #ef4444;
-            color: white;
-            width: 24px;
-            height: 24px;
-            min-width: 24px;
-            border-radius: 4px;
-            border: none;
-            font-size: 12px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 0 #991b1b;
-            transition: all 0.1s;
-        }
-        
-        .todo-delete-btn:active {
-            transform: translateY(2px);
-            box-shadow: 0 0 0 #991b1b;
-        }
-        
-        .todo-empty {
-            text-align: center;
-            color: #78350f;
-            font-size: 8px;
-            padding: 20px;
-        }
-        
-        .todo-list::-webkit-scrollbar {
-            width: 8px;
-        }
-        
-        .todo-list::-webkit-scrollbar-track {
-            background: rgba(0,0,0,0.3);
-            border-radius: 4px;
-        }
-        
-        .todo-list::-webkit-scrollbar-thumb {
-            background: #78350f;
-            border-radius: 4px;
-        }
-        
-        .todo-list::-webkit-scrollbar-thumb:hover {
-            background: #fbbf24;
-        }
-
         /* 채팅 컨테이너 스타일 */
         .chat-container {
             position: fixed;
             bottom: 20px;
             left: 20px;
-            width: 350px;
-            height: 450px;
+            width: 402px;
+            height: 517px;
             z-index: 110;
             background: rgba(40, 20, 10, 0.95);
             border: 4px solid #5d3a2a;
@@ -816,20 +502,25 @@
         }
 
         .chat-message-user {
-            font-size: 9px;
+            font-size: 11px;
             color: #22c55e;
             font-weight: bold;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
+            font-family: 'Press Start 2P', cursive;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
         }
 
         .chat-message-text {
-            font-size: 8px;
+            font-size: 13px;
             color: #fbbf24;
-            line-height: 1.4;
+            line-height: 1.5;
+            font-family: 'Noto Sans KR', 'Press Start 2P', sans-serif;
         }
 
         .chat-message-time {
-            font-size: 7px;
+            font-size: 10px;
             color: #78350f;
             margin-top: 4px;
         }
@@ -861,11 +552,11 @@
             flex: 1;
             background: rgba(0,0,0,0.5);
             border: 2px solid #fbbf24;
-            padding: 8px;
+            padding: 10px;
             border-radius: 6px;
             color: white;
-            font-family: 'Press Start 2P', cursive;
-            font-size: 9px;
+            font-family: 'Noto Sans KR', 'Press Start 2P', sans-serif;
+            font-size: 13px;
             outline: none;
         }
 
@@ -920,29 +611,302 @@
             display: none !important;
         }
 
-        /* 온라인 사용자 목록 스타일 */
-        .online-users {
-            margin-bottom: 12px;
-            background: rgba(0,0,0,0.3);
-            border-radius: 8px;
-            border: 2px solid #78350f;
+        /* 순위표 스타일 */
+        .leaderboard-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 320px;
+            max-height: 500px;
+            z-index: 110;
+            background: rgba(40, 20, 10, 0.95);
+            border: 4px solid #fbbf24;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            backdrop-filter: blur(8px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .leaderboard-container.minimized {
+            max-height: 60px;
             overflow: hidden;
         }
 
-        .online-users-header {
-            padding: 8px;
-            background: rgba(251, 191, 36, 0.1);
-            border-bottom: 1px solid #78350f;
+        .leaderboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #fbbf24;
         }
 
-        .online-users-title {
-            font-size: 9px;
+        .leaderboard-title {
+            font-size: 12px;
             color: #fbbf24;
             font-weight: bold;
+            text-shadow: 2px 2px 0 #000;
+        }
+
+        .leaderboard-toggle-btn {
+            background: #3b82f6;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 0 #1e40af;
+            transition: all 0.1s;
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        .leaderboard-toggle-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 0 0 #1e40af;
+        }
+
+        .leaderboard-refresh-btn {
+            background: #22c55e;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 0 #166534;
+            transition: all 0.2s;
+        }
+
+        .leaderboard-refresh-btn:hover {
+            background: #16a34a;
+        }
+
+        .leaderboard-refresh-btn:active {
+            transform: translateY(3px) rotate(180deg);
+            box-shadow: 0 0 0 #166534;
+        }
+
+        .leaderboard-refresh-btn.refreshing {
+            animation: spin 0.5s ease-in-out;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .leaderboard-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .leaderboard-tab {
+            flex: 1;
+            background: rgba(0,0,0,0.3);
+            border: 2px solid #78350f;
+            color: #fbbf24;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 9px;
+            cursor: pointer;
+            font-family: 'Press Start 2P', cursive;
+            transition: all 0.2s;
+        }
+
+        .leaderboard-tab:hover {
+            background: rgba(251, 191, 36, 0.2);
+        }
+
+        .leaderboard-tab.active {
+            background: #fbbf24;
+            color: #2c1a13;
+            border-color: #fbbf24;
+            box-shadow: 0 2px 0 #78350f;
+        }
+
+        .leaderboard-list {
+            max-height: 350px;
+            overflow-y: auto;
+            padding: 4px;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            margin-bottom: 6px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+            border: 2px solid #78350f;
+            animation: leaderboardFadeIn 0.3s ease-out;
+        }
+
+        @keyframes leaderboardFadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .leaderboard-item.rank-1 {
+            border-color: #fbbf24;
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(0,0,0,0.3) 100%);
+        }
+
+        .leaderboard-item.rank-2 {
+            border-color: #c0c0c0;
+            background: linear-gradient(135deg, rgba(192, 192, 192, 0.2) 0%, rgba(0,0,0,0.3) 100%);
+        }
+
+        .leaderboard-item.rank-3 {
+            border-color: #cd7f32;
+            background: linear-gradient(135deg, rgba(205, 127, 50, 0.2) 0%, rgba(0,0,0,0.3) 100%);
+        }
+
+        .leaderboard-rank {
+            font-size: 12px;
+            font-weight: bold;
+            color: #fbbf24;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .leaderboard-crown {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
+        }
+
+        .leaderboard-user-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .leaderboard-username {
+            font-size: 10px;
+            color: #22c55e;
+            font-weight: bold;
+            font-family: 'Press Start 2P', cursive;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .leaderboard-time {
+            font-size: 11px;
+            color: #fbbf24;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        .leaderboard-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .leaderboard-list::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.3);
+            border-radius: 3px;
+        }
+
+        .leaderboard-list::-webkit-scrollbar-thumb {
+            background: #fbbf24;
+            border-radius: 3px;
+        }
+
+        .leaderboard-list::-webkit-scrollbar-thumb:hover {
+            background: #f59e0b;
+        }
+
+        /* 채팅창 왕관 스타일 */
+        .chat-crown {
+            width: 14px;
+            height: 14px;
+            margin-left: 4px;
+            vertical-align: middle;
+        }
+
+        /* 온라인 사용자 목록 스타일 */
+        /* 온라인 사용자 컨테이너 (별도 팝업) */
+        .online-container {
+            position: fixed;
+            top: 540px;
+            right: 20px;
+            width: 280px;
+            max-height: 400px;
+            z-index: 110;
+            background: rgba(40, 20, 10, 0.95);
+            border: 4px solid #5d3a2a;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            backdrop-filter: blur(8px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .online-container.minimized {
+            max-height: 60px;
+            overflow: hidden;
+        }
+
+        .online-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #fbbf24;
+        }
+
+        .online-title {
+            font-size: 12px;
+            color: #fbbf24;
+            font-weight: bold;
+            text-shadow: 2px 2px 0 #000;
+        }
+
+        .online-toggle-btn {
+            background: #3b82f6;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 0 #1e40af;
+            transition: all 0.1s;
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        .online-toggle-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 0 0 #1e40af;
         }
 
         .online-users-list {
-            max-height: 120px;
+            max-height: 300px;
             overflow-y: auto;
             padding: 4px;
         }
@@ -978,13 +942,14 @@
         }
 
         .online-user-name {
-            font-size: 8px;
+            font-size: 9px;
             color: #22c55e;
             font-weight: bold;
-            max-width: 80px;
+            max-width: 120px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+            font-family: 'Press Start 2P', cursive;
         }
 
         .online-user-timer {
@@ -995,7 +960,7 @@
         }
 
         .online-user-time {
-            font-size: 9px;
+            font-size: 10px;
             color: #fbbf24;
             font-weight: bold;
         }
@@ -1624,16 +1589,35 @@
     </div>
 
     <!-- 투두 리스트 -->
-    <div class="todo-container" id="todoContainer">
-        <div class="todo-header" id="todoHeader">
-            <div class="todo-title">📝 TODO LIST</div>
-            <div class="todo-header-buttons">
-                <button class="todo-toggle-btn" onclick="toggleTodoList()">−</button>
-                <button class="todo-add-btn" onclick="addTodo()">+</button>
+    <!-- 순위표 -->
+    <div class="leaderboard-container" id="leaderboardContainer">
+        <div class="leaderboard-header">
+            <div class="leaderboard-title">🏆 LEADERBOARD</div>
+            <div style="display: flex; gap: 8px;">
+                <button class="leaderboard-refresh-btn" onclick="refreshLeaderboard()" title="새로고침">🔄</button>
+                <button class="leaderboard-toggle-btn" onclick="toggleLeaderboard()">−</button>
             </div>
         </div>
-        <div class="todo-list" id="todoList">
-            <div class="todo-empty">Press + to add task!</div>
+
+        <div class="leaderboard-tabs">
+            <button class="leaderboard-tab active" onclick="switchLeaderboard('daily')">일간</button>
+            <button class="leaderboard-tab" onclick="switchLeaderboard('weekly')">주간</button>
+            <button class="leaderboard-tab" onclick="switchLeaderboard('monthly')">월간</button>
+        </div>
+
+        <div class="leaderboard-list" id="leaderboardList">
+            <!-- 동적으로 추가됨 -->
+        </div>
+    </div>
+
+    <!-- 온라인 사용자 목록 (별도 팝업) -->
+    <div class="online-container" id="onlineContainer">
+        <div class="online-header">
+            <div class="online-title">👥 ONLINE (<span id="onlineCount">0</span>)</div>
+            <button class="online-toggle-btn" onclick="toggleOnlineList()">−</button>
+        </div>
+        <div class="online-users-list" id="onlineUsersList">
+            <!-- 동적으로 추가됨 -->
         </div>
     </div>
 
@@ -1642,16 +1626,6 @@
         <div class="chat-header">
             <div class="chat-title">💬 LIVE CHAT</div>
             <button class="chat-toggle-btn" onclick="toggleChat()">−</button>
-        </div>
-
-        <!-- 온라인 사용자 목록 -->
-        <div class="online-users" id="onlineUsers">
-            <div class="online-users-header">
-                <span class="online-users-title">👥 ONLINE (<span id="onlineCount">0</span>)</span>
-            </div>
-            <div class="online-users-list" id="onlineUsersList">
-                <!-- 동적으로 추가됨 -->
-            </div>
         </div>
 
         <div class="chat-messages" id="chatMessages">
@@ -1835,8 +1809,8 @@
             usersRef = database.ref('users');
             console.log('Firebase connected successfully!');
 
-            // 실시간 메시지 리스너
-            chatRef.limitToLast(50).on('child_added', function(snapshot) {
+            // 실시간 메시지 리스너 (최근 100개만)
+            chatRef.limitToLast(100).on('child_added', function(snapshot) {
                 const message = snapshot.val();
                 displayMessage(message, false);
             });
@@ -1845,6 +1819,9 @@
             usersRef.on('value', function(snapshot) {
                 updateOnlineUsers(snapshot.val());
             });
+
+            // 오래된 메시지 자동 정리 (일주일 이상)
+            cleanOldMessages();
 
         } catch (error) {
             console.error('Firebase initialization error:', error);
@@ -2149,6 +2126,359 @@
             if (!isMuted) playBeep();
         }
 
+        function toggleOnlineList() {
+            const onlineContainer = document.getElementById('onlineContainer');
+            const toggleBtn = onlineContainer.querySelector('.online-toggle-btn');
+
+            if (onlineContainer.classList.contains('minimized')) {
+                onlineContainer.classList.remove('minimized');
+                toggleBtn.textContent = '−';
+            } else {
+                onlineContainer.classList.add('minimized');
+                toggleBtn.textContent = '+';
+            }
+
+            if (!isMuted) playBeep();
+        }
+
+        // ==========================================
+        // 순위표 기능
+        // ==========================================
+
+        let currentLeaderboardType = 'daily'; // daily, weekly, monthly
+        let leaderboardRef = null;
+        let topRankers = { daily: [], weekly: [], monthly: [] }; // 1-3등 정보 저장
+
+        // 순위표 토글
+        function toggleLeaderboard() {
+            const leaderboardContainer = document.getElementById('leaderboardContainer');
+            const toggleBtn = leaderboardContainer.querySelector('.leaderboard-toggle-btn');
+
+            if (leaderboardContainer.classList.contains('minimized')) {
+                leaderboardContainer.classList.remove('minimized');
+                toggleBtn.textContent = '−';
+            } else {
+                leaderboardContainer.classList.add('minimized');
+                toggleBtn.textContent = '+';
+            }
+
+            if (!isMuted) playBeep();
+        }
+
+        // 순위표 탭 전환
+        function switchLeaderboard(type) {
+            currentLeaderboardType = type;
+
+            // 탭 활성화 상태 변경
+            document.querySelectorAll('.leaderboard-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // 새로고침 버튼 애니메이션
+            const refreshBtn = document.querySelector('.leaderboard-refresh-btn');
+            if (refreshBtn) {
+                refreshBtn.classList.add('refreshing');
+                setTimeout(() => {
+                    refreshBtn.classList.remove('refreshing');
+                }, 500);
+            }
+
+            // 순위표 업데이트
+            updateLeaderboard();
+
+            if (!isMuted) playBeep();
+        }
+
+        // 타이머 시간 기록
+        function recordTimerSession(seconds) {
+            if (!currentUser || !database || seconds < 1) return;
+
+            const today = new Date();
+            const dateKey = today.toISOString().split('T')[0]; // YYYY-MM-DD
+            const weekKey = getWeekKey(today);
+            const monthKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
+
+            const userStatsRef = database.ref(`timerStats/${currentUser.uid}`);
+
+            // 일간, 주간, 월간 통계 업데이트
+            userStatsRef.transaction(function(stats) {
+                if (!stats) {
+                    stats = {
+                        daily: {},
+                        weekly: {},
+                        monthly: {},
+                        nickname: userProfile.nickname,
+                        color: userProfile.color
+                    };
+                }
+
+                // 일간 통계
+                if (!stats.daily) stats.daily = {};
+                stats.daily[dateKey] = (stats.daily[dateKey] || 0) + seconds;
+
+                // 주간 통계
+                if (!stats.weekly) stats.weekly = {};
+                stats.weekly[weekKey] = (stats.weekly[weekKey] || 0) + seconds;
+
+                // 월간 통계
+                if (!stats.monthly) stats.monthly = {};
+                stats.monthly[monthKey] = (stats.monthly[monthKey] || 0) + seconds;
+
+                // 프로필 정보 업데이트
+                stats.nickname = userProfile.nickname;
+                stats.color = userProfile.color;
+                stats.lastActive = Date.now();
+
+                return stats;
+            });
+
+            console.log(`타이머 기록: ${seconds}초 (${Math.floor(seconds / 60)}분)`);
+        }
+
+        // 주차 키 생성 (ISO 8601 week)
+        function getWeekKey(date) {
+            const d = new Date(date);
+            d.setHours(0, 0, 0, 0);
+            d.setDate(d.getDate() + 4 - (d.getDay() || 7));
+            const yearStart = new Date(d.getFullYear(), 0, 1);
+            const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+            return `${d.getFullYear()}-W${String(weekNo).padStart(2, '0')}`;
+        }
+
+        // 순위표 업데이트
+        async function updateLeaderboard() {
+            if (!database) return;
+
+            const today = new Date();
+            let timeKey;
+
+            if (currentLeaderboardType === 'daily') {
+                timeKey = today.toISOString().split('T')[0];
+            } else if (currentLeaderboardType === 'weekly') {
+                timeKey = getWeekKey(today);
+            } else {
+                timeKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
+            }
+
+            try {
+                const snapshot = await database.ref('timerStats').once('value');
+                const allStats = snapshot.val();
+
+                if (!allStats) {
+                    document.getElementById('leaderboardList').innerHTML = '<div style="text-align: center; color: #78350f; font-size: 9px; padding: 20px;">아직 기록이 없습니다</div>';
+                    return;
+                }
+
+                // 사용자별 시간 집계
+                const rankings = [];
+                Object.keys(allStats).forEach(userId => {
+                    const userStats = allStats[userId];
+                    let totalSeconds = 0;
+
+                    if (currentLeaderboardType === 'daily' && userStats.daily && userStats.daily[timeKey]) {
+                        totalSeconds = userStats.daily[timeKey];
+                    } else if (currentLeaderboardType === 'weekly' && userStats.weekly && userStats.weekly[timeKey]) {
+                        totalSeconds = userStats.weekly[timeKey];
+                    } else if (currentLeaderboardType === 'monthly' && userStats.monthly && userStats.monthly[timeKey]) {
+                        totalSeconds = userStats.monthly[timeKey];
+                    }
+
+                    if (totalSeconds > 0) {
+                        rankings.push({
+                            userId: userId,
+                            nickname: userStats.nickname || 'Unknown',
+                            color: userStats.color || '#22c55e',
+                            totalSeconds: totalSeconds
+                        });
+                    }
+                });
+
+                // 시간 순으로 정렬
+                rankings.sort((a, b) => b.totalSeconds - a.totalSeconds);
+
+                // 상위 10명만 표시
+                const top10 = rankings.slice(0, 10);
+
+                // 1-3등 저장 (모든 탭에서 상위 3명 저장)
+                topRankers[currentLeaderboardType] = top10.slice(0, 3);
+
+                // 순위표 UI 업데이트
+                displayLeaderboard(top10);
+
+                // 채팅 메시지에 왕관 업데이트
+                updateCrownInMessages();
+
+            } catch (error) {
+                console.error('순위표 업데이트 오류:', error);
+            }
+        }
+
+        // 순위표 새로고침
+        async function refreshLeaderboard() {
+            const refreshBtn = document.querySelector('.leaderboard-refresh-btn');
+            if (!refreshBtn) return;
+
+            // 애니메이션 추가
+            refreshBtn.classList.add('refreshing');
+
+            // 비프음 재생
+            if (!isMuted) playBeep();
+
+            // 순위표 업데이트
+            await updateLeaderboard();
+
+            // 애니메이션 제거
+            setTimeout(() => {
+                refreshBtn.classList.remove('refreshing');
+            }, 500);
+        }
+
+        // 순위표 표시
+        function displayLeaderboard(rankings) {
+            const listContainer = document.getElementById('leaderboardList');
+
+            if (rankings.length === 0) {
+                listContainer.innerHTML = '<div style="text-align: center; color: #78350f; font-size: 9px; padding: 20px;">아직 기록이 없습니다</div>';
+                return;
+            }
+
+            listContainer.innerHTML = '';
+
+            rankings.forEach((user, index) => {
+                const rank = index + 1;
+                const hours = Math.floor(user.totalSeconds / 3600);
+                const minutes = Math.floor((user.totalSeconds % 3600) / 60);
+                const timeText = hours > 0 ? `${hours}시간 ${minutes}분` : `${minutes}분`;
+
+                const itemDiv = document.createElement('div');
+                itemDiv.className = `leaderboard-item rank-${rank <= 3 ? rank : 'other'}`;
+
+                let crownHtml = '';
+                if (rank === 1) {
+                    crownHtml = '<img src="gold.png" class="leaderboard-crown" alt="1등">';
+                } else if (rank === 2) {
+                    crownHtml = '<img src="silver.png" class="leaderboard-crown" alt="2등">';
+                } else if (rank === 3) {
+                    crownHtml = '<img src="brown.png" class="leaderboard-crown" alt="3등">';
+                }
+
+                itemDiv.innerHTML = `
+                    <div class="leaderboard-rank">${rank}</div>
+                    <div class="leaderboard-user-info">
+                        <div class="leaderboard-username" style="color: ${user.color};">
+                            <span>${escapeHtml(user.nickname)}</span>
+                            ${crownHtml}
+                        </div>
+                        <div class="leaderboard-time">${timeText}</div>
+                    </div>
+                `;
+
+                listContainer.appendChild(itemDiv);
+            });
+        }
+
+        // 사용자의 랭크 가져오기 (채팅에 왕관 표시용)
+        function getUserRank(userId) {
+            for (const [type, rankers] of Object.entries(topRankers)) {
+                const index = rankers.findIndex(r => r.userId === userId);
+                if (index !== -1) {
+                    return index + 1; // 1, 2, 3
+                }
+            }
+            return null;
+        }
+
+        // 왕관 이미지 HTML 생성
+        function getCrownHtml(rank) {
+            if (rank === 1) return '<img src="gold.png" class="chat-crown" alt="1등">';
+            if (rank === 2) return '<img src="silver.png" class="chat-crown" alt="2등">';
+            if (rank === 3) return '<img src="brown.png" class="chat-crown" alt="3등">';
+            return '';
+        }
+
+        // 채팅 메시지에 왕관 업데이트 (리더보드 갱신 후 호출)
+        function updateCrownInMessages() {
+            const messagesContainer = document.getElementById('chatMessages');
+            if (!messagesContainer) return;
+
+            const messages = messagesContainer.querySelectorAll('.chat-message');
+            messages.forEach(msgDiv => {
+                const userDiv = msgDiv.querySelector('.chat-message-user');
+                if (!userDiv) return;
+
+                // 사용자 ID를 data attribute에서 가져오기
+                const userId = msgDiv.dataset.userId;
+                if (!userId) return;
+
+                const userRank = getUserRank(userId);
+                const crownHtml = userRank ? getCrownHtml(userRank) : '';
+
+                // 기존 왕관 제거
+                const existingCrown = userDiv.querySelector('.chat-crown');
+                if (existingCrown) existingCrown.remove();
+
+                // 새 왕관 추가
+                if (crownHtml) {
+                    userDiv.insertAdjacentHTML('beforeend', crownHtml);
+                }
+            });
+        }
+
+        // 순위표 초기화 및 주기적 업데이트
+        if (database) {
+            updateLeaderboard();
+            setInterval(updateLeaderboard, 5 * 60 * 1000); // 5분마다 업데이트
+        }
+
+        // 오래된 채팅 메시지 정리 함수
+        function cleanOldMessages() {
+            if (!chatRef) return;
+
+            const weekAgo = Date.now() - (7 * 24 * 60 * 60 * 1000); // 7일 전
+
+            // 7일 이상 된 메시지 찾아서 삭제
+            chatRef.orderByChild('timestamp')
+                .endAt(weekAgo)
+                .once('value', function(snapshot) {
+                    const deletePromises = [];
+                    snapshot.forEach(function(childSnapshot) {
+                        deletePromises.push(childSnapshot.ref.remove());
+                    });
+
+                    Promise.all(deletePromises).then(() => {
+                        console.log('오래된 메시지 정리 완료');
+                    }).catch(error => {
+                        console.error('메시지 정리 오류:', error);
+                    });
+                });
+
+            // 메시지 개수가 100개 초과하면 오래된 것부터 삭제
+            chatRef.once('value', function(snapshot) {
+                const messageCount = snapshot.numChildren();
+                if (messageCount > 100) {
+                    const deleteCount = messageCount - 100;
+                    chatRef.orderByChild('timestamp')
+                        .limitToFirst(deleteCount)
+                        .once('value', function(oldSnapshot) {
+                            const deletePromises = [];
+                            oldSnapshot.forEach(function(childSnapshot) {
+                                deletePromises.push(childSnapshot.ref.remove());
+                            });
+
+                            Promise.all(deletePromises).then(() => {
+                                console.log(`${deleteCount}개의 오래된 메시지 삭제됨`);
+                            }).catch(error => {
+                                console.error('메시지 제한 정리 오류:', error);
+                            });
+                        });
+                }
+            });
+        }
+
+        // 주기적으로 오래된 메시지 정리 (매 시간마다)
+        setInterval(cleanOldMessages, 60 * 60 * 1000);
+
         function sendMessage() {
     if (!chatRef) {
         alert('Firebase is not configured. Please check the console for instructions.');
@@ -2214,22 +2544,33 @@
             const messageDiv = document.createElement('div');
             messageDiv.className = 'chat-message';
 
+            // userId를 data attribute에 저장 (왕관 업데이트용)
+            if (message.userId) {
+                messageDiv.dataset.userId = message.userId;
+            }
+
             const time = new Date(message.timestamp);
             const timeString = time.getHours().toString().padStart(2, '0') + ':' +
                                time.getMinutes().toString().padStart(2, '0');
 
             const usernameColor = message.color || '#22c55e';
 
+            // 왕관 표시 (사용자 ID로 랭크 확인)
+            const userRank = message.userId ? getUserRank(message.userId) : null;
+            const crownHtml = userRank ? getCrownHtml(userRank) : '';
+
             messageDiv.innerHTML = `
-                <div class="chat-message-user" style="color: ${usernameColor};">${escapeHtml(message.username)}</div>
+                <div class="chat-message-user" style="color: ${usernameColor};">
+                    <span>${escapeHtml(message.username)}</span>${crownHtml}
+                </div>
                 <div class="chat-message-text">${escapeHtml(message.text)}</div>
                 <div class="chat-message-time">${timeString}</div>
             `;
 
             messagesContainer.appendChild(messageDiv);
 
-            // 메시지 개수 제한 (최대 50개)
-            while (messagesContainer.children.length > 50) {
+            // 메시지 개수 제한 (최대 100개 UI 표시)
+            while (messagesContainer.children.length > 100) {
                 messagesContainer.removeChild(messagesContainer.firstChild);
             }
 
@@ -2490,11 +2831,7 @@
         let isYouTubeAPIReady = false;
         let isVideoVisible = false;
         let currentVideoId = '';
-        
-        // Todo List variables
-        let todoItems = [];
-        let todoIdCounter = 0;
-        
+
         // Mode variables
         let isMuted = false;
         let isFocusMode = false;
@@ -2517,7 +2854,6 @@
         
         // 페이지 로드 시 초기화
         window.addEventListener('DOMContentLoaded', function() {
-            loadTodosFromStorage();
             loadCustomPresets();
             loadMuteState();
             handleUrlParams();
@@ -2600,50 +2936,7 @@
         }
         
         // LocalStorage 관련 함수들
-        function saveTodosToStorage() {
-            const todos = Array.from(document.querySelectorAll('.todo-item')).map(item => {
-                const checkbox = item.querySelector('.todo-checkbox');
-                const textInput = item.querySelector('.todo-text');
-                return {
-                    id: parseInt(item.dataset.id),
-                    text: textInput.value,
-                    completed: checkbox.checked
-                };
-            });
-            localStorage.setItem('digipen_todos', JSON.stringify(todos));
-        }
-        
-        function loadTodosFromStorage() {
-            const saved = localStorage.getItem('digipen_todos');
-            if (saved) {
-                const todos = JSON.parse(saved);
-                const todoList = document.getElementById('todoList');
-                
-                if (todos.length > 0) {
-                    // 빈 메시지 제거
-                    const emptyMsg = todoList.querySelector('.todo-empty');
-                    if (emptyMsg) emptyMsg.remove();
-                    
-                    todos.forEach(todo => {
-                        const todoItem = document.createElement('div');
-                        todoItem.className = 'todo-item';
-                        todoItem.dataset.id = todo.id;
-                        
-                        todoItem.innerHTML = `
-                            <input type="checkbox" class="todo-checkbox" ${todo.completed ? 'checked' : ''} onchange="toggleTodo(${todo.id})">
-                            <input type="text" class="todo-text ${todo.completed ? 'completed' : ''}" value="${todo.text}" placeholder="Type your task..." maxlength="50" onchange="saveTodosToStorage()">
-                            <button class="todo-delete-btn" onclick="deleteTodo(${todo.id})">×</button>
-                        `;
-                        
-                        todoList.appendChild(todoItem);
-                        todoIdCounter = Math.max(todoIdCounter, todo.id + 1);
-                    });
-                    
-                    todoItems = todos;
-                }
-            }
-        }
-        
+
         function saveCustomPresets() {
             localStorage.setItem('digipen_presets', JSON.stringify(customPresets));
         }
@@ -2688,182 +2981,6 @@
             localStorage.setItem('digipen_muted', isMuted.toString());
         }
         
-        // Todo Functions
-        function addTodo() {
-            const todoList = document.getElementById('todoList');
-            
-            // 빈 메시지 제거
-            const emptyMsg = todoList.querySelector('.todo-empty');
-            if (emptyMsg) {
-                emptyMsg.remove();
-            }
-            
-            // 새 투두 아이템 생성
-            const todoId = todoIdCounter++;
-            const todoItem = document.createElement('div');
-            todoItem.className = 'todo-item';
-            todoItem.dataset.id = todoId;
-            
-            todoItem.innerHTML = `
-                <input type="checkbox" class="todo-checkbox" onchange="toggleTodo(${todoId})">
-                <input type="text" class="todo-text" placeholder="Type your task..." maxlength="50" onchange="saveTodosToStorage()">
-                <button class="todo-delete-btn" onclick="deleteTodo(${todoId})">×</button>
-            `;
-            
-            todoList.appendChild(todoItem);
-            
-            // 추가된 항목에 포커스
-            const input = todoItem.querySelector('.todo-text');
-            input.focus();
-            
-            // Beep 사운드
-            if (!isMuted) playBeep();
-            
-            // 투두 배열에 추가
-            todoItems.push({
-                id: todoId,
-                text: '',
-                completed: false
-            });
-            
-            // 저장
-            saveTodosToStorage();
-        }
-        
-        function toggleTodo(todoId) {
-            const todoItem = document.querySelector(`.todo-item[data-id="${todoId}"]`);
-            const checkbox = todoItem.querySelector('.todo-checkbox');
-            const textInput = todoItem.querySelector('.todo-text');
-            
-            if (checkbox.checked) {
-                textInput.classList.add('completed');
-                if (!isMuted) playBeep();
-            } else {
-                textInput.classList.remove('completed');
-            }
-            
-            // 상태 업데이트
-            const todo = todoItems.find(t => t.id === todoId);
-            if (todo) {
-                todo.completed = checkbox.checked;
-            }
-            
-            // 저장
-            saveTodosToStorage();
-        }
-        
-        function deleteTodo(todoId) {
-            const todoItem = document.querySelector(`.todo-item[data-id="${todoId}"]`);
-            const todoList = document.getElementById('todoList');
-            
-            // 삭제 애니메이션
-            todoItem.style.animation = 'slideOut 0.3s ease-out';
-            
-            setTimeout(() => {
-                todoItem.remove();
-                
-                // 배열에서 제거
-                todoItems = todoItems.filter(t => t.id !== todoId);
-                
-                // 모든 투두가 삭제되면 빈 메시지 표시
-                if (todoList.children.length === 0) {
-                    todoList.innerHTML = '<div class="todo-empty">Press + to add task!</div>';
-                }
-                
-                // 저장
-                saveTodosToStorage();
-            }, 300);
-            
-            if (!isMuted) playBeep();
-        }
-        
-        // 슬라이드 아웃 애니메이션 추가
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideOut {
-                from {
-                    transform: translateX(0);
-                    opacity: 1;
-                }
-                to {
-                    transform: translateX(30px);
-                    opacity: 0;
-                }
-            }
-        `;
-        document.head.appendChild(style);
-
-        // TODO 리스트 접기/펼치기
-        function toggleTodoList() {
-            const todoContainer = document.getElementById('todoContainer');
-            const toggleBtn = document.querySelector('.todo-toggle-btn');
-
-            if (todoContainer.classList.contains('minimized')) {
-                todoContainer.classList.remove('minimized');
-                toggleBtn.textContent = '−';
-            } else {
-                todoContainer.classList.add('minimized');
-                toggleBtn.textContent = '+';
-            }
-
-            if (!isMuted) playBeep();
-        }
-
-        // TODO 리스트 드래그 이동
-        let isDraggingTodo = false;
-        let currentTodoX, currentTodoY, initialTodoX, initialTodoY;
-        let xOffset = 0, yOffset = 0;
-
-        const todoContainer = document.getElementById('todoContainer');
-        const todoHeader = document.getElementById('todoHeader');
-
-        todoHeader.addEventListener('mousedown', dragStart);
-        document.addEventListener('mousemove', drag);
-        document.addEventListener('mouseup', dragEnd);
-
-        function dragStart(e) {
-            if (e.target.closest('.todo-toggle-btn') || e.target.closest('.todo-add-btn')) {
-                return;
-            }
-
-            initialTodoX = e.clientX - xOffset;
-            initialTodoY = e.clientY - yOffset;
-
-            if (e.target === todoHeader || e.target.closest('.todo-title')) {
-                isDraggingTodo = true;
-                todoContainer.style.transition = 'none';
-            }
-        }
-
-        function drag(e) {
-            if (isDraggingTodo) {
-                e.preventDefault();
-                currentTodoX = e.clientX - initialTodoX;
-                currentTodoY = e.clientY - initialTodoY;
-
-                xOffset = currentTodoX;
-                yOffset = currentTodoY;
-
-                setTodoTranslate(currentTodoX, currentTodoY);
-            }
-        }
-
-        function setTodoTranslate(xPos, yPos) {
-            todoContainer.style.right = 'auto';
-            todoContainer.style.top = 'auto';
-            todoContainer.style.left = (20 + xPos) + 'px';
-            todoContainer.style.bottom = (window.innerHeight - 500 - yPos) + 'px';
-        }
-
-        function dragEnd(e) {
-            if (isDraggingTodo) {
-                initialTodoX = currentTodoX;
-                initialTodoY = currentTodoY;
-                isDraggingTodo = false;
-                todoContainer.style.transition = '';
-            }
-        }
-
         // Mode Functions
         function toggleMute() {
             isMuted = !isMuted;
@@ -2940,88 +3057,7 @@
             if (!isMuted) playBeep();
         }
         
-        // Share Feature Functions
-        function openShareModal() {
-            const modal = document.getElementById('shareModal');
-            modal.classList.add('active');
-            updateShareUrls();
-            if (!isMuted) playBeep();
-        }
-        
-        function closeShareModal() {
-            const modal = document.getElementById('shareModal');
-            modal.classList.remove('active');
-            if (!isMuted) playBeep();
-        }
-        
-        function updateShareUrls() {
-            const baseUrl = window.location.origin + window.location.pathname;
-            
-            // 현재 설정 URL
-            let currentUrl = baseUrl;
-            if (isPomodoroMode) {
-                currentUrl += `?pomo=${currentWorkTime}/${currentBreakTime}`;
-            } else if (totalSeconds > 0) {
-                const minutes = Math.floor(totalSeconds / 60);
-                currentUrl += `?timer=${minutes}`;
-            } else {
-                currentUrl += `?pomo=25/5`;
-            }
-            
-            document.getElementById('shareUrlCurrent').textContent = currentUrl;
-            
-            // 시간 지연 URL 업데이트
-            const startInMinutes = parseInt(document.getElementById('shareStartIn').value) || 5;
-            const startInSeconds = startInMinutes * 60;
-            let timedUrl = currentUrl + `&startin=${startInSeconds}`;
-            document.getElementById('shareUrlTimed').textContent = timedUrl;
-        }
-        
-        function copyShareUrl(type) {
-            let url;
-            let buttonId;
-            
-            if (type === 'current') {
-                url = document.getElementById('shareUrlCurrent').textContent;
-                buttonId = 'current';
-            } else {
-                // 시간 지연 URL 다시 생성 (최신 값 반영)
-                updateShareUrls();
-                url = document.getElementById('shareUrlTimed').textContent;
-                buttonId = 'timed';
-            }
-            
-            // 클립보드 복사
-            navigator.clipboard.writeText(url).then(() => {
-                // 복사 성공 피드백
-                const buttons = document.querySelectorAll('.share-button');
-                buttons.forEach(btn => {
-                    if (btn.textContent.includes('COPY')) {
-                        const originalText = btn.textContent;
-                        btn.textContent = '✓ COPIED!';
-                        btn.classList.add('copied');
-                        
-                        setTimeout(() => {
-                            btn.textContent = originalText;
-                            btn.classList.remove('copied');
-                        }, 2000);
-                    }
-                });
-                
-                if (!isMuted) playBeep();
-            }).catch(err => {
-                alert('복사 실패! URL을 직접 선택해서 복사해주세요.');
-            });
-        }
-        
-        // shareStartIn 입력 변경 시 URL 업데이트
-        document.addEventListener('DOMContentLoaded', function() {
-            const shareStartInInput = document.getElementById('shareStartIn');
-            if (shareStartInInput) {
-                shareStartInInput.addEventListener('input', updateShareUrls);
-            }
-        });
-
+     
         function toggleUI() {
             if (uiContainer.style.opacity === '0') {
                 uiContainer.style.opacity = '1';
@@ -3617,6 +3653,13 @@
                     clearInterval(timerInterval);
                     isRunning = false;
 
+                    // 타이머 완료 시 시간 기록
+                    if (totalSeconds > 0) {
+                        recordTimerSession(totalSeconds);
+                        // 순위표 업데이트
+                        setTimeout(updateLeaderboard, 1000);
+                    }
+
                     if (isPomodoroMode) {
                         handlePomodoroTransition();
                     } else {
@@ -3653,6 +3696,29 @@
             statusText.classList.remove('animate-pulse');
             startBtn.classList.remove('hidden');
             stopBtn.classList.add('hidden');
+
+            // stop 시 실행한 시간만큼 기록
+            if (startTime && totalSeconds > 0) {
+                const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+                console.log('Stop 시 기록:', {
+                    startTime,
+                    totalSeconds,
+                    elapsedSeconds,
+                    currentUser: currentUser?.uid,
+                    database: !!database
+                });
+                if (elapsedSeconds > 0) {
+                    recordTimerSession(elapsedSeconds);
+                    // 순위표 업데이트
+                    setTimeout(updateLeaderboard, 1000);
+                }
+            } else {
+                console.log('Stop 기록 실패:', {
+                    startTime,
+                    totalSeconds,
+                    currentUser: currentUser?.uid
+                });
+            }
 
             // Firebase 상태 업데이트
             updateMyUserStatus();
