@@ -11,6 +11,7 @@
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
@@ -1124,9 +1125,454 @@
             width: 100%;
             height: 100%;
         }
+
+        /* 로그인 모달 스타일 */
+        .auth-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .auth-modal.hidden {
+            display: none;
+        }
+
+        .auth-container {
+            background: linear-gradient(135deg, #3d251a 0%, #2c1a13 100%);
+            border: 4px solid #fbbf24;
+            border-radius: 16px;
+            padding: 32px;
+            width: 90%;
+            max-width: 420px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+        }
+
+        .auth-title {
+            font-size: 20px;
+            color: #fbbf24;
+            text-align: center;
+            margin-bottom: 24px;
+            text-shadow: 2px 2px 0 #000;
+        }
+
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .auth-input {
+            width: 100%;
+            background: rgba(0,0,0,0.5);
+            border: 2px solid #fbbf24;
+            padding: 12px;
+            border-radius: 8px;
+            color: white;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 10px;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .auth-input::placeholder {
+            color: #78350f;
+        }
+
+        .auth-input:focus {
+            border-color: #22c55e;
+        }
+
+        .auth-btn {
+            background: #22c55e;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            font-size: 12px;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #166534;
+            transition: all 0.1s;
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        .auth-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 #166534;
+        }
+
+        .auth-btn:disabled {
+            background: #666;
+            box-shadow: 0 4px 0 #333;
+            cursor: not-allowed;
+        }
+
+        .auth-btn-secondary {
+            background: #3b82f6;
+            box-shadow: 0 4px 0 #1e40af;
+        }
+
+        .auth-btn-secondary:active {
+            box-shadow: 0 0 0 #1e40af;
+        }
+
+        .auth-divider {
+            text-align: center;
+            color: #78350f;
+            font-size: 10px;
+            margin: 16px 0;
+            position: relative;
+        }
+
+        .auth-divider::before,
+        .auth-divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 40%;
+            height: 2px;
+            background: #78350f;
+        }
+
+        .auth-divider::before {
+            left: 0;
+        }
+
+        .auth-divider::after {
+            right: 0;
+        }
+
+        .auth-toggle {
+            text-align: center;
+            color: #fbbf24;
+            font-size: 9px;
+            margin-top: 16px;
+            cursor: pointer;
+        }
+
+        .auth-toggle:hover {
+            color: #22c55e;
+        }
+
+        .auth-error {
+            background: rgba(239, 68, 68, 0.2);
+            border: 2px solid #ef4444;
+            color: #ef4444;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 8px;
+            text-align: center;
+        }
+
+        .user-profile {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            background: rgba(61, 37, 26, 0.9);
+            border: 2px solid #fbbf24;
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-profile.hidden {
+            display: none;
+        }
+
+        .user-email {
+            color: #22c55e;
+            font-size: 9px;
+        }
+
+        .logout-btn {
+            background: #ef4444;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: none;
+            font-size: 8px;
+            cursor: pointer;
+            box-shadow: 0 2px 0 #991b1b;
+            transition: all 0.1s;
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        .logout-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 0 0 #991b1b;
+        }
+
+        /* 프로필 설정 모달 */
+        .profile-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        .profile-modal.hidden {
+            display: none;
+        }
+
+        .profile-container {
+            background: linear-gradient(135deg, #3d251a 0%, #2c1a13 100%);
+            border: 4px solid #fbbf24;
+            border-radius: 16px;
+            padding: 32px;
+            width: 90%;
+            max-width: 480px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+        }
+
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .profile-title {
+            font-size: 18px;
+            color: #fbbf24;
+            text-shadow: 2px 2px 0 #000;
+        }
+
+        .profile-close-btn {
+            background: #ef4444;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 2px 0 #991b1b;
+            transition: all 0.1s;
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        .profile-close-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 0 0 #991b1b;
+        }
+
+        .profile-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .profile-field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .profile-label {
+            font-size: 10px;
+            color: #fbbf24;
+            text-transform: uppercase;
+        }
+
+        .profile-nickname-input {
+            width: 100%;
+            background: rgba(0,0,0,0.5);
+            border: 2px solid #fbbf24;
+            padding: 12px;
+            border-radius: 8px;
+            color: white;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 12px;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .profile-nickname-input:focus {
+            border-color: #22c55e;
+        }
+
+        .color-picker-container {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .color-option {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            border: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+
+        .color-option.selected {
+            border-color: #fbbf24;
+            transform: scale(1.15);
+            box-shadow: 0 0 12px rgba(251, 191, 36, 0.6);
+        }
+
+        .color-option.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 24px;
+            text-shadow: 0 0 4px rgba(0,0,0,0.8);
+        }
+
+        .profile-preview {
+            background: rgba(0,0,0,0.3);
+            border: 2px solid #78350f;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .profile-preview-label {
+            font-size: 8px;
+            color: #78350f;
+            margin-bottom: 12px;
+        }
+
+        .profile-preview-nickname {
+            font-size: 16px;
+            font-weight: bold;
+            text-shadow: 2px 2px 0 #000;
+        }
+
+        .profile-save-btn {
+            background: #22c55e;
+            color: white;
+            padding: 14px 24px;
+            border-radius: 8px;
+            border: none;
+            font-size: 12px;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #166534;
+            transition: all 0.1s;
+            font-family: 'Press Start 2P', cursive;
+            margin-top: 8px;
+        }
+
+        .profile-save-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 #166534;
+        }
+
+        .edit-profile-btn {
+            background: #3b82f6;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: none;
+            font-size: 8px;
+            cursor: pointer;
+            box-shadow: 0 2px 0 #1e40af;
+            transition: all 0.1s;
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        .edit-profile-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 0 0 #1e40af;
+        }
     </style>
 </head>
 <body class="w-full h-screen flex items-center justify-center">
+
+    <!-- 로그인 모달 -->
+    <div id="authModal" class="auth-modal">
+        <div class="auth-container">
+            <h2 class="auth-title" id="authTitle">로그인</h2>
+            <div id="authError" class="auth-error hidden"></div>
+
+            <form id="authForm" class="auth-form">
+                <input type="email" id="authEmail" class="auth-input" placeholder="이메일" required>
+                <input type="password" id="authPassword" class="auth-input" placeholder="비밀번호" required>
+                <button type="submit" id="authSubmitBtn" class="auth-btn">로그인</button>
+            </form>
+
+            <div class="auth-divider">OR</div>
+
+            <button id="googleSignInBtn" class="auth-btn auth-btn-secondary">Google로 로그인</button>
+
+            <div class="auth-toggle" id="authToggle">
+                계정이 없으신가요? <span style="color: #22c55e;">회원가입</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 사용자 프로필 -->
+    <div id="userProfile" class="user-profile hidden">
+        <span class="user-email" id="userEmail"></span>
+        <button id="editProfileBtn" class="edit-profile-btn">프로필</button>
+        <button id="logoutBtn" class="logout-btn">로그아웃</button>
+    </div>
+
+    <!-- 프로필 설정 모달 -->
+    <div id="profileModal" class="profile-modal hidden">
+        <div class="profile-container">
+            <div class="profile-header">
+                <h2 class="profile-title">프로필 설정</h2>
+                <button id="profileCloseBtn" class="profile-close-btn">×</button>
+            </div>
+
+            <div class="profile-form">
+                <div class="profile-field">
+                    <label class="profile-label">닉네임</label>
+                    <input type="text" id="profileNickname" class="profile-nickname-input" placeholder="닉네임을 입력하세요" maxlength="15">
+                </div>
+
+                <div class="profile-field">
+                    <label class="profile-label">닉네임 색상</label>
+                    <div class="color-picker-container" id="colorPicker">
+                        <div class="color-option" data-color="#22c55e" style="background: #22c55e;"></div>
+                        <div class="color-option" data-color="#3b82f6" style="background: #3b82f6;"></div>
+                        <div class="color-option" data-color="#a855f7" style="background: #a855f7;"></div>
+                        <div class="color-option" data-color="#ec4899" style="background: #ec4899;"></div>
+                        <div class="color-option" data-color="#ef4444" style="background: #ef4444;"></div>
+                        <div class="color-option" data-color="#f59e0b" style="background: #f59e0b;"></div>
+                        <div class="color-option" data-color="#eab308" style="background: #eab308;"></div>
+                        <div class="color-option" data-color="#84cc16" style="background: #84cc16;"></div>
+                        <div class="color-option" data-color="#14b8a6" style="background: #14b8a6;"></div>
+                        <div class="color-option" data-color="#06b6d4" style="background: #06b6d4;"></div>
+                        <div class="color-option" data-color="#8b5cf6" style="background: #8b5cf6;"></div>
+                        <div class="color-option" data-color="#d946ef" style="background: #d946ef;"></div>
+                    </div>
+                </div>
+
+                <div class="profile-preview">
+                    <div class="profile-preview-label">미리보기</div>
+                    <div class="profile-preview-nickname" id="previewNickname">닉네임</div>
+                </div>
+
+                <button id="profileSaveBtn" class="profile-save-btn">저장</button>
+            </div>
+        </div>
+    </div>
 
     <div id="scene-container">
         <div class="interior-wall"></div>
@@ -1153,8 +1599,6 @@
             </div>
         </div>
     </div>
-
-    <button onclick="toggleUI()" class="toggle-ui-btn">👁️</button>
 
     <!-- 모드 버튼들 -->
     <div class="mode-buttons">
@@ -1199,7 +1643,6 @@
             <div class="chat-title">💬 LIVE CHAT</div>
             <button class="chat-toggle-btn" onclick="toggleChat()">−</button>
         </div>
-        <input type="text" id="chatUsername" class="chat-username-input" placeholder="Your name..." maxlength="20">
 
         <!-- 온라인 사용자 목록 -->
         <div class="online-users" id="onlineUsers">
@@ -1377,10 +1820,17 @@
         let usersRef = null;
         let myUserRef = null;
         let myUserId = null;
+        let auth = null;
+        let currentUser = null;
+        let userProfile = {
+            nickname: '',
+            color: '#22c55e'
+        };
 
         try {
             firebase.initializeApp(firebaseConfig);
             database = firebase.database();
+            auth = firebase.auth();
             chatRef = database.ref('messages');
             usersRef = database.ref('users');
             console.log('Firebase connected successfully!');
@@ -1404,6 +1854,280 @@
                     <div class="chat-message-text" style="color: #ef4444;">Firebase not configured. Please set up your Firebase project.</div>
                 </div>
             `;
+        }
+
+        // ==========================================
+        // 인증 기능
+        // ==========================================
+
+        let isLoginMode = true;
+
+        // 인증 상태 관찰
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                currentUser = user;
+                document.getElementById('authModal').classList.add('hidden');
+                document.getElementById('userProfile').classList.remove('hidden');
+
+                // 프로필 불러오기
+                await loadUserProfile();
+
+                // 사용자 온라인 상태 업데이트
+                myUserId = user.uid;
+                myUserRef = usersRef.child(user.uid);
+                myUserRef.set({
+                    username: userProfile.nickname,
+                    color: userProfile.color,
+                    lastSeen: Date.now()
+                });
+                myUserRef.onDisconnect().remove();
+
+                console.log('로그인 성공:', user.email);
+            } else {
+                currentUser = null;
+                document.getElementById('authModal').classList.remove('hidden');
+                document.getElementById('userProfile').classList.add('hidden');
+                console.log('로그아웃 상태');
+            }
+        });
+
+        // 폼 제출 처리
+        document.getElementById('authForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('authEmail').value.trim();
+            const password = document.getElementById('authPassword').value;
+            const submitBtn = document.getElementById('authSubmitBtn');
+            const errorDiv = document.getElementById('authError');
+
+            submitBtn.disabled = true;
+            errorDiv.classList.add('hidden');
+
+            try {
+                if (isLoginMode) {
+                    await auth.signInWithEmailAndPassword(email, password);
+                } else {
+                    await auth.createUserWithEmailAndPassword(email, password);
+                }
+                document.getElementById('authForm').reset();
+            } catch (error) {
+                console.error('인증 오류:', error);
+                errorDiv.classList.remove('hidden');
+
+                let errorMessage = '오류가 발생했습니다.';
+                switch (error.code) {
+                    case 'auth/email-already-in-use':
+                        errorMessage = '이미 사용 중인 이메일입니다.';
+                        break;
+                    case 'auth/weak-password':
+                        errorMessage = '비밀번호는 최소 6자 이상이어야 합니다.';
+                        break;
+                    case 'auth/user-not-found':
+                        errorMessage = '등록되지 않은 이메일입니다.';
+                        break;
+                    case 'auth/wrong-password':
+                        errorMessage = '잘못된 비밀번호입니다.';
+                        break;
+                    case 'auth/invalid-email':
+                        errorMessage = '유효하지 않은 이메일 주소입니다.';
+                        break;
+                    default:
+                        errorMessage = error.message;
+                }
+                errorDiv.textContent = errorMessage;
+            } finally {
+                submitBtn.disabled = false;
+            }
+        });
+
+        // Google 로그인
+        document.getElementById('googleSignInBtn').addEventListener('click', async () => {
+            const errorDiv = document.getElementById('authError');
+            errorDiv.classList.add('hidden');
+
+            try {
+                const provider = new firebase.auth.GoogleAuthProvider();
+                await auth.signInWithPopup(provider);
+            } catch (error) {
+                console.error('Google 로그인 오류:', error);
+                errorDiv.classList.remove('hidden');
+                errorDiv.textContent = 'Google 로그인에 실패했습니다: ' + error.message;
+            }
+        });
+
+        // 로그인/회원가입 토글
+        document.getElementById('authToggle').addEventListener('click', () => {
+            isLoginMode = !isLoginMode;
+            const title = document.getElementById('authTitle');
+            const submitBtn = document.getElementById('authSubmitBtn');
+            const toggleText = document.getElementById('authToggle');
+            const errorDiv = document.getElementById('authError');
+
+            errorDiv.classList.add('hidden');
+
+            if (isLoginMode) {
+                title.textContent = '로그인';
+                submitBtn.textContent = '로그인';
+                toggleText.innerHTML = '계정이 없으신가요? <span style="color: #22c55e;">회원가입</span>';
+            } else {
+                title.textContent = '회원가입';
+                submitBtn.textContent = '회원가입';
+                toggleText.innerHTML = '이미 계정이 있으신가요? <span style="color: #22c55e;">로그인</span>';
+            }
+        });
+
+        // 로그아웃
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            try {
+                await auth.signOut();
+                if (myUserRef) {
+                    myUserRef.remove();
+                }
+            } catch (error) {
+                console.error('로그아웃 오류:', error);
+                alert('로그아웃에 실패했습니다.');
+            }
+        });
+
+        // ==========================================
+        // 프로필 기능
+        // ==========================================
+
+        // 프로필 모달 열기
+        document.getElementById('editProfileBtn').addEventListener('click', () => {
+            document.getElementById('profileModal').classList.remove('hidden');
+            loadProfileToModal();
+        });
+
+        // 프로필 모달 닫기
+        document.getElementById('profileCloseBtn').addEventListener('click', () => {
+            document.getElementById('profileModal').classList.add('hidden');
+        });
+
+        // ESC 키로 모달 닫기
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const profileModal = document.getElementById('profileModal');
+                if (!profileModal.classList.contains('hidden')) {
+                    profileModal.classList.add('hidden');
+                }
+            }
+        });
+
+        // 모달 배경 클릭 시 닫기
+        document.getElementById('profileModal').addEventListener('click', (e) => {
+            if (e.target.id === 'profileModal') {
+                document.getElementById('profileModal').classList.add('hidden');
+            }
+        });
+
+        // 닉네임 입력 시 미리보기 업데이트
+        document.getElementById('profileNickname').addEventListener('input', (e) => {
+            const nickname = e.target.value || '닉네임';
+            document.getElementById('previewNickname').textContent = nickname;
+        });
+
+        // 색상 선택
+        document.querySelectorAll('.color-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.color-option').forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+                const color = this.getAttribute('data-color');
+                document.getElementById('previewNickname').style.color = color;
+            });
+        });
+
+        // 프로필 저장
+        document.getElementById('profileSaveBtn').addEventListener('click', async () => {
+            if (!currentUser) return;
+
+            const nickname = document.getElementById('profileNickname').value.trim();
+            if (!nickname) {
+                alert('닉네임을 입력해주세요!');
+                return;
+            }
+
+            const selectedColor = document.querySelector('.color-option.selected');
+            const color = selectedColor ? selectedColor.getAttribute('data-color') : '#22c55e';
+
+            userProfile = { nickname, color };
+
+            try {
+                // Firebase에 프로필 저장
+                await database.ref('profiles/' + currentUser.uid).set({
+                    nickname: nickname,
+                    color: color,
+                    updatedAt: Date.now()
+                });
+
+                // UI 업데이트
+                updateProfileUI();
+
+                // 온라인 사용자 목록에도 업데이트
+                if (myUserRef) {
+                    myUserRef.update({
+                        username: nickname,
+                        color: color,
+                        lastUpdate: Date.now()
+                    });
+                }
+
+                // 모달 닫기
+                document.getElementById('profileModal').classList.add('hidden');
+
+                console.log('프로필 저장 완료:', userProfile);
+            } catch (error) {
+                console.error('프로필 저장 오류:', error);
+                alert('프로필 저장에 실패했습니다.');
+            }
+        });
+
+        // Firebase에서 프로필 불러오기
+        async function loadUserProfile() {
+            if (!currentUser) return;
+
+            try {
+                const snapshot = await database.ref('profiles/' + currentUser.uid).once('value');
+                const data = snapshot.val();
+
+                if (data) {
+                    userProfile = {
+                        nickname: data.nickname || currentUser.email.split('@')[0],
+                        color: data.color || '#22c55e'
+                    };
+                } else {
+                    // 기본값 설정
+                    userProfile = {
+                        nickname: currentUser.email.split('@')[0],
+                        color: '#22c55e'
+                    };
+                }
+
+                updateProfileUI();
+            } catch (error) {
+                console.error('프로필 불러오기 오류:', error);
+            }
+        }
+
+        // 프로필 UI 업데이트
+        function updateProfileUI() {
+            const userEmailElement = document.getElementById('userEmail');
+            userEmailElement.textContent = userProfile.nickname;
+            userEmailElement.style.color = userProfile.color;
+        }
+
+        // 모달에 프로필 로드
+        function loadProfileToModal() {
+            document.getElementById('profileNickname').value = userProfile.nickname;
+            document.getElementById('previewNickname').textContent = userProfile.nickname;
+            document.getElementById('previewNickname').style.color = userProfile.color;
+
+            // 색상 선택 표시
+            document.querySelectorAll('.color-option').forEach(opt => {
+                opt.classList.remove('selected');
+                if (opt.getAttribute('data-color') === userProfile.color) {
+                    opt.classList.add('selected');
+                }
+            });
         }
 
         // ==========================================
@@ -1431,15 +2155,14 @@
         return;
     }
 
-    const username = document.getElementById('chatUsername').value.trim();
-    const messageText = document.getElementById('chatInput').value.trim();
-    const siteKey = '6LfjvhgsAAAAAK8rWKhx_oyB8ugtvnaSraArir_T';
-
-    if (!username) {
-        alert('Please enter your name!');
-        document.getElementById('chatUsername').focus();
+    // 로그인 체크
+    if (!currentUser) {
+        alert('로그인이 필요합니다!');
         return;
     }
+
+    const messageText = document.getElementById('chatInput').value.trim();
+    const siteKey = '6LfjvhgsAAAAAK8rWKhx_oyB8ugtvnaSraArir_T';
 
     if (!messageText) {
         return;
@@ -1454,11 +2177,13 @@
             // (주의: 이 방식은 봇을 완벽하게 막지는 못하고, 최소한의 방어막 역할만 합니다)
 
             const message = {
-                username: username,
+                username: userProfile.nickname,
+                color: userProfile.color,
                 text: messageText,
                 timestamp: Date.now(),
+                userId: currentUser.uid,
                 // 필요하다면 나중에 검증을 위해 토큰도 함께 저장할 수 있습니다.
-                // recaptchaToken: token 
+                // recaptchaToken: token
             };
 
             chatRef.push(message)
@@ -1493,8 +2218,10 @@
             const timeString = time.getHours().toString().padStart(2, '0') + ':' +
                                time.getMinutes().toString().padStart(2, '0');
 
+            const usernameColor = message.color || '#22c55e';
+
             messageDiv.innerHTML = `
-                <div class="chat-message-user">${escapeHtml(message.username)}</div>
+                <div class="chat-message-user" style="color: ${usernameColor};">${escapeHtml(message.username)}</div>
                 <div class="chat-message-text">${escapeHtml(message.text)}</div>
                 <div class="chat-message-time">${timeString}</div>
             `;
@@ -1524,73 +2251,17 @@
             return div.innerHTML;
         }
 
-        // 사용자 이름을 로컬 스토리지에 저장
-        window.addEventListener('DOMContentLoaded', function() {
-            const savedUsername = localStorage.getItem('digipen_chat_username');
-            if (savedUsername) {
-                document.getElementById('chatUsername').value = savedUsername;
-            }
-
-            document.getElementById('chatUsername').addEventListener('change', function() {
-                localStorage.setItem('digipen_chat_username', this.value);
-                registerUser(); // 이름 변경 시 사용자 등록
-            });
-
-            document.getElementById('chatUsername').addEventListener('blur', function() {
-                if (this.value.trim()) {
-                    localStorage.setItem('digipen_chat_username', this.value);
-                    registerUser(); // 포커스 벗어날 때도 등록
-                }
-            });
-        });
 
         // ==========================================
         // 온라인 사용자 관리
         // ==========================================
 
-        // 현재 사용자를 Firebase에 등록
-        function registerUser() {
-            console.log('registerUser called');
-            if (!usersRef) {
-                console.log('usersRef not available');
-                return;
-            }
-
-            const username = document.getElementById('chatUsername').value.trim();
-            console.log('Username:', username);
-            if (!username) {
-                console.log('No username entered');
-                return;
-            }
-
-            // 고유 ID 생성 (없으면)
-            if (!myUserId) {
-                myUserId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-                console.log('Generated user ID:', myUserId);
-            }
-
-            myUserRef = usersRef.child(myUserId);
-
-            // 연결 해제 시 자동 삭제
-            myUserRef.onDisconnect().remove();
-
-            // 초기 상태 등록
-            console.log('Calling updateMyUserStatus');
-            updateMyUserStatus();
-        }
 
         // 내 타이머 상태 업데이트
         function updateMyUserStatus() {
             console.log('updateMyUserStatus called, myUserRef:', myUserRef);
-            if (!myUserRef) {
-                console.log('No myUserRef, calling registerUser');
-                registerUser();
-                return;
-            }
-
-            const username = document.getElementById('chatUsername').value.trim();
-            if (!username) {
-                console.log('No username in updateMyUserStatus');
+            if (!myUserRef || !currentUser) {
+                console.log('No myUserRef or currentUser');
                 return;
             }
 
@@ -1599,7 +2270,8 @@
             const timeText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
 
             const userStatus = {
-                username: username,
+                username: userProfile.nickname,
+                color: userProfile.color,
                 time: timeText,
                 remainingSeconds: remainingSeconds,
                 totalSeconds: totalSeconds,
@@ -1656,10 +2328,11 @@
 
                 const isMe = user.id === myUserId;
                 const statusClass = user.status === 'running' ? 'running' : (user.status === 'paused' ? 'paused' : '');
+                const userColor = user.color || '#22c55e';
 
                 userItem.innerHTML = `
                     <div class="online-user-info">
-                        <span class="online-user-name">${escapeHtml(user.username)}${isMe ? ' (You)' : ''}</span>
+                        <span class="online-user-name" style="color: ${userColor};">${escapeHtml(user.username)}${isMe ? ' (You)' : ''}</span>
                     </div>
                     <div class="online-user-timer">
                         <span class="online-user-time">${user.time || '00:00'}</span>
