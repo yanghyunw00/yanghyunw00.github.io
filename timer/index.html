@@ -1238,7 +1238,7 @@
         .user-profile {
             position: fixed;
             top: 20px;
-            right: 20px;
+            left: 20px;
             z-index: 100;
             background: rgba(61, 37, 26, 0.9);
             border: 2px solid #fbbf24;
@@ -1971,7 +1971,10 @@
 
         // 프로필 모달 열기
         document.getElementById('editProfileBtn').addEventListener('click', () => {
-            document.getElementById('profileModal').classList.remove('hidden');
+            console.log('프로필 버튼 클릭됨');
+            const modal = document.getElementById('profileModal');
+            console.log('모달 요소:', modal);
+            modal.classList.remove('hidden');
             loadProfileToModal();
         });
 
