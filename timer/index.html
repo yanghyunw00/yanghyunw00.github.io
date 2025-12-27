@@ -1,0 +1,3763 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digipen Hangout Pomodoro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.youtube.com/iframe_api"></script>
+
+    <script src="https://www.google.com/recaptcha/api.js?render=6LfjvhgsAAAAAK8rWKhx_oyB8ugtvnaSraArir_T" async defer></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Noto+Sans+KR:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Press Start 2P', cursive;
+            margin: 0;
+            overflow: hidden;
+            background-color: #2c1a13;
+        }
+
+        #scene-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            background: #3d251a;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .interior-wall {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, #2c1a13 0%, #3d251a 100%);
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.5);
+        }
+
+        .wall-decoration {
+            position: absolute;
+            top: 2%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 40px;
+            z-index: 2;
+            white-space: nowrap;
+            animation: floatText 3s ease-in-out infinite;
+            letter-spacing: -2px;
+            text-shadow: 4px 4px 0 #000;
+        }
+
+        @media (max-height: 800px) {
+            .wall-decoration {
+                font-size: 24px;
+                top: 1%;
+            }
+        }
+        @keyframes floatText {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-5px); }
+        }
+        .letter-red { color: #ef4444; }
+        .letter-green { color: #22c55e; }
+
+        .fireplace {
+            position: absolute;
+            bottom: 5%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 240px;
+            height: 200px;
+            background: #4a2c20;
+            border: 6px solid #6b422e;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            z-index: 5;
+        }
+        .fireplace-mantel {
+            width: 260px;
+            height: 25px;
+            background: #6b422e;
+            border-bottom: 5px solid #3d251a;
+            position: absolute;
+            top: -30px;
+            left: -16px;
+        }
+        .fire-pit {
+            width: 180px;
+            height: 140px;
+            background: #000;
+            margin-top: 35px;
+            position: relative;
+            overflow: hidden;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+        .fire {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 140px;
+            height: 90px;
+            background: linear-gradient(to top, #ff0000, #ff4500, #ffeb3b);
+            border-radius: 50% 50% 20% 20%;
+            animation: flicker 0.5s infinite alternate;
+        }
+        @keyframes flicker {
+            from { transform: translateX(-50%) scale(1); opacity: 1; }
+            to { transform: translateX(-50%) scale(0.95) translateY(5px); opacity: 0.8; }
+        }
+
+        .window-frame {
+            position: absolute;
+            top: 15%;
+            left: 5%;
+            width: 320px;
+            height: 420px;
+            background: #6b422e;
+            border: 12px solid #4a2c20;
+            overflow: hidden;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5), 5px 5px 15px rgba(0,0,0,0.3);
+            z-index: 2;
+        }
+        .window-glass {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, #0f172a 0%, #1e293b 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .mountain {
+            position: absolute;
+            bottom: 0;
+            width: 0;
+            height: 0;
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            border-bottom: 300px solid #1e293b;
+            z-index: 1;
+        }
+        .mountain::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: -150px;
+            width: 0;
+            height: 0;
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            border-bottom: 120px solid rgba(255, 255, 255, 0.05); 
+        }
+        #snow-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .christmas-tree {
+            position: absolute;
+            bottom: 8%;
+            right: 10%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 10;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.6));
+        }
+        .tree-star {
+            width: 40px;
+            height: 40px;
+            background: #fbbf24;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            margin-bottom: -10px;
+            z-index: 20;
+            animation: starShine 1.5s infinite alternate;
+            box-shadow: 0 0 20px #fbbf24;
+        }
+        .tree-layer {
+            width: 0;
+            height: 0;
+            border-left: solid transparent;
+            border-right: solid transparent;
+            border-bottom: solid #15803d;
+            position: relative;
+            margin-top: -15px;
+        }
+        .tree-layer:first-of-type {
+            margin-top: 0;
+        }
+        .tree-trunk {
+            width: 30px;
+            height: 40px;
+            background: #5d3a1a;
+            margin-top: -10px;
+            box-shadow: inset 2px 0 5px rgba(0,0,0,0.5);
+        }
+        .tree-light {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            position: absolute;
+            animation: twinkle 1.2s infinite alternate;
+            box-shadow: 0 0 8px currentColor;
+        }
+        @keyframes starShine {
+            from { transform: scale(0.9); filter: brightness(1); }
+            to { transform: scale(1.1); filter: brightness(1.3); }
+        }
+        @keyframes twinkle {
+            from { opacity: 0.4; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1.1); }
+        }
+
+        #ui-container {
+            position: relative;
+            z-index: 100;
+            backdrop-filter: blur(8px);
+            background: rgba(40, 20, 10, 0.85);
+            border: 4px solid #5d3a2a;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+            max-width: 550px;
+            margin: 0 auto;
+            transform: scale(0.85);
+            transform-origin: center;
+        }
+
+        @media (min-height: 900px) {
+            #ui-container {
+                transform: scale(1);
+                max-width: 600px;
+            }
+        }
+
+        .retro-button {
+            transition: all 0.1s;
+            cursor: pointer;
+            user-select: none;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.5);
+        }
+        .retro-button:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 rgba(0,0,0,0);
+        }
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .mode-badge {
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .toggle-ui-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 110;
+            background: rgba(107, 66, 46, 0.8); 
+            color: white;
+            padding: 12px;
+            border-radius: 50%;
+            cursor: pointer;
+            backdrop-filter: blur(2px);
+            border: 2px solid rgba(255,255,255,0.4);
+            font-size: 16px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        /* 뮤트 & 집중 모드 버튼 */
+        .mode-buttons {
+            position: fixed;
+            top: 80px;
+            left: 20px;
+            z-index: 110;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .mode-btn {
+            background: rgba(107, 66, 46, 0.9);
+            color: white;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            backdrop-filter: blur(2px);
+            border: 2px solid rgba(255,255,255,0.4);
+            font-size: 11px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .mode-btn:hover {
+            background: rgba(107, 66, 46, 1);
+            transform: translateY(-2px);
+        }
+
+        .mode-btn.active {
+            background: #22c55e;
+            border-color: #166534;
+        }
+
+        .mode-btn.muted {
+            background: #ef4444;
+            border-color: #991b1b;
+        }
+        
+
+        /* 집중 모드 스타일 */
+        body.focus-mode #ui-container,
+        body.focus-mode .window-frame,
+        body.focus-mode .wall-decoration,
+        body.focus-mode .fireplace,
+        body.focus-mode .christmas-tree {
+            display: none !important;
+        }
+
+        body.focus-mode .toggle-ui-btn {
+            display: none;
+        }
+
+        body.focus-mode {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .focus-timer-display {
+            display: none;
+            text-align: center;
+            z-index: 200;
+        }
+
+        body.focus-mode .focus-timer-display {
+            display: block;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .focus-timer-display .timer {
+            font-size: 120px;
+            color: #fbbf24;
+            text-shadow: 4px 4px 0 #78350f, 0 0 40px rgba(251, 191, 36, 0.5);
+            margin-bottom: 30px;
+            letter-spacing: 10px;
+        }
+
+        .focus-timer-display .status {
+            font-size: 24px;
+            color: #fbbf24;
+            text-shadow: 2px 2px 0 #000;
+            margin-bottom: 40px;
+            letter-spacing: 3px;
+        }
+
+        .focus-timer-display .controls {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .focus-timer-display .focus-btn {
+            background: #fbbf24;
+            color: #2c1a13;
+            padding: 15px 40px;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 6px 0 #78350f;
+            transition: all 0.1s;
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        .focus-timer-display .focus-btn:active {
+            transform: translateY(6px);
+            box-shadow: 0 0 0 #78350f;
+        }
+
+        .focus-timer-display .focus-btn.exit {
+            background: #ef4444;
+            box-shadow: 0 6px 0 #991b1b;
+        }
+
+        /* 채팅 컨테이너 스타일 */
+        .chat-container {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 402px;
+            height: 517px;
+            z-index: 110;
+            background: rgba(40, 20, 10, 0.95);
+            border: 4px solid #5d3a2a;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            backdrop-filter: blur(8px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-container.minimized {
+            height: 60px;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #fbbf24;
+            flex-shrink: 0;
+        }
+
+        .chat-title {
+            font-size: 12px;
+            color: #fbbf24;
+            text-shadow: 2px 2px 0 #000;
+            letter-spacing: 1px;
+        }
+
+        .chat-toggle-btn {
+            background: #3b82f6;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 0 #1e40af;
+            transition: all 0.1s;
+        }
+
+        .chat-toggle-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 0 0 #1e40af;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding-right: 4px;
+        }
+
+        .chat-message {
+            background: rgba(0,0,0,0.3);
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: 2px solid #78350f;
+            animation: messageSlideIn 0.3s ease-out;
+            word-wrap: break-word;
+        }
+
+        @keyframes messageSlideIn {
+            from {
+                transform: translateX(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .chat-message-user {
+            font-size: 11px;
+            color: #22c55e;
+            font-weight: bold;
+            margin-bottom: 6px;
+            font-family: 'Press Start 2P', cursive;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .chat-message-text {
+            font-size: 13px;
+            color: #fbbf24;
+            line-height: 1.5;
+            font-family: 'Noto Sans KR', 'Press Start 2P', sans-serif;
+        }
+
+        .chat-message-time {
+            font-size: 10px;
+            color: #78350f;
+            margin-top: 4px;
+        }
+
+        .chat-input-area {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .chat-username-input {
+            width: 100%;
+            background: rgba(0,0,0,0.5);
+            border: 2px solid #fbbf24;
+            padding: 8px;
+            border-radius: 6px;
+            color: white;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 9px;
+            outline: none;
+            margin-bottom: 8px;
+        }
+
+        .chat-username-input::placeholder {
+            color: #78350f;
+        }
+
+        .chat-input {
+            flex: 1;
+            background: rgba(0,0,0,0.5);
+            border: 2px solid #fbbf24;
+            padding: 10px;
+            border-radius: 6px;
+            color: white;
+            font-family: 'Noto Sans KR', 'Press Start 2P', sans-serif;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .chat-input::placeholder {
+            color: #78350f;
+        }
+
+        .chat-send-btn {
+            background: #22c55e;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: none;
+            font-size: 10px;
+            cursor: pointer;
+            box-shadow: 0 3px 0 #166534;
+            transition: all 0.1s;
+            font-family: 'Press Start 2P', cursive;
+            white-space: nowrap;
+        }
+
+        .chat-send-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 0 0 #166534;
+        }
+
+        .chat-send-btn:disabled {
+            background: #666;
+            box-shadow: 0 3px 0 #333;
+            cursor: not-allowed;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.3);
+            border-radius: 4px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: #78350f;
+            border-radius: 4px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb:hover {
+            background: #fbbf24;
+        }
+
+        body.focus-mode .chat-container {
+            display: none !important;
+        }
+
+        /* 순위표 스타일 */
+        .leaderboard-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 320px;
+            max-height: 500px;
+            z-index: 110;
+            background: rgba(40, 20, 10, 0.95);
+            border: 4px solid #fbbf24;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            backdrop-filter: blur(8px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .leaderboard-container.minimized {
+            max-height: 60px;
+            overflow: hidden;
+        }
+
+        .leaderboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #fbbf24;
+        }
+
+        .leaderboard-title {
+            font-size: 12px;
+            color: #fbbf24;
+            font-weight: bold;
+            text-shadow: 2px 2px 0 #000;
+        }
+
+        .leaderboard-toggle-btn {
+            background: #3b82f6;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 0 #1e40af;
+            transition: all 0.1s;
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        .leaderboard-toggle-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 0 0 #1e40af;
+        }
+
+        .leaderboard-refresh-btn {
+            background: #22c55e;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 0 #166534;
+            transition: all 0.2s;
+        }
+
+        .leaderboard-refresh-btn:hover {
+            background: #16a34a;
+        }
+
+        .leaderboard-refresh-btn:active {
+            transform: translateY(3px) rotate(180deg);
+            box-shadow: 0 0 0 #166534;
+        }
+
+        .leaderboard-refresh-btn.refreshing {
+            animation: spin 0.5s ease-in-out;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .leaderboard-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .leaderboard-tab {
+            flex: 1;
+            background: rgba(0,0,0,0.3);
+            border: 2px solid #78350f;
+            color: #fbbf24;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 9px;
+            cursor: pointer;
+            font-family: 'Press Start 2P', cursive;
+            transition: all 0.2s;
+        }
+
+        .leaderboard-tab:hover {
+            background: rgba(251, 191, 36, 0.2);
+        }
+
+        .leaderboard-tab.active {
+            background: #fbbf24;
+            color: #2c1a13;
+            border-color: #fbbf24;
+            box-shadow: 0 2px 0 #78350f;
+        }
+
+        .leaderboard-list {
+            max-height: 350px;
+            overflow-y: auto;
+            padding: 4px;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            margin-bottom: 6px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+            border: 2px solid #78350f;
+            animation: leaderboardFadeIn 0.3s ease-out;
+        }
+
+        @keyframes leaderboardFadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .leaderboard-item.rank-1 {
+            border-color: #fbbf24;
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(0,0,0,0.3) 100%);
+        }
+
+        .leaderboard-item.rank-2 {
+            border-color: #c0c0c0;
+            background: linear-gradient(135deg, rgba(192, 192, 192, 0.2) 0%, rgba(0,0,0,0.3) 100%);
+        }
+
+        .leaderboard-item.rank-3 {
+            border-color: #cd7f32;
+            background: linear-gradient(135deg, rgba(205, 127, 50, 0.2) 0%, rgba(0,0,0,0.3) 100%);
+        }
+
+        .leaderboard-rank {
+            font-size: 12px;
+            font-weight: bold;
+            color: #fbbf24;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .leaderboard-crown {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
+        }
+
+        .leaderboard-user-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .leaderboard-username {
+            font-size: 10px;
+            color: #22c55e;
+            font-weight: bold;
+            font-family: 'Press Start 2P', cursive;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .leaderboard-time {
+            font-size: 11px;
+            color: #fbbf24;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        .leaderboard-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .leaderboard-list::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.3);
+            border-radius: 3px;
+        }
+
+        .leaderboard-list::-webkit-scrollbar-thumb {
+            background: #fbbf24;
+            border-radius: 3px;
+        }
+
+        .leaderboard-list::-webkit-scrollbar-thumb:hover {
+            background: #f59e0b;
+        }
+
+        /* 채팅창 왕관 스타일 */
+        .chat-crown {
+            width: 14px;
+            height: 14px;
+            margin-left: 4px;
+            vertical-align: middle;
+        }
+
+        /* 온라인 사용자 목록 스타일 */
+        /* 온라인 사용자 컨테이너 (별도 팝업) */
+        .online-container {
+            position: fixed;
+            top: 540px;
+            right: 20px;
+            width: 280px;
+            max-height: 400px;
+            z-index: 110;
+            background: rgba(40, 20, 10, 0.95);
+            border: 4px solid #5d3a2a;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            backdrop-filter: blur(8px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .online-container.minimized {
+            max-height: 60px;
+            overflow: hidden;
+        }
+
+        .online-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #fbbf24;
+        }
+
+        .online-title {
+            font-size: 12px;
+            color: #fbbf24;
+            font-weight: bold;
+            text-shadow: 2px 2px 0 #000;
+        }
+
+        .online-toggle-btn {
+            background: #3b82f6;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 0 #1e40af;
+            transition: all 0.1s;
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        .online-toggle-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 0 0 #1e40af;
+        }
+
+        .online-users-list {
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 4px;
+        }
+
+        .online-user-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 8px;
+            margin-bottom: 4px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 6px;
+            border: 1px solid #78350f;
+            animation: userFadeIn 0.3s ease-out;
+        }
+
+        @keyframes userFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .online-user-info {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex: 1;
+        }
+
+        .online-user-name {
+            font-size: 9px;
+            color: #22c55e;
+            font-weight: bold;
+            max-width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        .online-user-timer {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 2px;
+        }
+
+        .online-user-time {
+            font-size: 10px;
+            color: #fbbf24;
+            font-weight: bold;
+        }
+
+        .online-user-status {
+            font-size: 6px;
+            color: #78350f;
+            text-transform: uppercase;
+        }
+
+        .online-user-status.running {
+            color: #22c55e;
+        }
+
+        .online-user-status.paused {
+            color: #ef4444;
+        }
+
+        .online-users-list::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .online-users-list::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.3);
+            border-radius: 2px;
+        }
+
+        .online-users-list::-webkit-scrollbar-thumb {
+            background: #78350f;
+            border-radius: 2px;
+        }
+
+        .online-users-list::-webkit-scrollbar-thumb:hover {
+            background: #fbbf24;
+        }
+
+        /* YouTube 오디오 플레이어 스타일 */
+        .yt-audio-controls {
+            background: rgba(0,0,0,0.3);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(251, 191, 36, 0.3);
+        }
+        
+        .yt-video-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            padding: 6px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 6px;
+        }
+        
+        .yt-video-toggle-btn {
+            background: #ef4444;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 8px;
+            cursor: pointer;
+            border: 2px solid #991b1b;
+            transition: all 0.2s;
+        }
+        
+        .yt-video-toggle-btn:hover {
+            background: #dc2626;
+        }
+        
+        .yt-video-toggle-btn.active {
+            background: #22c55e;
+            border-color: #166534;
+        }
+        
+        .yt-video-toggle-label {
+            font-size: 8px;
+            color: #fbbf24;
+        }
+        
+        .yt-progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(251, 191, 36, 0.2);
+            border-radius: 2px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .yt-progress-fill {
+            height: 100%;
+            background: #fbbf24;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        .yt-time-display {
+            font-size: 9px;
+            color: #fbbf24;
+            letter-spacing: 1px;
+        }
+        
+        .yt-video-container {
+            width: 100%;
+            margin-top: 8px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid #fbbf24;
+            display: none;
+        }
+        
+        .yt-video-container.visible {
+            display: block;
+        }
+        
+        .yt-video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+        }
+        
+        .yt-video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* 로그인 모달 스타일 */
+        .auth-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .auth-modal.hidden {
+            display: none;
+        }
+
+        .auth-container {
+            background: linear-gradient(135deg, #3d251a 0%, #2c1a13 100%);
+            border: 4px solid #fbbf24;
+            border-radius: 16px;
+            padding: 32px;
+            width: 90%;
+            max-width: 420px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+        }
+
+        .auth-title {
+            font-size: 20px;
+            color: #fbbf24;
+            text-align: center;
+            margin-bottom: 24px;
+            text-shadow: 2px 2px 0 #000;
+        }
+
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .auth-input {
+            width: 100%;
+            background: rgba(0,0,0,0.5);
+            border: 2px solid #fbbf24;
+            padding: 12px;
+            border-radius: 8px;
+            color: white;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 10px;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .auth-input::placeholder {
+            color: #78350f;
+        }
+
+        .auth-input:focus {
+            border-color: #22c55e;
+        }
+
+        .auth-btn {
+            background: #22c55e;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            font-size: 12px;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #166534;
+            transition: all 0.1s;
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        .auth-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 #166534;
+        }
+
+        .auth-btn:disabled {
+            background: #666;
+            box-shadow: 0 4px 0 #333;
+            cursor: not-allowed;
+        }
+
+        .auth-btn-secondary {
+            background: #3b82f6;
+            box-shadow: 0 4px 0 #1e40af;
+        }
+
+        .auth-btn-secondary:active {
+            box-shadow: 0 0 0 #1e40af;
+        }
+
+        .auth-divider {
+            text-align: center;
+            color: #78350f;
+            font-size: 10px;
+            margin: 16px 0;
+            position: relative;
+        }
+
+        .auth-divider::before,
+        .auth-divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 40%;
+            height: 2px;
+            background: #78350f;
+        }
+
+        .auth-divider::before {
+            left: 0;
+        }
+
+        .auth-divider::after {
+            right: 0;
+        }
+
+        .auth-toggle {
+            text-align: center;
+            color: #fbbf24;
+            font-size: 9px;
+            margin-top: 16px;
+            cursor: pointer;
+        }
+
+        .auth-toggle:hover {
+            color: #22c55e;
+        }
+
+        .auth-error {
+            background: rgba(239, 68, 68, 0.2);
+            border: 2px solid #ef4444;
+            color: #ef4444;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 8px;
+            text-align: center;
+        }
+
+        .user-profile {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            background: rgba(61, 37, 26, 0.9);
+            border: 2px solid #fbbf24;
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-profile.hidden {
+            display: none;
+        }
+
+        .user-email {
+            color: #22c55e;
+            font-size: 9px;
+        }
+
+        .logout-btn {
+            background: #ef4444;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: none;
+            font-size: 8px;
+            cursor: pointer;
+            box-shadow: 0 2px 0 #991b1b;
+            transition: all 0.1s;
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        .logout-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 0 0 #991b1b;
+        }
+
+        /* 프로필 설정 모달 */
+        .profile-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        .profile-modal.hidden {
+            display: none;
+        }
+
+        .profile-container {
+            background: linear-gradient(135deg, #3d251a 0%, #2c1a13 100%);
+            border: 4px solid #fbbf24;
+            border-radius: 16px;
+            padding: 32px;
+            width: 90%;
+            max-width: 480px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+        }
+
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .profile-title {
+            font-size: 18px;
+            color: #fbbf24;
+            text-shadow: 2px 2px 0 #000;
+        }
+
+        .profile-close-btn {
+            background: #ef4444;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 2px 0 #991b1b;
+            transition: all 0.1s;
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        .profile-close-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 0 0 #991b1b;
+        }
+
+        .profile-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .profile-field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .profile-label {
+            font-size: 10px;
+            color: #fbbf24;
+            text-transform: uppercase;
+        }
+
+        .profile-nickname-input {
+            width: 100%;
+            background: rgba(0,0,0,0.5);
+            border: 2px solid #fbbf24;
+            padding: 12px;
+            border-radius: 8px;
+            color: white;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 12px;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .profile-nickname-input:focus {
+            border-color: #22c55e;
+        }
+
+        .color-picker-container {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .color-option {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            border: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+
+        .color-option.selected {
+            border-color: #fbbf24;
+            transform: scale(1.15);
+            box-shadow: 0 0 12px rgba(251, 191, 36, 0.6);
+        }
+
+        .color-option.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 24px;
+            text-shadow: 0 0 4px rgba(0,0,0,0.8);
+        }
+
+        .profile-preview {
+            background: rgba(0,0,0,0.3);
+            border: 2px solid #78350f;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .profile-preview-label {
+            font-size: 8px;
+            color: #78350f;
+            margin-bottom: 12px;
+        }
+
+        .profile-preview-nickname {
+            font-size: 16px;
+            font-weight: bold;
+            text-shadow: 2px 2px 0 #000;
+        }
+
+        .profile-save-btn {
+            background: #22c55e;
+            color: white;
+            padding: 14px 24px;
+            border-radius: 8px;
+            border: none;
+            font-size: 12px;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #166534;
+            transition: all 0.1s;
+            font-family: 'Press Start 2P', cursive;
+            margin-top: 8px;
+        }
+
+        .profile-save-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 #166534;
+        }
+
+        .edit-profile-btn {
+            background: #3b82f6;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: none;
+            font-size: 8px;
+            cursor: pointer;
+            box-shadow: 0 2px 0 #1e40af;
+            transition: all 0.1s;
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        .edit-profile-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 0 0 #1e40af;
+        }
+    </style>
+</head>
+<body class="w-full h-screen flex items-center justify-center">
+
+    <!-- 로그인 모달 -->
+    <div id="authModal" class="auth-modal">
+        <div class="auth-container">
+            <h2 class="auth-title" id="authTitle">로그인</h2>
+            <div id="authError" class="auth-error hidden"></div>
+
+            <form id="authForm" class="auth-form">
+                <input type="email" id="authEmail" class="auth-input" placeholder="이메일" required>
+                <input type="password" id="authPassword" class="auth-input" placeholder="비밀번호" required>
+                <button type="submit" id="authSubmitBtn" class="auth-btn">로그인</button>
+            </form>
+
+            <div class="auth-divider">OR</div>
+
+            <button id="googleSignInBtn" class="auth-btn auth-btn-secondary">Google로 로그인</button>
+
+            <div class="auth-toggle" id="authToggle">
+                계정이 없으신가요? <span style="color: #22c55e;">회원가입</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 사용자 프로필 -->
+    <div id="userProfile" class="user-profile hidden">
+        <span class="user-email" id="userEmail"></span>
+        <button id="editProfileBtn" class="edit-profile-btn">프로필</button>
+        <button id="logoutBtn" class="logout-btn">로그아웃</button>
+    </div>
+
+    <!-- 프로필 설정 모달 -->
+    <div id="profileModal" class="profile-modal hidden">
+        <div class="profile-container">
+            <div class="profile-header">
+                <h2 class="profile-title">프로필 설정</h2>
+                <button id="profileCloseBtn" class="profile-close-btn">×</button>
+            </div>
+
+            <div class="profile-form">
+                <div class="profile-field">
+                    <label class="profile-label">닉네임</label>
+                    <input type="text" id="profileNickname" class="profile-nickname-input" placeholder="닉네임을 입력하세요" maxlength="15">
+                </div>
+
+                <div class="profile-field">
+                    <label class="profile-label">닉네임 색상</label>
+                    <div class="color-picker-container" id="colorPicker">
+                        <div class="color-option" data-color="#22c55e" style="background: #22c55e;"></div>
+                        <div class="color-option" data-color="#3b82f6" style="background: #3b82f6;"></div>
+                        <div class="color-option" data-color="#a855f7" style="background: #a855f7;"></div>
+                        <div class="color-option" data-color="#ec4899" style="background: #ec4899;"></div>
+                        <div class="color-option" data-color="#ef4444" style="background: #ef4444;"></div>
+                        <div class="color-option" data-color="#f59e0b" style="background: #f59e0b;"></div>
+                        <div class="color-option" data-color="#eab308" style="background: #eab308;"></div>
+                        <div class="color-option" data-color="#84cc16" style="background: #84cc16;"></div>
+                        <div class="color-option" data-color="#14b8a6" style="background: #14b8a6;"></div>
+                        <div class="color-option" data-color="#06b6d4" style="background: #06b6d4;"></div>
+                        <div class="color-option" data-color="#8b5cf6" style="background: #8b5cf6;"></div>
+                        <div class="color-option" data-color="#d946ef" style="background: #d946ef;"></div>
+                    </div>
+                </div>
+
+                <div class="profile-preview">
+                    <div class="profile-preview-label">미리보기</div>
+                    <div class="profile-preview-nickname" id="previewNickname">닉네임</div>
+                </div>
+
+                <button id="profileSaveBtn" class="profile-save-btn">저장</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="scene-container">
+        <div class="interior-wall"></div>
+        
+        <div class="wall-decoration">
+            <span class="letter-red">D</span><span class="letter-green">i</span><span class="letter-red">g</span><span class="letter-green">i</span><span class="letter-red">p</span><span class="letter-green">e</span><span class="letter-red">n</span>
+            &nbsp;
+            <span class="letter-green">H</span><span class="letter-red">a</span><span class="letter-green">n</span><span class="letter-red">g</span><span class="letter-green">o</span><span class="letter-red">u</span><span class="letter-green">t</span>
+        </div>
+
+        <div class="window-frame">
+            <div class="window-glass">
+                <div class="mountain" style="left: -50px; border-bottom-color: #0f172a; transform: scale(0.8);"></div>
+                <div class="mountain" style="left: 80px; bottom: -50px; border-width: 0 200px 400px 200px; border-bottom-color: #1e293b;"></div>
+                <div class="mountain" style="right: -80px; bottom: -20px; border-width: 0 250px 350px 250px; border-bottom-color: #172554; transform: scale(0.9);"></div>
+                <canvas id="snow-canvas"></canvas>
+            </div>
+        </div>
+
+        <div class="fireplace">
+            <div class="fireplace-mantel"></div>
+            <div class="fire-pit">
+                <div class="fire"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 모드 버튼들 -->
+    <div class="mode-buttons">
+        <button id="muteBtn" class="mode-btn" onclick="toggleMute()">
+            <span id="muteIcon">🔊</span>
+            <span id="muteText">SOUND</span>
+        </button>
+        <button id="focusBtn" class="mode-btn" onclick="toggleFocusMode()">
+            🎯 FOCUS
+        </button>
+    </div>
+
+    <!-- 집중 모드 화면 -->
+    <div class="focus-timer-display">
+        <div class="timer" id="focusTimer">00:00</div>
+        <div class="status" id="focusStatus">READY</div>
+        <div class="controls">
+            <button class="focus-btn" onclick="startTimer()">START</button>
+            <button class="focus-btn" onclick="stopTimer()">PAUSE</button>
+            <button class="focus-btn" onclick="resetTimer()">RESET</button>
+            <button class="focus-btn exit" onclick="toggleFocusMode()">EXIT</button>
+        </div>
+    </div>
+
+    <!-- 투두 리스트 -->
+    <!-- 순위표 -->
+    <div class="leaderboard-container" id="leaderboardContainer">
+        <div class="leaderboard-header">
+            <div class="leaderboard-title">🏆 LEADERBOARD</div>
+            <div style="display: flex; gap: 8px;">
+                <button class="leaderboard-refresh-btn" onclick="refreshLeaderboard()" title="새로고침">🔄</button>
+                <button class="leaderboard-toggle-btn" onclick="toggleLeaderboard()">−</button>
+            </div>
+        </div>
+
+        <div class="leaderboard-tabs">
+            <button class="leaderboard-tab active" onclick="switchLeaderboard('daily')">일간</button>
+            <button class="leaderboard-tab" onclick="switchLeaderboard('weekly')">주간</button>
+            <button class="leaderboard-tab" onclick="switchLeaderboard('monthly')">월간</button>
+        </div>
+
+        <div class="leaderboard-list" id="leaderboardList">
+            <!-- 동적으로 추가됨 -->
+        </div>
+    </div>
+
+    <!-- 온라인 사용자 목록 (별도 팝업) -->
+    <div class="online-container" id="onlineContainer">
+        <div class="online-header">
+            <div class="online-title">👥 ONLINE (<span id="onlineCount">0</span>)</div>
+            <button class="online-toggle-btn" onclick="toggleOnlineList()">−</button>
+        </div>
+        <div class="online-users-list" id="onlineUsersList">
+            <!-- 동적으로 추가됨 -->
+        </div>
+    </div>
+
+    <!-- 실시간 채팅 -->
+    <div class="chat-container" id="chatContainer">
+        <div class="chat-header">
+            <div class="chat-title">💬 LIVE CHAT</div>
+            <button class="chat-toggle-btn" onclick="toggleChat()">−</button>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+            <div class="chat-message">
+                <div class="chat-message-user">System</div>
+                <div class="chat-message-text">Welcome to Digipen Hangout! 🎮</div>
+            </div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="chatInput" class="chat-input" placeholder="Type message..." maxlength="200" onkeypress="handleChatKeyPress(event)">
+            <button class="chat-send-btn" onclick="sendMessage()">SEND</button>
+        </div>
+    </div>
+
+    <div id="ui-container" class="p-6 md:p-8 rounded-xl w-[95%] sm:w-[85%] text-white transition-opacity duration-500">
+        
+        <div class="flex justify-between items-end mb-6 border-b-2 border-amber-900/50 pb-4">
+            <div>
+                <div class="flex items-center gap-2 mb-2">
+                    <div id="recDot" class="w-3 h-3 bg-red-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.6)]"></div>
+                    <span id="modeDisplay" class="text-xs text-amber-300 tracking-wider">MANUAL MODE</span>
+                </div>
+                <div id="timerDisplay" class="text-5xl md:text-7xl text-amber-400 font-bold tracking-widest drop-shadow-[0_0_15px_rgba(251,191,36,0.4)]" style="text-shadow: 2px 2px 0px #78350f;">00:00</div>
+            </div>
+            <div class="text-right">
+                <div id="statusText" class="text-xs md:text-sm text-amber-200 mb-2 tracking-widest">READY</div>
+                <div class="w-32 h-4 bg-amber-950 rounded border-2 border-amber-900 overflow-hidden">
+                    <div id="progressBar" class="h-full bg-amber-500 w-0 transition-all duration-1000"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-amber-950/60 p-4 rounded-lg mb-6 border border-amber-900/50 shadow-inner">
+            <div class="flex justify-between items-center mb-3">
+                <span class="text-xs text-amber-200">🎧 BGM DECK</span>
+                <div class="flex gap-2">
+                    <button onclick="toggleAudioMode('file')" class="text-[10px] bg-amber-800 px-3 py-1.5 rounded hover:bg-amber-700 transition-colors border-b-2 border-amber-950">MP3</button>
+                    <button onclick="toggleAudioMode('youtube')" class="text-[10px] bg-red-900 px-3 py-1.5 rounded hover:bg-red-800 transition-colors border-b-2 border-red-950">YOUTUBE</button>
+                </div>
+            </div>
+
+            <div id="filePanel" class="block">
+                <input type="file" id="audioFile" accept="audio/*" class="hidden" onchange="handleFileSelect(event)">
+                <div class="flex items-center gap-2">
+                    <button onclick="document.getElementById('audioFile').click()" class="retro-button bg-amber-800 text-[10px] px-4 py-2 rounded text-white border-b-4 border-amber-950 hover:bg-amber-700">📂 LOAD</button>
+                    <div class="flex-1 overflow-hidden bg-black/30 p-2 rounded border border-amber-900/30">
+                        <div id="fileNameDisplay" class="text-[10px] text-amber-300 truncate">NO CASSETTE LOADED</div>
+                    </div>
+                    <button onclick="togglePlayMusic()" id="musicPlayBtn" class="retro-button w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-xs border-b-4 border-amber-800 hover:bg-amber-500 shadow-lg">▶</button>
+                </div>
+                <audio id="bgmPlayer" loop class="hidden"></audio>
+            </div>
+
+            <div id="youtubePanel" class="hidden">
+                <div class="flex gap-2 mb-3">
+                    <input type="text" id="ytUrl" placeholder="Paste Youtube URL..." class="flex-1 bg-amber-950/50 text-white text-[10px] p-2 border border-amber-800 rounded focus:border-amber-500 outline-none transition-colors">
+                    <button onclick="loadYoutube()" class="retro-button bg-red-700 text-white text-[10px] px-3 py-2 rounded border-b-4 border-red-900 hover:bg-red-600">LOAD</button>
+                </div>
+                
+                <!-- YouTube 오디오 컨트롤 -->
+                <div id="ytAudioControls" class="yt-audio-controls hidden">
+                    <!-- 비디오 표시 토글 -->
+                    <div class="yt-video-toggle">
+                        <button id="ytVideoToggleBtn" onclick="toggleYoutubeVideo()" class="yt-video-toggle-btn">
+                            📺 VIDEO OFF
+                        </button>
+                        <span class="yt-video-toggle-label">Toggle video display</span>
+                    </div>
+                    
+                    <div class="flex items-center gap-3 mb-2">
+                        <button id="ytPlayBtn" onclick="toggleYoutubePlay()" class="retro-button w-10 h-10 bg-red-600 rounded-full flex items-center justify-center text-xs border-b-4 border-red-800 hover:bg-red-500 shadow-lg">▶</button>
+                        <div class="flex-1">
+                            <div class="yt-progress-bar" id="ytProgressBar" onclick="seekYoutube(event)">
+                                <div class="yt-progress-fill" id="ytProgressFill"></div>
+                            </div>
+                        </div>
+                        <div class="yt-time-display" id="ytTimeDisplay">0:00 / 0:00</div>
+                    </div>
+                    <div class="text-[9px] text-amber-300 truncate" id="ytVideoTitle">YouTube Audio Player</div>
+                    
+                    <!-- 비디오 표시 영역 -->
+                    <div id="ytVideoContainer" class="yt-video-container">
+                        <div class="yt-video-wrapper">
+                            <div id="ytPlayerVisible"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 숨겨진 YouTube iframe (오디오 전용) -->
+                <div id="ytPlayerContainer" style="position: absolute; left: -9999px; width: 1px; height: 1px;">
+                    <div id="ytPlayer"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-4 gap-3 mb-6">
+            <button onclick="setPreset(5)" class="retro-button bg-yellow-600 text-white text-[10px] py-3 rounded border-b-4 border-yellow-800 hover:bg-yellow-500 hover:translate-y-[1px]">5M</button>
+            <button onclick="setPreset(10)" class="retro-button bg-orange-600 text-white text-[10px] py-3 rounded border-b-4 border-orange-800 hover:bg-orange-500 hover:translate-y-[1px]">10M</button>
+            <button onclick="setPreset(25)" class="retro-button bg-blue-600 text-white text-[10px] py-3 rounded border-b-4 border-blue-800 hover:bg-blue-500 hover:translate-y-[1px]">25M</button>
+            <button onclick="setPreset(50)" class="retro-button bg-indigo-600 text-white text-[10px] py-3 rounded border-b-4 border-indigo-800 hover:bg-indigo-500 hover:translate-y-[1px]">50M</button>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 mb-6">
+            <button onclick="startPomodoroSequence(25, 5)" class="retro-button bg-purple-600 text-white text-[10px] py-3 rounded border-b-4 border-purple-800 relative overflow-hidden group hover:bg-purple-500">
+                <span class="relative z-10 flex items-center justify-center gap-1">🍅 25/5 POMO</span>
+                <div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity"></div>
+            </button>
+            <button onclick="startPomodoroSequence(50, 10)" class="retro-button bg-teal-600 text-white text-[10px] py-3 rounded border-b-4 border-teal-800 relative overflow-hidden group hover:bg-teal-500">
+                <span class="relative z-10 flex items-center justify-center gap-1">🧠 50/10 POMO</span>
+                <div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity"></div>
+            </button>
+        </div>
+
+        <div class="bg-amber-950/40 p-3 rounded border border-amber-900/30 mb-4">
+            <div class="flex items-center gap-2 mb-2">
+                <span class="text-[10px] text-amber-200">MY POMO</span>
+                <span class="text-[8px] text-amber-600">work/break</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <input type="number" id="presetWork" placeholder="25" class="w-14 bg-transparent border-b-2 border-amber-700 text-center text-sm outline-none text-white focus:border-amber-400 transition-colors">
+                <span class="text-amber-500">/</span>
+                <input type="number" id="presetBreak" placeholder="5" class="w-14 bg-transparent border-b-2 border-amber-700 text-center text-sm outline-none text-white focus:border-amber-400 transition-colors">
+                <button onclick="saveCustomPreset()" class="retro-button ml-auto bg-green-600 text-white text-[10px] px-4 py-1.5 rounded border-b-4 border-green-800 hover:bg-green-500">💾 SAVE</button>
+            </div>
+        </div>
+
+        <!-- 저장된 프리셋들 -->
+        <div id="savedPresets" class="grid grid-cols-3 gap-2 mb-6"></div>
+
+        <div class="flex items-center gap-3 mb-6 bg-amber-950/40 p-3 rounded border border-amber-900/30">
+            <span class="text-[10px] text-amber-200">CUSTOM</span>
+            <input type="number" id="inputMin" placeholder="00" class="w-12 bg-transparent border-b-2 border-amber-700 text-center text-sm outline-none text-white focus:border-amber-400 transition-colors">
+            <span class="text-sm text-amber-500">:</span>
+            <input type="number" id="inputSec" placeholder="00" class="w-12 bg-transparent border-b-2 border-amber-700 text-center text-sm outline-none text-white focus:border-amber-400 transition-colors">
+            <button onclick="setCustom()" class="retro-button ml-auto bg-blue-600 text-white text-[10px] px-4 py-1.5 rounded border-b-4 border-blue-800 hover:bg-blue-500">SET</button>
+        </div>
+
+        <div class="flex gap-3">
+            <button id="startBtn" onclick="startTimer()" class="retro-button flex-1 bg-amber-600 border-b-4 border-amber-800 text-white py-4 rounded text-sm hover:bg-amber-500 font-bold shadow-lg">START</button>
+            <button id="stopBtn" onclick="stopTimer()" class="retro-button flex-1 bg-red-600 border-b-4 border-red-800 text-white py-4 rounded text-sm hover:bg-red-500 hidden font-bold shadow-lg">STOP</button>
+            <button onclick="resetTimer()" class="retro-button w-20 bg-amber-800 border-b-4 border-amber-950 text-white py-4 rounded text-sm hover:bg-amber-700 font-bold shadow-lg">R</button>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // Firebase 설정 및 초기화
+        // ==========================================
+
+        // 여기에 Firebase 설정을 입력하세요
+        // Firebase Console에서 프로젝트를 만들고 아래 설정을 복사해서 붙여넣으세요
+        const firebaseConfig = {
+  apiKey: "AIzaSyBa2FDJ0iNsD67G1LvjFxMWN8bzJveQ6yI",
+  authDomain: "mytimer-4add6.firebaseapp.com",
+  databaseURL: "https://mytimer-4add6-default-rtdb.firebaseio.com",
+  projectId: "mytimer-4add6",
+  storageBucket: "mytimer-4add6.firebasestorage.app",
+  messagingSenderId: "515788166314",
+  appId: "1:515788166314:web:d79ed7df9924283e76acd3",
+  measurementId: "G-WXR0K507LE"
+};
+
+        // Firebase 초기화
+        let database = null;
+        let chatRef = null;
+        let usersRef = null;
+        let myUserRef = null;
+        let myUserId = null;
+        let auth = null;
+        let currentUser = null;
+        let userProfile = {
+            nickname: '',
+            color: '#22c55e'
+        };
+
+        try {
+            firebase.initializeApp(firebaseConfig);
+            database = firebase.database();
+            auth = firebase.auth();
+            chatRef = database.ref('messages');
+            usersRef = database.ref('users');
+            console.log('Firebase connected successfully!');
+
+            // 실시간 메시지 리스너 (최근 100개만)
+            chatRef.limitToLast(100).on('child_added', function(snapshot) {
+                const message = snapshot.val();
+                displayMessage(message, false);
+            });
+
+            // 온라인 사용자 리스너
+            usersRef.on('value', function(snapshot) {
+                updateOnlineUsers(snapshot.val());
+            });
+
+            // 오래된 메시지 자동 정리 (일주일 이상)
+            cleanOldMessages();
+
+        } catch (error) {
+            console.error('Firebase initialization error:', error);
+            document.getElementById('chatMessages').innerHTML = `
+                <div class="chat-message">
+                    <div class="chat-message-user">System</div>
+                    <div class="chat-message-text" style="color: #ef4444;">Firebase not configured. Please set up your Firebase project.</div>
+                </div>
+            `;
+        }
+
+        // ==========================================
+        // 인증 기능
+        // ==========================================
+
+        let isLoginMode = true;
+
+        // 인증 상태 관찰
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                currentUser = user;
+                document.getElementById('authModal').classList.add('hidden');
+                document.getElementById('userProfile').classList.remove('hidden');
+
+                // 프로필 불러오기
+                await loadUserProfile();
+
+                // 사용자 온라인 상태 업데이트
+                myUserId = user.uid;
+                myUserRef = usersRef.child(user.uid);
+                myUserRef.set({
+                    username: userProfile.nickname,
+                    color: userProfile.color,
+                    lastSeen: Date.now()
+                });
+                myUserRef.onDisconnect().remove();
+
+                console.log('로그인 성공:', user.email);
+            } else {
+                currentUser = null;
+                document.getElementById('authModal').classList.remove('hidden');
+                document.getElementById('userProfile').classList.add('hidden');
+                console.log('로그아웃 상태');
+            }
+        });
+
+        // 폼 제출 처리
+        document.getElementById('authForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('authEmail').value.trim();
+            const password = document.getElementById('authPassword').value;
+            const submitBtn = document.getElementById('authSubmitBtn');
+            const errorDiv = document.getElementById('authError');
+
+            submitBtn.disabled = true;
+            errorDiv.classList.add('hidden');
+
+            try {
+                if (isLoginMode) {
+                    await auth.signInWithEmailAndPassword(email, password);
+                } else {
+                    await auth.createUserWithEmailAndPassword(email, password);
+                }
+                document.getElementById('authForm').reset();
+            } catch (error) {
+                console.error('인증 오류:', error);
+                errorDiv.classList.remove('hidden');
+
+                let errorMessage = '오류가 발생했습니다.';
+                switch (error.code) {
+                    case 'auth/email-already-in-use':
+                        errorMessage = '이미 사용 중인 이메일입니다.';
+                        break;
+                    case 'auth/weak-password':
+                        errorMessage = '비밀번호는 최소 6자 이상이어야 합니다.';
+                        break;
+                    case 'auth/user-not-found':
+                        errorMessage = '등록되지 않은 이메일입니다.';
+                        break;
+                    case 'auth/wrong-password':
+                        errorMessage = '잘못된 비밀번호입니다.';
+                        break;
+                    case 'auth/invalid-email':
+                        errorMessage = '유효하지 않은 이메일 주소입니다.';
+                        break;
+                    default:
+                        errorMessage = error.message;
+                }
+                errorDiv.textContent = errorMessage;
+            } finally {
+                submitBtn.disabled = false;
+            }
+        });
+
+        // Google 로그인
+        document.getElementById('googleSignInBtn').addEventListener('click', async () => {
+            const errorDiv = document.getElementById('authError');
+            errorDiv.classList.add('hidden');
+
+            try {
+                const provider = new firebase.auth.GoogleAuthProvider();
+                await auth.signInWithPopup(provider);
+            } catch (error) {
+                console.error('Google 로그인 오류:', error);
+                errorDiv.classList.remove('hidden');
+                errorDiv.textContent = 'Google 로그인에 실패했습니다: ' + error.message;
+            }
+        });
+
+        // 로그인/회원가입 토글
+        document.getElementById('authToggle').addEventListener('click', () => {
+            isLoginMode = !isLoginMode;
+            const title = document.getElementById('authTitle');
+            const submitBtn = document.getElementById('authSubmitBtn');
+            const toggleText = document.getElementById('authToggle');
+            const errorDiv = document.getElementById('authError');
+
+            errorDiv.classList.add('hidden');
+
+            if (isLoginMode) {
+                title.textContent = '로그인';
+                submitBtn.textContent = '로그인';
+                toggleText.innerHTML = '계정이 없으신가요? <span style="color: #22c55e;">회원가입</span>';
+            } else {
+                title.textContent = '회원가입';
+                submitBtn.textContent = '회원가입';
+                toggleText.innerHTML = '이미 계정이 있으신가요? <span style="color: #22c55e;">로그인</span>';
+            }
+        });
+
+        // 로그아웃
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            try {
+                await auth.signOut();
+                if (myUserRef) {
+                    myUserRef.remove();
+                }
+            } catch (error) {
+                console.error('로그아웃 오류:', error);
+                alert('로그아웃에 실패했습니다.');
+            }
+        });
+
+        // ==========================================
+        // 프로필 기능
+        // ==========================================
+
+        // 프로필 모달 열기
+        document.getElementById('editProfileBtn').addEventListener('click', () => {
+            console.log('프로필 버튼 클릭됨');
+            const modal = document.getElementById('profileModal');
+            console.log('모달 요소:', modal);
+            modal.classList.remove('hidden');
+            loadProfileToModal();
+        });
+
+        // 프로필 모달 닫기
+        document.getElementById('profileCloseBtn').addEventListener('click', () => {
+            document.getElementById('profileModal').classList.add('hidden');
+        });
+
+        // ESC 키로 모달 닫기
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const profileModal = document.getElementById('profileModal');
+                if (!profileModal.classList.contains('hidden')) {
+                    profileModal.classList.add('hidden');
+                }
+            }
+        });
+
+        // 모달 배경 클릭 시 닫기
+        document.getElementById('profileModal').addEventListener('click', (e) => {
+            if (e.target.id === 'profileModal') {
+                document.getElementById('profileModal').classList.add('hidden');
+            }
+        });
+
+        // 닉네임 입력 시 미리보기 업데이트
+        document.getElementById('profileNickname').addEventListener('input', (e) => {
+            const nickname = e.target.value || '닉네임';
+            document.getElementById('previewNickname').textContent = nickname;
+        });
+
+        // 색상 선택
+        document.querySelectorAll('.color-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.color-option').forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+                const color = this.getAttribute('data-color');
+                document.getElementById('previewNickname').style.color = color;
+            });
+        });
+
+        // 프로필 저장
+        document.getElementById('profileSaveBtn').addEventListener('click', async () => {
+            if (!currentUser) return;
+
+            const nickname = document.getElementById('profileNickname').value.trim();
+            if (!nickname) {
+                alert('닉네임을 입력해주세요!');
+                return;
+            }
+
+            const selectedColor = document.querySelector('.color-option.selected');
+            const color = selectedColor ? selectedColor.getAttribute('data-color') : '#22c55e';
+
+            userProfile = { nickname, color };
+
+            try {
+                // Firebase에 프로필 저장
+                await database.ref('profiles/' + currentUser.uid).set({
+                    nickname: nickname,
+                    color: color,
+                    updatedAt: Date.now()
+                });
+
+                // UI 업데이트
+                updateProfileUI();
+
+                // 온라인 사용자 목록에도 업데이트
+                if (myUserRef) {
+                    myUserRef.update({
+                        username: nickname,
+                        color: color,
+                        lastUpdate: Date.now()
+                    });
+                }
+
+                // 모달 닫기
+                document.getElementById('profileModal').classList.add('hidden');
+
+                console.log('프로필 저장 완료:', userProfile);
+            } catch (error) {
+                console.error('프로필 저장 오류:', error);
+                alert('프로필 저장에 실패했습니다.');
+            }
+        });
+
+        // Firebase에서 프로필 불러오기
+        async function loadUserProfile() {
+            if (!currentUser) return;
+
+            try {
+                const snapshot = await database.ref('profiles/' + currentUser.uid).once('value');
+                const data = snapshot.val();
+
+                if (data) {
+                    userProfile = {
+                        nickname: data.nickname || currentUser.email.split('@')[0],
+                        color: data.color || '#22c55e'
+                    };
+                } else {
+                    // 기본값 설정
+                    userProfile = {
+                        nickname: currentUser.email.split('@')[0],
+                        color: '#22c55e'
+                    };
+                }
+
+                updateProfileUI();
+            } catch (error) {
+                console.error('프로필 불러오기 오류:', error);
+            }
+        }
+
+        // 프로필 UI 업데이트
+        function updateProfileUI() {
+            const userEmailElement = document.getElementById('userEmail');
+            userEmailElement.textContent = userProfile.nickname;
+            userEmailElement.style.color = userProfile.color;
+        }
+
+        // 모달에 프로필 로드
+        function loadProfileToModal() {
+            document.getElementById('profileNickname').value = userProfile.nickname;
+            document.getElementById('previewNickname').textContent = userProfile.nickname;
+            document.getElementById('previewNickname').style.color = userProfile.color;
+
+            // 색상 선택 표시
+            document.querySelectorAll('.color-option').forEach(opt => {
+                opt.classList.remove('selected');
+                if (opt.getAttribute('data-color') === userProfile.color) {
+                    opt.classList.add('selected');
+                }
+            });
+        }
+
+        // ==========================================
+        // 채팅 기능
+        // ==========================================
+
+        function toggleChat() {
+            const chatContainer = document.getElementById('chatContainer');
+            const toggleBtn = chatContainer.querySelector('.chat-toggle-btn');
+
+            if (chatContainer.classList.contains('minimized')) {
+                chatContainer.classList.remove('minimized');
+                toggleBtn.textContent = '−';
+            } else {
+                chatContainer.classList.add('minimized');
+                toggleBtn.textContent = '+';
+            }
+
+            if (!isMuted) playBeep();
+        }
+
+        function toggleOnlineList() {
+            const onlineContainer = document.getElementById('onlineContainer');
+            const toggleBtn = onlineContainer.querySelector('.online-toggle-btn');
+
+            if (onlineContainer.classList.contains('minimized')) {
+                onlineContainer.classList.remove('minimized');
+                toggleBtn.textContent = '−';
+            } else {
+                onlineContainer.classList.add('minimized');
+                toggleBtn.textContent = '+';
+            }
+
+            if (!isMuted) playBeep();
+        }
+
+        // ==========================================
+        // 순위표 기능
+        // ==========================================
+
+        let currentLeaderboardType = 'daily'; // daily, weekly, monthly
+        let leaderboardRef = null;
+        let topRankers = { daily: [], weekly: [], monthly: [] }; // 1-3등 정보 저장
+
+        // 순위표 토글
+        function toggleLeaderboard() {
+            const leaderboardContainer = document.getElementById('leaderboardContainer');
+            const toggleBtn = leaderboardContainer.querySelector('.leaderboard-toggle-btn');
+
+            if (leaderboardContainer.classList.contains('minimized')) {
+                leaderboardContainer.classList.remove('minimized');
+                toggleBtn.textContent = '−';
+            } else {
+                leaderboardContainer.classList.add('minimized');
+                toggleBtn.textContent = '+';
+            }
+
+            if (!isMuted) playBeep();
+        }
+
+        // 순위표 탭 전환
+        function switchLeaderboard(type) {
+            currentLeaderboardType = type;
+
+            // 탭 활성화 상태 변경
+            document.querySelectorAll('.leaderboard-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // 새로고침 버튼 애니메이션
+            const refreshBtn = document.querySelector('.leaderboard-refresh-btn');
+            if (refreshBtn) {
+                refreshBtn.classList.add('refreshing');
+                setTimeout(() => {
+                    refreshBtn.classList.remove('refreshing');
+                }, 500);
+            }
+
+            // 순위표 업데이트
+            updateLeaderboard();
+
+            if (!isMuted) playBeep();
+        }
+
+        // 타이머 시간 기록
+        function recordTimerSession(seconds) {
+            if (!currentUser || !database || seconds < 1) return;
+
+            const today = new Date();
+            const dateKey = today.toISOString().split('T')[0]; // YYYY-MM-DD
+            const weekKey = getWeekKey(today);
+            const monthKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
+
+            const userStatsRef = database.ref(`timerStats/${currentUser.uid}`);
+
+            // 일간, 주간, 월간 통계 업데이트
+            userStatsRef.transaction(function(stats) {
+                if (!stats) {
+                    stats = {
+                        daily: {},
+                        weekly: {},
+                        monthly: {},
+                        nickname: userProfile.nickname,
+                        color: userProfile.color
+                    };
+                }
+
+                // 일간 통계
+                if (!stats.daily) stats.daily = {};
+                stats.daily[dateKey] = (stats.daily[dateKey] || 0) + seconds;
+
+                // 주간 통계
+                if (!stats.weekly) stats.weekly = {};
+                stats.weekly[weekKey] = (stats.weekly[weekKey] || 0) + seconds;
+
+                // 월간 통계
+                if (!stats.monthly) stats.monthly = {};
+                stats.monthly[monthKey] = (stats.monthly[monthKey] || 0) + seconds;
+
+                // 프로필 정보 업데이트
+                stats.nickname = userProfile.nickname;
+                stats.color = userProfile.color;
+                stats.lastActive = Date.now();
+
+                return stats;
+            });
+
+            console.log(`타이머 기록: ${seconds}초 (${Math.floor(seconds / 60)}분)`);
+        }
+
+        // 주차 키 생성 (ISO 8601 week)
+        function getWeekKey(date) {
+            const d = new Date(date);
+            d.setHours(0, 0, 0, 0);
+            d.setDate(d.getDate() + 4 - (d.getDay() || 7));
+            const yearStart = new Date(d.getFullYear(), 0, 1);
+            const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+            return `${d.getFullYear()}-W${String(weekNo).padStart(2, '0')}`;
+        }
+
+        // 순위표 업데이트
+        async function updateLeaderboard() {
+            if (!database) return;
+
+            const today = new Date();
+            let timeKey;
+
+            if (currentLeaderboardType === 'daily') {
+                timeKey = today.toISOString().split('T')[0];
+            } else if (currentLeaderboardType === 'weekly') {
+                timeKey = getWeekKey(today);
+            } else {
+                timeKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
+            }
+
+            try {
+                const snapshot = await database.ref('timerStats').once('value');
+                const allStats = snapshot.val();
+
+                if (!allStats) {
+                    document.getElementById('leaderboardList').innerHTML = '<div style="text-align: center; color: #78350f; font-size: 9px; padding: 20px;">아직 기록이 없습니다</div>';
+                    return;
+                }
+
+                // 사용자별 시간 집계
+                const rankings = [];
+                Object.keys(allStats).forEach(userId => {
+                    const userStats = allStats[userId];
+                    let totalSeconds = 0;
+
+                    if (currentLeaderboardType === 'daily' && userStats.daily && userStats.daily[timeKey]) {
+                        totalSeconds = userStats.daily[timeKey];
+                    } else if (currentLeaderboardType === 'weekly' && userStats.weekly && userStats.weekly[timeKey]) {
+                        totalSeconds = userStats.weekly[timeKey];
+                    } else if (currentLeaderboardType === 'monthly' && userStats.monthly && userStats.monthly[timeKey]) {
+                        totalSeconds = userStats.monthly[timeKey];
+                    }
+
+                    if (totalSeconds > 0) {
+                        rankings.push({
+                            userId: userId,
+                            nickname: userStats.nickname || 'Unknown',
+                            color: userStats.color || '#22c55e',
+                            totalSeconds: totalSeconds
+                        });
+                    }
+                });
+
+                // 시간 순으로 정렬
+                rankings.sort((a, b) => b.totalSeconds - a.totalSeconds);
+
+                // 상위 10명만 표시
+                const top10 = rankings.slice(0, 10);
+
+                // 1-3등 저장 (모든 탭에서 상위 3명 저장)
+                topRankers[currentLeaderboardType] = top10.slice(0, 3);
+
+                // 순위표 UI 업데이트
+                displayLeaderboard(top10);
+
+                // 채팅 메시지에 왕관 업데이트
+                updateCrownInMessages();
+
+            } catch (error) {
+                console.error('순위표 업데이트 오류:', error);
+            }
+        }
+
+        // 순위표 새로고침
+        async function refreshLeaderboard() {
+            const refreshBtn = document.querySelector('.leaderboard-refresh-btn');
+            if (!refreshBtn) return;
+
+            // 애니메이션 추가
+            refreshBtn.classList.add('refreshing');
+
+            // 비프음 재생
+            if (!isMuted) playBeep();
+
+            // 순위표 업데이트
+            await updateLeaderboard();
+
+            // 애니메이션 제거
+            setTimeout(() => {
+                refreshBtn.classList.remove('refreshing');
+            }, 500);
+        }
+
+        // 순위표 표시
+        function displayLeaderboard(rankings) {
+            const listContainer = document.getElementById('leaderboardList');
+
+            if (rankings.length === 0) {
+                listContainer.innerHTML = '<div style="text-align: center; color: #78350f; font-size: 9px; padding: 20px;">아직 기록이 없습니다</div>';
+                return;
+            }
+
+            listContainer.innerHTML = '';
+
+            rankings.forEach((user, index) => {
+                const rank = index + 1;
+                const hours = Math.floor(user.totalSeconds / 3600);
+                const minutes = Math.floor((user.totalSeconds % 3600) / 60);
+                const timeText = hours > 0 ? `${hours}시간 ${minutes}분` : `${minutes}분`;
+
+                const itemDiv = document.createElement('div');
+                itemDiv.className = `leaderboard-item rank-${rank <= 3 ? rank : 'other'}`;
+
+                let crownHtml = '';
+                if (rank === 1) {
+                    crownHtml = '<img src="gold.png" class="leaderboard-crown" alt="1등">';
+                } else if (rank === 2) {
+                    crownHtml = '<img src="silver.png" class="leaderboard-crown" alt="2등">';
+                } else if (rank === 3) {
+                    crownHtml = '<img src="brown.png" class="leaderboard-crown" alt="3등">';
+                }
+
+                itemDiv.innerHTML = `
+                    <div class="leaderboard-rank">${rank}</div>
+                    <div class="leaderboard-user-info">
+                        <div class="leaderboard-username" style="color: ${user.color};">
+                            <span>${escapeHtml(user.nickname)}</span>
+                            ${crownHtml}
+                        </div>
+                        <div class="leaderboard-time">${timeText}</div>
+                    </div>
+                `;
+
+                listContainer.appendChild(itemDiv);
+            });
+        }
+
+        // 사용자의 랭크 가져오기 (채팅에 왕관 표시용)
+        function getUserRank(userId) {
+            for (const [type, rankers] of Object.entries(topRankers)) {
+                const index = rankers.findIndex(r => r.userId === userId);
+                if (index !== -1) {
+                    return index + 1; // 1, 2, 3
+                }
+            }
+            return null;
+        }
+
+        // 왕관 이미지 HTML 생성
+        function getCrownHtml(rank) {
+            if (rank === 1) return '<img src="gold.png" class="chat-crown" alt="1등">';
+            if (rank === 2) return '<img src="silver.png" class="chat-crown" alt="2등">';
+            if (rank === 3) return '<img src="brown.png" class="chat-crown" alt="3등">';
+            return '';
+        }
+
+        // 채팅 메시지에 왕관 업데이트 (리더보드 갱신 후 호출)
+        function updateCrownInMessages() {
+            const messagesContainer = document.getElementById('chatMessages');
+            if (!messagesContainer) return;
+
+            const messages = messagesContainer.querySelectorAll('.chat-message');
+            messages.forEach(msgDiv => {
+                const userDiv = msgDiv.querySelector('.chat-message-user');
+                if (!userDiv) return;
+
+                // 사용자 ID를 data attribute에서 가져오기
+                const userId = msgDiv.dataset.userId;
+                if (!userId) return;
+
+                const userRank = getUserRank(userId);
+                const crownHtml = userRank ? getCrownHtml(userRank) : '';
+
+                // 기존 왕관 제거
+                const existingCrown = userDiv.querySelector('.chat-crown');
+                if (existingCrown) existingCrown.remove();
+
+                // 새 왕관 추가
+                if (crownHtml) {
+                    userDiv.insertAdjacentHTML('beforeend', crownHtml);
+                }
+            });
+        }
+
+        // 순위표 초기화 및 주기적 업데이트
+        if (database) {
+            updateLeaderboard();
+            setInterval(updateLeaderboard, 5 * 60 * 1000); // 5분마다 업데이트
+        }
+
+        // 오래된 채팅 메시지 정리 함수
+        function cleanOldMessages() {
+            if (!chatRef) return;
+
+            const weekAgo = Date.now() - (7 * 24 * 60 * 60 * 1000); // 7일 전
+
+            // 7일 이상 된 메시지 찾아서 삭제
+            chatRef.orderByChild('timestamp')
+                .endAt(weekAgo)
+                .once('value', function(snapshot) {
+                    const deletePromises = [];
+                    snapshot.forEach(function(childSnapshot) {
+                        deletePromises.push(childSnapshot.ref.remove());
+                    });
+
+                    Promise.all(deletePromises).then(() => {
+                        console.log('오래된 메시지 정리 완료');
+                    }).catch(error => {
+                        console.error('메시지 정리 오류:', error);
+                    });
+                });
+
+            // 메시지 개수가 100개 초과하면 오래된 것부터 삭제
+            chatRef.once('value', function(snapshot) {
+                const messageCount = snapshot.numChildren();
+                if (messageCount > 100) {
+                    const deleteCount = messageCount - 100;
+                    chatRef.orderByChild('timestamp')
+                        .limitToFirst(deleteCount)
+                        .once('value', function(oldSnapshot) {
+                            const deletePromises = [];
+                            oldSnapshot.forEach(function(childSnapshot) {
+                                deletePromises.push(childSnapshot.ref.remove());
+                            });
+
+                            Promise.all(deletePromises).then(() => {
+                                console.log(`${deleteCount}개의 오래된 메시지 삭제됨`);
+                            }).catch(error => {
+                                console.error('메시지 제한 정리 오류:', error);
+                            });
+                        });
+                }
+            });
+        }
+
+        // 주기적으로 오래된 메시지 정리 (매 시간마다)
+        setInterval(cleanOldMessages, 60 * 60 * 1000);
+
+        function sendMessage() {
+    if (!chatRef) {
+        alert('Firebase is not configured. Please check the console for instructions.');
+        return;
+    }
+
+    // 로그인 체크
+    if (!currentUser) {
+        alert('로그인이 필요합니다!');
+        return;
+    }
+
+    const messageText = document.getElementById('chatInput').value.trim();
+    const siteKey = '6LfjvhgsAAAAAK8rWKhx_oyB8ugtvnaSraArir_T';
+
+    if (!messageText) {
+        return;
+    }
+
+    // [v3 변경점] 메시지 전송 전에 리캡차 토큰을 먼저 받아옵니다.
+    grecaptcha.ready(function() {
+        grecaptcha.execute(siteKey, {action: 'submit'}).then(function(token) {
+            
+            // 1. 여기서 token과 함께 서버로 보내 점수를 확인하는 것이 정석입니다.
+            // 2. 현재는 서버(백엔드)가 없으므로, 토큰을 받는 과정이 성공하면 메시지를 보냅니다.
+            // (주의: 이 방식은 봇을 완벽하게 막지는 못하고, 최소한의 방어막 역할만 합니다)
+
+            const message = {
+                username: userProfile.nickname,
+                color: userProfile.color,
+                text: messageText,
+                timestamp: Date.now(),
+                userId: currentUser.uid,
+                // 필요하다면 나중에 검증을 위해 토큰도 함께 저장할 수 있습니다.
+                // recaptchaToken: token
+            };
+
+            chatRef.push(message)
+                .then(() => {
+                    document.getElementById('chatInput').value = '';
+                    if (!isMuted) playBeep();
+                })
+                .catch((error) => {
+                    console.error('Error sending message:', error);
+                    alert('Failed to send message. Please try again.');
+                });
+        });
+    });
+}
+
+        function displayMessage(message, skipScroll = false) {
+            const messagesContainer = document.getElementById('chatMessages');
+
+            // 시스템 메시지 제거 (첫 메시지가 들어올 때)
+            const systemMsg = messagesContainer.querySelector('.chat-message');
+            if (systemMsg && systemMsg.querySelector('.chat-message-user').textContent === 'System') {
+                // 실제 메시지가 있는지 확인
+                if (messagesContainer.children.length === 1 && message.username !== 'System') {
+                    systemMsg.remove();
+                }
+            }
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'chat-message';
+
+            // userId를 data attribute에 저장 (왕관 업데이트용)
+            if (message.userId) {
+                messageDiv.dataset.userId = message.userId;
+            }
+
+            const time = new Date(message.timestamp);
+            const timeString = time.getHours().toString().padStart(2, '0') + ':' +
+                               time.getMinutes().toString().padStart(2, '0');
+
+            const usernameColor = message.color || '#22c55e';
+
+            // 왕관 표시 (사용자 ID로 랭크 확인)
+            const userRank = message.userId ? getUserRank(message.userId) : null;
+            const crownHtml = userRank ? getCrownHtml(userRank) : '';
+
+            messageDiv.innerHTML = `
+                <div class="chat-message-user" style="color: ${usernameColor};">
+                    <span>${escapeHtml(message.username)}</span>${crownHtml}
+                </div>
+                <div class="chat-message-text">${escapeHtml(message.text)}</div>
+                <div class="chat-message-time">${timeString}</div>
+            `;
+
+            messagesContainer.appendChild(messageDiv);
+
+            // 메시지 개수 제한 (최대 100개 UI 표시)
+            while (messagesContainer.children.length > 100) {
+                messagesContainer.removeChild(messagesContainer.firstChild);
+            }
+
+            // 스크롤을 맨 아래로
+            if (!skipScroll) {
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+        }
+
+        function handleChatKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+
+        // ==========================================
+        // 온라인 사용자 관리
+        // ==========================================
+
+
+        // 내 타이머 상태 업데이트
+        function updateMyUserStatus() {
+            console.log('updateMyUserStatus called, myUserRef:', myUserRef);
+            if (!myUserRef || !currentUser) {
+                console.log('No myUserRef or currentUser');
+                return;
+            }
+
+            const m = Math.floor(remainingSeconds / 60);
+            const s = remainingSeconds % 60;
+            const timeText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+
+            const userStatus = {
+                username: userProfile.nickname,
+                color: userProfile.color,
+                time: timeText,
+                remainingSeconds: remainingSeconds,
+                totalSeconds: totalSeconds,
+                isRunning: isRunning,
+                isPomodoroMode: isPomodoroMode,
+                status: isRunning ? 'running' : (remainingSeconds > 0 ? 'paused' : 'idle'),
+                lastUpdate: Date.now()
+            };
+
+            console.log('Setting user status:', userStatus);
+            myUserRef.set(userStatus).then(() => {
+                console.log('User status updated successfully');
+            }).catch(err => {
+                console.error('Failed to update user status:', err);
+            });
+        }
+
+        // 온라인 사용자 목록 업데이트
+        function updateOnlineUsers(users) {
+            console.log('updateOnlineUsers called with:', users);
+            const usersList = document.getElementById('onlineUsersList');
+            const onlineCount = document.getElementById('onlineCount');
+
+            if (!users) {
+                console.log('No users data');
+                usersList.innerHTML = '<div style="text-align: center; padding: 10px; font-size: 7px; color: #78350f;">No users online</div>';
+                onlineCount.textContent = '0';
+                return;
+            }
+
+            const now = Date.now();
+            const activeUsers = [];
+
+            // 30초 이내에 업데이트된 사용자만 표시
+            Object.keys(users).forEach(userId => {
+                const user = users[userId];
+                if (user && user.lastUpdate && (now - user.lastUpdate) < 30000) {
+                    activeUsers.push({ id: userId, ...user });
+                }
+            });
+
+            console.log('Active users:', activeUsers.length, activeUsers);
+            onlineCount.textContent = activeUsers.length;
+
+            if (activeUsers.length === 0) {
+                usersList.innerHTML = '<div style="text-align: center; padding: 10px; font-size: 7px; color: #78350f;">No users online</div>';
+                return;
+            }
+
+            usersList.innerHTML = '';
+            activeUsers.forEach(user => {
+                const userItem = document.createElement('div');
+                userItem.className = 'online-user-item';
+
+                const isMe = user.id === myUserId;
+                const statusClass = user.status === 'running' ? 'running' : (user.status === 'paused' ? 'paused' : '');
+                const userColor = user.color || '#22c55e';
+
+                userItem.innerHTML = `
+                    <div class="online-user-info">
+                        <span class="online-user-name" style="color: ${userColor};">${escapeHtml(user.username)}${isMe ? ' (You)' : ''}</span>
+                    </div>
+                    <div class="online-user-timer">
+                        <span class="online-user-time">${user.time || '00:00'}</span>
+                        <span class="online-user-status ${statusClass}">${user.status || 'idle'}</span>
+                    </div>
+                `;
+
+                usersList.appendChild(userItem);
+            });
+        }
+
+        // ==========================================
+        // 기존 코드
+        // ==========================================
+
+        const scene = document.getElementById('scene-container');
+        
+        function createTree() {
+            const tree = document.createElement('div');
+            tree.className = 'christmas-tree';
+            
+            // 별
+            const star = document.createElement('div');
+            star.className = 'tree-star';
+            tree.appendChild(star);
+
+            // 트리 레이어들 (위에서 아래로 점점 커지게)
+            const layers = [
+                { width: 40, height: 50 },   // 맨 위
+                { width: 60, height: 60 },
+                { width: 80, height: 70 },
+                { width: 100, height: 80 },
+                { width: 120, height: 90 },
+                { width: 140, height: 100 }  // 맨 아래
+            ];
+            
+            const colors = ['#ef4444', '#f59e0b', '#22c55e', '#3b82f6', '#a855f7', '#ec4899'];
+            
+            layers.forEach((layerSize, index) => {
+                const layer = document.createElement('div');
+                layer.className = 'tree-layer';
+                layer.style.borderLeftWidth = layerSize.width + 'px';
+                layer.style.borderRightWidth = layerSize.width + 'px';
+                layer.style.borderBottomWidth = layerSize.height + 'px';
+                
+                // 각 레이어에 전구 추가
+                const numLights = 3 + index;
+                for (let i = 0; i < numLights; i++) {
+                    const light = document.createElement('div');
+                    light.className = 'tree-light';
+                    
+                    // 전구를 삼각형 안에 랜덤하게 배치
+                    const xPos = (Math.random() * layerSize.width * 1.6) - (layerSize.width * 0.8);
+                    const yPos = Math.random() * (layerSize.height * 0.7) + 10;
+                    
+                    // 삼각형 경계 안에 있는지 확인
+                    if (Math.abs(xPos) < (layerSize.height - yPos) * (layerSize.width / layerSize.height)) {
+                        light.style.left = `calc(50% + ${xPos}px)`;
+                        light.style.top = `${yPos}px`;
+                        light.style.background = colors[Math.floor(Math.random() * colors.length)];
+                        light.style.animationDelay = (Math.random() * 1.5) + 's';
+                        layer.appendChild(light);
+                    }
+                }
+                
+                tree.appendChild(layer);
+            });
+            
+            // 나무 줄기
+            const trunk = document.createElement('div');
+            trunk.className = 'tree-trunk';
+            tree.appendChild(trunk);
+
+            scene.appendChild(tree);
+        }
+        createTree();
+
+        const canvas = document.getElementById('snow-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        const particles = [];
+
+        function resize() {
+            width = canvas.width = 320;
+            height = canvas.height = 420;
+        }
+        resize();
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * -height;
+                this.vy = 0.5 + Math.random() * 1.5;
+                this.size = 1.5 + Math.random() * 2;
+                this.opacity = 0.5 + Math.random() * 0.5;
+            }
+            update() {
+                this.y += this.vy;
+                if (this.y > height) this.reset();
+            }
+            draw() {
+                ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < 60; i++) particles.push(new Particle());
+
+        function animateSnow() {
+            ctx.clearRect(0, 0, width, height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animateSnow);
+        }
+        animateSnow();
+
+        // Timer variables
+        let timerInterval;
+        let totalSeconds = 0;
+        let remainingSeconds = 0;
+        let isRunning = false;
+        let isPomodoroMode = false;
+        let isWorkSession = true;
+        let startTime = null; // 타이머 시작 시간 저장
+        let pausedTime = 0; // 일시정지된 시간 저장 
+        
+        const display = document.getElementById('timerDisplay');
+        const progressBar = document.getElementById('progressBar');
+        const statusText = document.getElementById('statusText');
+        const modeDisplay = document.getElementById('modeDisplay');
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const recDot = document.getElementById('recDot');
+        const uiContainer = document.getElementById('ui-container');
+        
+        const filePanel = document.getElementById('filePanel');
+        const youtubePanel = document.getElementById('youtubePanel');
+        const bgmPlayer = document.getElementById('bgmPlayer');
+        const musicPlayBtn = document.getElementById('musicPlayBtn');
+        const fileNameDisplay = document.getElementById('fileNameDisplay');
+        
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        // YouTube Player variables
+        let ytPlayer = null;
+        let ytPlayerVisible = null;
+        let ytUpdateInterval = null;
+        let isYouTubeAPIReady = false;
+        let isVideoVisible = false;
+        let currentVideoId = '';
+
+        // Mode variables
+        let isMuted = false;
+        let isFocusMode = false;
+        
+        // Custom Pomodoro presets - {work: minutes, break: minutes}
+        let customPresets = [];
+        
+        // Current Pomodoro settings
+        let currentWorkTime = 25;
+        let currentBreakTime = 5;
+        
+        // Share feature
+        let autoStartTimeout = null;
+
+        // YouTube API가 로드되면 호출됩니다
+        window.onYouTubeIframeAPIReady = function() {
+            console.log('YouTube API Ready');
+            isYouTubeAPIReady = true;
+        }
+        
+        // 페이지 로드 시 초기화
+        window.addEventListener('DOMContentLoaded', function() {
+            loadCustomPresets();
+            loadMuteState();
+            handleUrlParams();
+
+            // 사용자 등록 (username이 있으면) - Firebase 초기화 후 실행
+            setTimeout(() => {
+                const username = document.getElementById('chatUsername').value.trim();
+                if (username && database) {
+                    registerUser();
+                }
+            }, 1500);
+        });
+        
+        // URL 파라미터 처리
+        function handleUrlParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            // 뽀모도로 설정 (예: ?pomo=25/5)
+            const pomoParam = urlParams.get('pomo');
+            if (pomoParam) {
+                const [work, breakTime] = pomoParam.split('/').map(Number);
+                if (work && breakTime) {
+                    currentWorkTime = work;
+                    currentBreakTime = breakTime;
+                    
+                    // URL 파라미터 있으면 자동 알림
+                    setTimeout(() => {
+                        if (confirm(`친구가 ${work}분/${breakTime}분 뽀모도로로 초대했어요! 시작할까요?`)) {
+                            startPomodoroSequence(work, breakTime);
+                        }
+                    }, 500);
+                }
+            }
+            
+            // 일반 타이머 (예: ?timer=25)
+            const timerParam = urlParams.get('timer');
+            if (timerParam && !pomoParam) {
+                const minutes = Number(timerParam);
+                if (minutes > 0) {
+                    setTimeout(() => {
+                        if (confirm(`친구가 ${minutes}분 타이머로 초대했어요! 설정할까요?`)) {
+                            setPreset(minutes);
+                        }
+                    }, 500);
+                }
+            }
+            
+            // 자동 시작 (예: ?startin=300 -> 5분 후)
+            const startInParam = urlParams.get('startin');
+            if (startInParam) {
+                const seconds = Number(startInParam);
+                if (seconds > 0) {
+                    const minutes = Math.floor(seconds / 60);
+                    statusText.textContent = `AUTO START: ${minutes}M`;
+                    
+                    const focusStatus = document.getElementById('focusStatus');
+                    if (focusStatus) {
+                        focusStatus.textContent = `AUTO START: ${minutes}M`;
+                    }
+                    
+                    let countdown = seconds;
+                    const countdownInterval = setInterval(() => {
+                        countdown--;
+                        const m = Math.floor(countdown / 60);
+                        const s = countdown % 60;
+                        statusText.textContent = `AUTO START: ${m}:${s.toString().padStart(2, '0')}`;
+                        
+                        if (focusStatus) {
+                            focusStatus.textContent = `AUTO START: ${m}:${s.toString().padStart(2, '0')}`;
+                        }
+                        
+                        if (countdown <= 0) {
+                            clearInterval(countdownInterval);
+                            if (!isMuted) playBeep();
+                            startTimer();
+                        }
+                    }, 1000);
+                }
+            }
+        }
+        
+        // LocalStorage 관련 함수들
+
+        function saveCustomPresets() {
+            localStorage.setItem('digipen_presets', JSON.stringify(customPresets));
+        }
+        
+        function loadCustomPresets() {
+            const saved = localStorage.getItem('digipen_presets');
+            if (saved) {
+                customPresets = JSON.parse(saved);
+                renderCustomPresets();
+            }
+        }
+        
+        function renderCustomPresets() {
+            const container = document.getElementById('savedPresets');
+            container.innerHTML = '';
+            
+            customPresets.forEach((preset, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'retro-button bg-pink-600 text-white text-[9px] py-2 px-2 rounded border-b-4 border-pink-800 hover:bg-pink-500 relative group';
+                btn.innerHTML = `
+                    🍅 ${preset.work}/${preset.break}
+                    <span class="absolute -top-1 -right-1 bg-red-600 text-white rounded-full w-4 h-4 text-[8px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer" onclick="deletePreset(${index}, event)">×</span>
+                `;
+                btn.onclick = (e) => {
+                    if (!e.target.classList.contains('cursor-pointer')) {
+                        startPomodoroSequence(preset.work, preset.break);
+                    }
+                };
+                container.appendChild(btn);
+            });
+        }
+        
+        function loadMuteState() {
+            const saved = localStorage.getItem('digipen_muted');
+            if (saved === 'true') {
+                isMuted = true;
+                updateMuteButton();
+            }
+        }
+        
+        function saveMuteState() {
+            localStorage.setItem('digipen_muted', isMuted.toString());
+        }
+        
+        // Mode Functions
+        function toggleMute() {
+            isMuted = !isMuted;
+            updateMuteButton();
+            saveMuteState();
+            
+            // 토글 시 피드백 사운드 (뮤트 해제할 때만)
+            if (!isMuted) {
+                playBeep();
+            }
+        }
+        
+        function updateMuteButton() {
+            const muteBtn = document.getElementById('muteBtn');
+            const muteIcon = document.getElementById('muteIcon');
+            const muteText = document.getElementById('muteText');
+            
+            if (isMuted) {
+                muteBtn.classList.add('muted');
+                muteIcon.textContent = '🔇';
+                muteText.textContent = 'MUTED';
+            } else {
+                muteBtn.classList.remove('muted');
+                muteIcon.textContent = '🔊';
+                muteText.textContent = 'SOUND';
+            }
+        }
+        
+        function toggleFocusMode() {
+            isFocusMode = !isFocusMode;
+            const focusBtn = document.getElementById('focusBtn');
+            
+            if (isFocusMode) {
+                document.body.classList.add('focus-mode');
+                focusBtn.classList.add('active');
+            } else {
+                document.body.classList.remove('focus-mode');
+                focusBtn.classList.remove('active');
+            }
+            
+            if (!isMuted) playBeep();
+        }
+        
+        function saveCustomPreset() {
+            const workMin = parseInt(document.getElementById('presetWork').value);
+            const breakMin = parseInt(document.getElementById('presetBreak').value);
+            
+            if (!workMin || workMin <= 0 || !breakMin || breakMin <= 0) {
+                alert('공부시간과 휴식시간을 모두 입력해주세요!');
+                return;
+            }
+            
+            // 중복 체크
+            const isDuplicate = customPresets.some(p => p.work === workMin && p.break === breakMin);
+            if (isDuplicate) {
+                alert('이미 저장된 프리셋입니다!');
+                return;
+            }
+            
+            customPresets.push({ work: workMin, break: breakMin });
+            saveCustomPresets();
+            renderCustomPresets();
+            
+            document.getElementById('presetWork').value = '';
+            document.getElementById('presetBreak').value = '';
+            if (!isMuted) playBeep();
+        }
+        
+        function deletePreset(index, event) {
+            event.stopPropagation();
+            customPresets.splice(index, 1);
+            saveCustomPresets();
+            renderCustomPresets();
+            if (!isMuted) playBeep();
+        }
+        
+     
+        function toggleUI() {
+            if (uiContainer.style.opacity === '0') {
+                uiContainer.style.opacity = '1';
+                uiContainer.style.pointerEvents = 'auto';
+            } else {
+                uiContainer.style.opacity = '0';
+                uiContainer.style.pointerEvents = 'none';
+            }
+        }
+
+        function toggleAudioMode(mode) {
+            if (mode === 'file') {
+                filePanel.classList.remove('hidden');
+                filePanel.classList.add('block');
+                youtubePanel.classList.add('hidden');
+                youtubePanel.classList.remove('block');
+                
+                // YouTube 정지
+                try {
+                    if (ytPlayer && ytPlayer.pauseVideo) {
+                        ytPlayer.pauseVideo();
+                    }
+                    if (ytPlayerVisible && ytPlayerVisible.pauseVideo) {
+                        ytPlayerVisible.pauseVideo();
+                    }
+                    if (ytUpdateInterval) {
+                        clearInterval(ytUpdateInterval);
+                    }
+                    
+                    // 비디오 숨기기
+                    if (isVideoVisible) {
+                        const videoContainer = document.getElementById('ytVideoContainer');
+                        const toggleBtn = document.getElementById('ytVideoToggleBtn');
+                        videoContainer.classList.remove('visible');
+                        toggleBtn.classList.remove('active');
+                        toggleBtn.innerHTML = '📺 VIDEO OFF';
+                        isVideoVisible = false;
+                    }
+                } catch(e) {
+                    console.error('YouTube pause error:', e);
+                }
+            } else {
+                filePanel.classList.add('hidden');
+                filePanel.classList.remove('block');
+                youtubePanel.classList.remove('hidden');
+                youtubePanel.classList.add('block');
+                
+                // MP3 정지
+                bgmPlayer.pause();
+                musicPlayBtn.innerHTML = '▶';
+            }
+        }
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const objectUrl = URL.createObjectURL(file);
+                bgmPlayer.src = objectUrl;
+                fileNameDisplay.textContent = file.name;
+                musicPlayBtn.innerHTML = '▶'; 
+            }
+        }
+
+        function togglePlayMusic() {
+            if (!bgmPlayer.src) {
+                alert("MP3 파일을 먼저 로드해주세요.");
+                return;
+            }
+            if (bgmPlayer.paused) {
+                bgmPlayer.play();
+                musicPlayBtn.innerHTML = '❚❚';
+            } else {
+                bgmPlayer.pause();
+                musicPlayBtn.innerHTML = '▶';
+            }
+        }
+
+        function loadYoutube() {
+            const urlInput = document.getElementById('ytUrl').value;
+            let videoId = '';
+            
+            if (urlInput.includes('v=')) {
+                videoId = urlInput.split('v=')[1].split('&')[0];
+            } else if (urlInput.includes('youtu.be/')) {
+                videoId = urlInput.split('youtu.be/')[1].split('?')[0];
+            }
+            
+            if (!videoId) {
+                alert('올바른 YouTube URL을 입력해주세요.');
+                return;
+            }
+            
+            // YouTube API가 로드될 때까지 기다리기
+            if (typeof YT === 'undefined' || !YT.Player) {
+                alert('YouTube API를 로드하는 중입니다. 잠시 후 다시 시도해주세요.');
+                // 3초 후 자동 재시도
+                setTimeout(() => {
+                    if (typeof YT !== 'undefined' && YT.Player) {
+                        loadYoutubePlayer(videoId);
+                    }
+                }, 3000);
+                return;
+            }
+            
+            loadYoutubePlayer(videoId);
+        }
+        
+        function loadYoutubePlayer(videoId) {
+            currentVideoId = videoId;
+
+            // 기존 플레이어 제거
+            if (ytPlayer) {
+                try {
+                    ytPlayer.destroy();
+                } catch(e) {}
+            }
+            if (ytPlayerVisible) {
+                try {
+                    ytPlayerVisible.destroy();
+                } catch(e) {}
+            }
+
+            // 메인 플레이어 (항상 재생됨)
+            ytPlayer = new YT.Player('ytPlayer', {
+                height: '1',
+                width: '1',
+                videoId: videoId,
+                playerVars: {
+                    'autoplay': 0,
+                    'controls': 0,
+                    'disablekb': 1,
+                    'fs': 0,
+                    'modestbranding': 1,
+                    'rel': 0
+                },
+                events: {
+                    'onReady': onYoutubePlayerReady,
+                    'onStateChange': onYoutubePlayerStateChange
+                }
+            });
+
+            // 비디오 표시용 플레이어 (동기화)
+            ytPlayerVisible = new YT.Player('ytPlayerVisible', {
+                height: '360',
+                width: '640',
+                videoId: videoId,
+                playerVars: {
+                    'autoplay': 0,
+                    'controls': 1,
+                    'modestbranding': 1,
+                    'rel': 0
+                },
+                events: {
+                    'onReady': function(event) {
+                        // 준비되면 숨김 상태로 시작
+                        console.log('Video player ready');
+                    },
+                    'onStateChange': onVisiblePlayerStateChange
+                }
+            });
+        }
+        
+        function toggleYoutubeVideo() {
+            const videoContainer = document.getElementById('ytVideoContainer');
+            const toggleBtn = document.getElementById('ytVideoToggleBtn');
+
+            isVideoVisible = !isVideoVisible;
+
+            if (isVideoVisible) {
+                videoContainer.classList.add('visible');
+                toggleBtn.classList.add('active');
+                toggleBtn.innerHTML = '📺 VIDEO ON';
+
+                // 비디오 플레이어를 메인 플레이어와 동기화
+                if (ytPlayer && ytPlayerVisible) {
+                    try {
+                        const currentTime = ytPlayer.getCurrentTime();
+                        const state = ytPlayer.getPlayerState();
+
+                        ytPlayerVisible.seekTo(currentTime, true);
+
+                        if (state === YT.PlayerState.PLAYING) {
+                            ytPlayerVisible.playVideo();
+                        } else {
+                            ytPlayerVisible.pauseVideo();
+                        }
+                    } catch(e) {
+                        console.error('Sync error:', e);
+                    }
+                }
+            } else {
+                videoContainer.classList.remove('visible');
+                toggleBtn.classList.remove('active');
+                toggleBtn.innerHTML = '📺 VIDEO OFF';
+
+                // 비디오 플레이어만 일시정지 (메인은 계속 재생)
+                if (ytPlayerVisible) {
+                    try {
+                        ytPlayerVisible.pauseVideo();
+                    } catch(e) {}
+                }
+            }
+
+            if (!isMuted) playBeep();
+        }
+
+        function onYoutubePlayerReady(event) {
+            document.getElementById('ytAudioControls').classList.remove('hidden');
+            
+            // 비디오 제목 가져오기 시도
+            try {
+                const videoData = event.target.getVideoData();
+                if (videoData && videoData.title) {
+                    document.getElementById('ytVideoTitle').textContent = videoData.title;
+                } else {
+                    document.getElementById('ytVideoTitle').textContent = 'YouTube Audio Loaded';
+                }
+            } catch(e) {
+                document.getElementById('ytVideoTitle').textContent = 'YouTube Audio Loaded';
+            }
+            
+            updateYoutubeProgress();
+        }
+
+        function onYoutubePlayerStateChange(event) {
+            const ytPlayBtn = document.getElementById('ytPlayBtn');
+
+            try {
+                if (event.data === YT.PlayerState.PLAYING) {
+                    ytPlayBtn.innerHTML = '❚❚';
+                    startYoutubeProgressUpdate();
+
+                    // 비디오 플레이어 동기화
+                    if (isVideoVisible && ytPlayerVisible && ytPlayerVisible.getPlayerState) {
+                        const currentTime = ytPlayer.getCurrentTime();
+                        ytPlayerVisible.seekTo(currentTime, true);
+                        ytPlayerVisible.playVideo();
+                    }
+                } else if (event.data === YT.PlayerState.PAUSED) {
+                    ytPlayBtn.innerHTML = '▶';
+                    stopYoutubeProgressUpdate();
+
+                    // 비디오 플레이어 동기화
+                    if (isVideoVisible && ytPlayerVisible && ytPlayerVisible.pauseVideo) {
+                        ytPlayerVisible.pauseVideo();
+                    }
+                } else if (event.data === YT.PlayerState.ENDED) {
+                    ytPlayBtn.innerHTML = '▶';
+                    stopYoutubeProgressUpdate();
+                    // 반복 재생
+                    ytPlayer.seekTo(0);
+                    ytPlayer.playVideo();
+
+                    // 비디오 플레이어도 반복
+                    if (isVideoVisible && ytPlayerVisible) {
+                        ytPlayerVisible.seekTo(0);
+                        ytPlayerVisible.playVideo();
+                    }
+                }
+            } catch(e) {
+                console.error('YouTube state change error:', e);
+            }
+        }
+
+        // 비디오 플레이어 상태 변경 핸들러 (사용자가 비디오 컨트롤을 직접 조작할 때)
+        function onVisiblePlayerStateChange(event) {
+            if (!isVideoVisible) return;
+
+            try {
+                // 비디오 플레이어에서 재생/일시정지하면 메인 플레이어도 동기화
+                if (event.data === YT.PlayerState.PLAYING) {
+                    if (ytPlayer && ytPlayer.getPlayerState() !== YT.PlayerState.PLAYING) {
+                        const currentTime = ytPlayerVisible.getCurrentTime();
+                        ytPlayer.seekTo(currentTime, true);
+                        ytPlayer.playVideo();
+                    }
+                } else if (event.data === YT.PlayerState.PAUSED) {
+                    if (ytPlayer && ytPlayer.getPlayerState() === YT.PlayerState.PLAYING) {
+                        ytPlayer.pauseVideo();
+                    }
+                }
+            } catch(e) {
+                console.error('Visible player state change error:', e);
+            }
+        }
+
+        function toggleYoutubePlay() {
+            if (!ytPlayer || !ytPlayer.getPlayerState) {
+                alert('YouTube 영상을 먼저 로드해주세요.');
+                return;
+            }
+            
+            try {
+                const state = ytPlayer.getPlayerState();
+                if (state === YT.PlayerState.PLAYING) {
+                    ytPlayer.pauseVideo();
+                } else {
+                    ytPlayer.playVideo();
+                }
+            } catch(e) {
+                console.error('YouTube player error:', e);
+                alert('플레이어 오류가 발생했습니다. 페이지를 새로고침해주세요.');
+            }
+        }
+
+        function startYoutubeProgressUpdate() {
+            if (ytUpdateInterval) {
+                clearInterval(ytUpdateInterval);
+            }
+            ytUpdateInterval = setInterval(() => {
+                updateYoutubeProgress();
+                syncVideoPlayers(); // 주기적 동기화
+            }, 500);
+        }
+
+        // 두 플레이어 동기화 체크 (시간 차이가 1초 이상 나면 동기화)
+        function syncVideoPlayers() {
+            if (!isVideoVisible || !ytPlayer || !ytPlayerVisible) return;
+
+            try {
+                const mainTime = ytPlayer.getCurrentTime();
+                const visibleTime = ytPlayerVisible.getCurrentTime();
+                const timeDiff = Math.abs(mainTime - visibleTime);
+
+                // 1초 이상 차이나면 동기화
+                if (timeDiff > 1) {
+                    ytPlayerVisible.seekTo(mainTime, true);
+                }
+            } catch(e) {
+                // 무시
+            }
+        }
+
+        function stopYoutubeProgressUpdate() {
+            if (ytUpdateInterval) {
+                clearInterval(ytUpdateInterval);
+            }
+        }
+
+        function updateYoutubeProgress() {
+            if (!ytPlayer || !ytPlayer.getCurrentTime) return;
+            
+            try {
+                const currentTime = ytPlayer.getCurrentTime();
+                const duration = ytPlayer.getDuration();
+                
+                if (duration > 0) {
+                    const progress = (currentTime / duration) * 100;
+                    document.getElementById('ytProgressFill').style.width = progress + '%';
+                    
+                    const currentMin = Math.floor(currentTime / 60);
+                    const currentSec = Math.floor(currentTime % 60);
+                    const durationMin = Math.floor(duration / 60);
+                    const durationSec = Math.floor(duration % 60);
+                    
+                    document.getElementById('ytTimeDisplay').textContent = 
+                        `${currentMin}:${currentSec.toString().padStart(2, '0')} / ${durationMin}:${durationSec.toString().padStart(2, '0')}`;
+                }
+            } catch(e) {
+                console.error('YouTube progress update error:', e);
+            }
+        }
+
+        function seekYoutube(event) {
+            if (!ytPlayer || !ytPlayer.getDuration) return;
+
+            try {
+                const bar = document.getElementById('ytProgressBar');
+                const rect = bar.getBoundingClientRect();
+                const clickX = event.clientX - rect.left;
+                const percentage = clickX / rect.width;
+                const duration = ytPlayer.getDuration();
+                const seekTime = duration * percentage;
+
+                ytPlayer.seekTo(seekTime, true);
+
+                // 비디오 플레이어도 동기화
+                if (isVideoVisible && ytPlayerVisible && ytPlayerVisible.seekTo) {
+                    ytPlayerVisible.seekTo(seekTime, true);
+                }
+            } catch(e) {
+                console.error('YouTube seek error:', e);
+            }
+        }
+
+        function playBeep() {
+            if (isMuted) return;
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.type = 'square';
+            oscillator.frequency.setValueAtTime(440, audioCtx.currentTime); 
+            oscillator.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.1);
+            gainNode.gain.setValueAtTime(0.05, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 0.1);
+        }
+
+        function playAlarm() {
+            if (isMuted) return;
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const now = audioCtx.currentTime;
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.type = 'sawtooth';
+            oscillator.frequency.setValueAtTime(523.25, now);
+            oscillator.frequency.setValueAtTime(659.25, now + 0.2);
+            oscillator.frequency.setValueAtTime(783.99, now + 0.4);
+            oscillator.frequency.setValueAtTime(1046.50, now + 0.6);
+            gainNode.gain.setValueAtTime(0.2, now);
+            gainNode.gain.linearRampToValueAtTime(0, now + 0.8);
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.start(now);
+            oscillator.stop(now + 0.8);
+        }
+
+        function updateDisplay() {
+            const m = Math.floor(remainingSeconds / 60);
+            const s = remainingSeconds % 60;
+            const timeText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            
+            display.textContent = timeText;
+            
+            // 집중 모드 화면도 업데이트
+            const focusTimer = document.getElementById('focusTimer');
+            if (focusTimer) {
+                focusTimer.textContent = timeText;
+            }
+            
+            const progress = totalSeconds > 0 ? ((totalSeconds - remainingSeconds) / totalSeconds) * 100 : 0;
+            progressBar.style.width = `${progress}%`;
+            
+            if (remainingSeconds <= 10 && remainingSeconds > 0 && isRunning) {
+                display.classList.add('text-red-500');
+                display.classList.remove('text-amber-400');
+                if (focusTimer) {
+                    focusTimer.classList.add('text-red-500');
+                    focusTimer.classList.remove('text-amber-400');
+                }
+            } else {
+                display.classList.add('text-amber-400');
+                display.classList.remove('text-red-500');
+                if (focusTimer) {
+                    focusTimer.classList.add('text-amber-400');
+                    focusTimer.classList.remove('text-red-500');
+                }
+            }
+        }
+
+        function setPreset(minutes) {
+            isPomodoroMode = false;
+            stopTimer();
+            totalSeconds = minutes * 60;
+            remainingSeconds = totalSeconds;
+            updateDisplay();
+            statusText.textContent = `SET: ${minutes}M`;
+
+            // 집중 모드 상태 업데이트
+            const focusStatus = document.getElementById('focusStatus');
+            if (focusStatus) {
+                focusStatus.textContent = `SET: ${minutes}M`;
+            }
+
+            modeDisplay.textContent = "MANUAL";
+            recDot.classList.remove('bg-purple-500');
+            recDot.classList.add('bg-red-500');
+            if (!isMuted) playBeep();
+
+            // Firebase 상태 업데이트
+            updateMyUserStatus();
+        }
+
+        function setCustom() {
+            isPomodoroMode = false;
+            const min = parseInt(document.getElementById('inputMin').value) || 0;
+            const sec = parseInt(document.getElementById('inputSec').value) || 0;
+            if (min === 0 && sec === 0) return;
+            stopTimer();
+            totalSeconds = min * 60 + sec;
+            remainingSeconds = totalSeconds;
+            updateDisplay();
+            statusText.textContent = 'CUSTOM';
+            
+            const focusStatus = document.getElementById('focusStatus');
+            if (focusStatus) {
+                focusStatus.textContent = 'CUSTOM';
+            }
+            
+            modeDisplay.textContent = "MANUAL";
+            recDot.classList.remove('bg-purple-500');
+            recDot.classList.add('bg-red-500');
+            if (!isMuted) playBeep();
+            document.getElementById('inputMin').value = '';
+            document.getElementById('inputSec').value = '';
+        }
+
+        function startPomodoroSequence(workMinutes, breakMinutes) {
+            stopTimer();
+            isPomodoroMode = true;
+            isWorkSession = true;
+            currentWorkTime = workMinutes || 25;
+            currentBreakTime = breakMinutes || 5;
+            totalSeconds = currentWorkTime * 60; 
+            remainingSeconds = totalSeconds;
+            modeDisplay.textContent = `POMO ${currentWorkTime}/${currentBreakTime}`;
+            statusText.textContent = `WORK (${currentWorkTime}M)`;
+            
+            const focusStatus = document.getElementById('focusStatus');
+            if (focusStatus) {
+                focusStatus.textContent = `WORK (${currentWorkTime}M)`;
+            }
+            
+            recDot.classList.remove('bg-red-500');
+            recDot.classList.add('bg-purple-500');
+            updateDisplay();
+            if (!isMuted) playBeep();
+            startTimer(); 
+        }
+
+        function handlePomodoroTransition() {
+            if (!isMuted) playAlarm();
+            if (isWorkSession) {
+                isWorkSession = false;
+                totalSeconds = currentBreakTime * 60; 
+                statusText.textContent = `BREAK (${currentBreakTime}M)`;
+                
+                const focusStatus = document.getElementById('focusStatus');
+                if (focusStatus) {
+                    focusStatus.textContent = `BREAK (${currentBreakTime}M)`;
+                }
+                
+                display.classList.add('text-blue-400');
+                display.classList.remove('text-amber-400', 'text-red-500');
+            } else {
+                isWorkSession = true;
+                totalSeconds = currentWorkTime * 60; 
+                statusText.textContent = `WORK (${currentWorkTime}M)`;
+                
+                const focusStatus = document.getElementById('focusStatus');
+                if (focusStatus) {
+                    focusStatus.textContent = `WORK (${currentWorkTime}M)`;
+                }
+                
+                display.classList.add('text-amber-400');
+                display.classList.remove('text-blue-400', 'text-red-500');
+            }
+            remainingSeconds = totalSeconds;
+            progressBar.style.width = '0%';
+            setTimeout(() => { startTimer(); }, 2000); 
+        }
+
+        function startTimer() {
+            if (remainingSeconds <= 0) return;
+            if (isRunning) return;
+            isRunning = true;
+            if (!isPomodoroMode) {
+                statusText.textContent = 'RUNNING';
+                const focusStatus = document.getElementById('focusStatus');
+                if (focusStatus) {
+                    focusStatus.textContent = 'RUNNING';
+                }
+            }
+            startBtn.classList.add('hidden');
+            stopBtn.classList.remove('hidden');
+            if (!isMuted) playBeep();
+
+            // 타이머 시작 시간 기록 (백그라운드에서도 정확한 시간 추적)
+            startTime = Date.now();
+            pausedTime = remainingSeconds;
+
+            // Firebase 상태 업데이트
+            updateMyUserStatus();
+
+            timerInterval = setInterval(() => {
+                // 실제 경과 시간 계산 (백그라운드에서도 정확함)
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                remainingSeconds = pausedTime - elapsed;
+
+                if (remainingSeconds < 0) remainingSeconds = 0;
+
+                updateDisplay();
+
+                // 매초마다 Firebase 업데이트 (너무 자주 업데이트되지 않도록 3초마다 업데이트)
+                if (remainingSeconds % 3 === 0) {
+                    updateMyUserStatus();
+                }
+
+                if (remainingSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    isRunning = false;
+
+                    // 타이머 완료 시 시간 기록
+                    if (totalSeconds > 0) {
+                        recordTimerSession(totalSeconds);
+                        // 순위표 업데이트
+                        setTimeout(updateLeaderboard, 1000);
+                    }
+
+                    if (isPomodoroMode) {
+                        handlePomodoroTransition();
+                    } else {
+                        statusText.textContent = 'DONE';
+
+                        const focusStatus = document.getElementById('focusStatus');
+                        if (focusStatus) {
+                            focusStatus.textContent = 'DONE';
+                        }
+
+                        statusText.classList.add('animate-pulse');
+                        startBtn.classList.remove('hidden');
+                        stopBtn.classList.add('hidden');
+                        if (!isMuted) playAlarm();
+                        progressBar.style.width = '100%';
+
+                        // Firebase 상태 업데이트
+                        updateMyUserStatus();
+                    }
+                }
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+            isRunning = false;
+            statusText.textContent = 'PAUSED';
+
+            const focusStatus = document.getElementById('focusStatus');
+            if (focusStatus) {
+                focusStatus.textContent = 'PAUSED';
+            }
+
+            statusText.classList.remove('animate-pulse');
+            startBtn.classList.remove('hidden');
+            stopBtn.classList.add('hidden');
+
+            // stop 시 실행한 시간만큼 기록
+            if (startTime && totalSeconds > 0) {
+                const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+                console.log('Stop 시 기록:', {
+                    startTime,
+                    totalSeconds,
+                    elapsedSeconds,
+                    currentUser: currentUser?.uid,
+                    database: !!database
+                });
+                if (elapsedSeconds > 0) {
+                    recordTimerSession(elapsedSeconds);
+                    // 순위표 업데이트
+                    setTimeout(updateLeaderboard, 1000);
+                }
+            } else {
+                console.log('Stop 기록 실패:', {
+                    startTime,
+                    totalSeconds,
+                    currentUser: currentUser?.uid
+                });
+            }
+
+            // Firebase 상태 업데이트
+            updateMyUserStatus();
+        }
+
+        function resetTimer() {
+            stopTimer();
+            isPomodoroMode = false;
+            modeDisplay.textContent = "MANUAL";
+            recDot.classList.remove('bg-purple-500');
+            recDot.classList.add('bg-red-500');
+            display.classList.remove('text-blue-400');
+            display.classList.add('text-amber-400');
+
+            const focusTimer = document.getElementById('focusTimer');
+            if (focusTimer) {
+                focusTimer.classList.remove('text-blue-400');
+                focusTimer.classList.add('text-amber-400');
+            }
+
+            remainingSeconds = totalSeconds;
+            startTime = null; // 시작 시간 초기화
+            pausedTime = 0; // 일시정지 시간 초기화
+            updateDisplay();
+            statusText.textContent = 'RESET';
+
+            const focusStatus = document.getElementById('focusStatus');
+            if (focusStatus) {
+                focusStatus.textContent = 'RESET';
+            }
+
+            if (!isMuted) playBeep();
+
+            // Firebase 상태 업데이트
+            updateMyUserStatus();
+        }
+    </script>
+</body>
+</html>
