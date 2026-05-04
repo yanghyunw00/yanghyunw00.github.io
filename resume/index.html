@@ -1,0 +1,263 @@
+<!-- https://youtu.be/_xkSvufmjEs?si=mh-MXT2ZdUasYAYn&t=3416 -->
+<!-- adobe.ly/2GAgF93 -->
+<!-- https://scrimba.com/build-and-deploy-your-portfolio-c012 -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/svg+xml" href="../img/face.jpg">
+
+    <!-- Help auto scale for desktop & mobile -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hyunwoo Yang Website</title>
+
+    <!-- Normalize the difference across browsers  https://necolas.github.io/normalize.css/ -->
+    <link rel="stylesheet" href="external/normalize.css" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css"
+        integrity="sha256-46qynGAkLSFpVbEBog43gvNhfrOj+BmwXdxFgVK/Kvc=" crossorigin="anonymous" />
+
+    <!-- https://fonts.google.com/selection/embed -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap"
+        rel="stylesheet" />
+
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <!-- alt text can be blank since the logo is purely decorative and putting something like logo isn't actually helpful -->
+            <img src="img/cout.jpg" alt="">
+        </div>
+        <button class="nav-toggle" aria-label="toggle navigation">
+            <span class="hamburger"></span>
+        </button>
+        <nav class="nav">
+            <ul class="nav__list">
+                <li class="nav__item"> <a href="#home" class="nav__link">Home</a> </li>
+                <li class="nav__item"> <a href="#skills" class="nav__link">Skills</a> </li>
+                <li class="nav__item"> <a href="#about" class="nav__link">About Me</a> </li>
+                <li class="nav__item"> <a href="#projects" class="nav__link">Projects</a> </li>
+                <li class="nav__item"> <a href="#resume" class="nav__link">Resume</a> </li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Introduction -->
+
+    <section class="intro" id="#home">
+        <!-- TODO put in a mouse based interactive shader visualization page-->
+        <!-- <div class="intro-bg">
+            <iframe src="webgl/for_fun.html"></iframe>
+        </div> -->
+        <h1 class="section__title section__title--intro">
+            Hi, I am <strong>Hyunwoo Yang</strong>
+        </h1>
+        <p class="section__subtitle section__subtitle--intro">Game Engine Engineer</p>
+        <img src="img/face.jpg" alt="a picture of Hyunwoo Yang smiling" class="intro__img" />
+    </section>
+
+    <!-- My Services -->
+    <section class="my-services" id="skills">
+        <h2 class="section__title section__title--services">SKILLS</h2>
+        <div class="services">
+            <div class="service">
+                <h3>Languages</h3>
+                <p> C/C++ , C#, HTML5, Blueprint
+                </p>
+            </div>
+
+            <div class="service">
+                <h3>Engines / Framework Tools</h3>
+                <p> Unity, Unreal5, SDL2, SFML, IMGUI, Git/Github, Trello, Perforce, Visual Studio Code, Visual Studio, OpenGL,
+                    ShadeRED
+                </p>
+            </div>
+
+            <div class="service">
+                <h3>Fields</h3>
+                <p> Gameplay, Tools, Scripting, Engine, User Interface
+                </p>
+            </div>
+        </div>
+
+        <a href="#projects" class="btn">Projects</a>
+    </section>
+
+    <!-- About Me -->
+    <section class="about-me" id="about">
+        <h2 class="section__title section__title--about">Background</h2>
+        <p class="section__subtitle section__subtitle--about">
+              Hyunwoo Yang
+        </p>
+
+        <div class="about-me__body">
+            <p>
+                Hello! I'm Hyunwoo Yang, a professional game engine engineer who loves to develop the games.
+                I major in RTIS at DigiPen Institute of Technology in Redmond, WA!
+                I really enjoy to make fun games and other side projects!
+
+            </p>
+            <p>
+                I'm originally from Daegu, South Korea.
+                I have a strong foundation in creativity and a strategic approach to problem-solving.
+            </p>
+            <p>
+                I'm always on the lookout for new clients with interesting projects to work on,
+                so if you think that's you, send me an email!
+            </p>
+        </div>
+        <img src="img/tall.jpg" alt="picture of Hyunwoo Yang" class="about-me__img" />
+    </section>
+
+    <!-- My Portfolio -->
+    <section class="my-projects" id="projects">
+        <h2 class="section__title section__title--projects">My Projects</h2>
+        <p class="section__subtitle section__subtitle--projects">
+            A selection of my range of projects
+        </p>
+        <div class="portfolio">
+            <a href="portfolio/01_hello.html" class="portfolio__item">
+                <img src="img/portfolio_thumbnails/01_hello.jpg" alt="" class="portfolio__img" />
+            </a>
+            <a href="portfolio/02_meshes.html" class="portfolio__item">
+                <img src="img/portfolio_thumbnails/02_meshes.jpg" alt="" class="portfolio__img" />
+            </a>
+            <a href="portfolio/03_fog.html" class="portfolio__item">
+                <img src="img/portfolio_thumbnails/03_fog.jpg" alt="" class="portfolio__img" />
+            </a>
+            <a href="portfolio/04_toon.html" class="portfolio__item">
+                <img src="img/portfolio_thumbnails/04_toon.jpg" alt="" class="portfolio__img" />
+            </a>
+            <a href="portfolio/05_shadow.html" class="portfolio__item">
+                <img src="img/portfolio_thumbnails/05_shadow.jpg" alt="" class="portfolio__img" />
+            </a>
+            <a href="portfolio/06_value.html" class="portfolio__item">
+                <img src="img/portfolio_thumbnails/06_value.jpg" alt="" class="portfolio__img" />
+            </a>
+            <a href="portfolio/07_gradient.html" class="portfolio__item">
+                <img src="img/portfolio_thumbnails/07_gradient.jpg" alt="" class="portfolio__img" />
+            </a>
+
+        </div>
+    </section>
+
+    <!-- Resume Section -->
+    <section class="my-resume" id="resume">
+        <h2 class="section__title section__title--resume">Resume</h2>
+        <a target="_blank" href="docs/Resume.pdf"><i class="far fa-file-pdf"></i> PDF</a>
+
+        <div class="resume-section">
+            <h3>Experience</h3>
+            <p></p>
+            <h3>Projects</h3>
+            <div class="resume-item">
+                <p>
+                    <b>Tech Lead, Legacy of Dragons</b></br>
+                    09 / 2022</br>
+                    C++</br>
+                </p>
+                <ul>
+                    <li>2D top-down shooter in an action-survival genre in which a dragon hero battles waves of enemy dragons across multiple stages with 2 boss encounters.</li>
+                    <li>Collaborated with a team of 4 and led development of core gameplay systems including enemy wave mechanics and stage progression.</li>
+                    <li>Directed technical architecture as TechLead, coordinating system integration across the team.</li>
+                </ul>
+            </div>
+
+            <div class="resume-item">
+                <p>
+                    <b>QA, Help me! Doctor Water</b></br>
+                    03 / 2023</br>
+                    C++</br>
+                </p>
+                <ul>
+                    <li>2D vertical-scrolling action game; Dr. Water ascends an erupting volcano, defeating enemies and bosses with various weapons.</li>
+                    <li>Collaborated with a team of 4 and ensured gameplay quality through systematic playtesting across all stages and boss encounters.</li>
+                    <li>Identified and documented bugs in enemy behavior, weapon interactions, and level progression.</li>
+                    <li>Microdegree Expo Best Award, 2023.</li>
+                </ul>
+            </div>
+
+            <div class="resume-item">
+                <p>
+                    <b>Full Stack Developer, DigiPen Hangout Timer</b></br>
+                    09 / 2025</br>
+                    HTML, CSS, JavaScript</br>
+                </p>
+                <ul>
+                    <li>Online collaborative Pomodoro timer web application enabling friends to join shared real-time study sessions.</li>
+                </ul>
+            </div>
+
+            <div class="resume-item">
+                <p>
+                    <b>Tech Lead, I.G.Y</b></br>
+                    09 / 2025 - now</br>
+                    C++</br>
+                </p>
+                <ul>
+                    <li>Isometric (quarter-view) city builder simulation game inspired by Caesar 3.</li>
+                    <li>Collaborated with a team of 5 and led technical architecture for simulation systems including engine development and citizen AI behavior.</li>
+                </ul>
+            </div>
+
+            <h3>Leadership Experience</h3>
+            <div class="resume-item">
+                <p>
+                    <b>Leader, Linkers</b></br>
+                    <em>Daegu, South Korea</em></br>
+                </p>
+                <ul>
+                    <li>Collaborated with World Vision to provide aid to vulnerable populations.</li>
+                </ul>
+            </div>
+            <div class="resume-item">
+                <p>
+                    <b>Captain, 암흑회 FS</b></br>
+                    <em>Daegu, South Korea</em></br>
+                </p>
+                <ul>
+                    <li>Captain of a futsal team based in Daegu, South Korea.</li>
+                </ul>
+            </div>
+
+            <h3>Education</h3>
+            <div class="resume-item">
+                <p>
+                    <b>Bachelor of Science in Computer Science in Real-Time Interactive Simulation</b></br>
+                    2022- now</br>
+                    <em>Daegu, Korea & Redmond, WA, USA</em></br>
+                    Relevant Courses: Computer Graphics, Data Structure, Game Projects, Advanced C/C++
+                </p>
+            </div>
+        </div>
+    </section>
+    <!-- /Resume Section -->
+
+    <!-- Footer -->
+    <footer class="footer">
+        <a href="mailto:hyunwoo.yang@digipen.edu" class="footer__link">hyunwoo.yang@digipen.edu</a>
+        <ul class="social-list">
+            <li class="social-list__item">
+                <a class="social-list__link" href="https://linkedin.com/in/yanghyunwoo">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+            </li>
+            <li class="social-list__item">
+                <a class="social-list__link" href="https://github.com/yanghyunw00">
+                    <i class="fab fa-github"></i>
+                </a>
+            </li>
+            <!-- Want to list more? search : https://fontawesome.com/v5/search?ic=brands -->
+        </ul>
+    </footer>
+
+    <script src="js/index.js"></script>
+</body>
+
+</html>
