@@ -69,29 +69,30 @@
 
     <div class="portfolio-item-individual">
         <h2>Project Overview</h2>
-        <p> OpenGL과 GLSL을 사용하여 기본적인 함수를 구현하고 Quad를 쉐이더로 구현했다. 
-            또한 fragment shader와 vertex shader를 실시간으로 변경시키는 애니메이션 효과를 적용하였다.</p>
+        <p> This assignment implements foundational OpenGL and GLSL features to render a quad using shaders.
+            Core buffer and texture classes were built from scratch and both the vertex and fragment shaders include real-time animation effects.
+            </p>
 
         <h2>Tasks Completed</h2>
         <ul>
-            <li>IndexBuffer, Texture, VertexArray, VertexBuffer 클래스를 완성시켰다.</li>
-            <li>쉐이더를 사용하여 quad를 만들고 애니메이션 효과를 주었다.</li>
-            <li>C++, GLSL 스킬이 요구되며 애니메이션 효과를 위해 time을 Environment class에서 받아와 sin 과 곱하여
-                애니메이션 효과를 냈습니다.</li>
+            <li>Implemented IndexBuffer, Texture, VertexArray, and VertexBuffer classes using the GL:: wrapper layer for automatic error checking.</li>
+            <li>Built a quad using shaders and applied animation effects to both the vertex and fragment shaders.</li>
+            <li>Used C++ and GLSL skills throughout. Animation is driven by a time value pulled from the Environment class, multiplied with sin() to produce smooth motion.</li>
 
         </ul>
 
         <h2>Reflection</h2>
-        <p>쉐이더의 기초를 배웠습니다. vertex shader와 fragment shader의 사용법을 익히고 응용했으며 
-           AddVertexBuffer 함수를 구현하는 것이 복잡하여 어려웠습니다. 단순히 의사코드를 따라가기보다 각 함수가
-           어떤 역할을 하고 다음엔 어떤 함수가 필요할지 생각해보며 구현하니 금방 해결되었습니다.
+        <p>This assignment taught me the fundamentals of shaders
+           Learn how vertex and fragment shaders work and how to apply them creatively.
+           Implementing AddVertexBuffer was the most complex part, as the stride and offset math required careful thought.
+           Rather than blindly following pseudocode, thinking through what each function does and what comes next made it click quickly.
         </p>
     </div>
 
     <div class="portfolio-item-individual">
         <h2>Demo</h2>
         <!-- t..o..d..o demo the webgl version of the project -->
-        <iframe id="demo" src="../webgl/D01HelloQuad/graphics_fun.html"></iframe>
+        <iframe id="demo" src="../cs250/hw1/index.html"></iframe>
     </div>
 
 
