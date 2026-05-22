@@ -71,22 +71,39 @@
 
     <div class="portfolio-item-individual">
         <h2>Project Overview</h2>
-        <p>Provide a brief description of the project, its purpose, and what you aimed to achieve.</p>
+        <p> This assignment implements procedural mesh generation in C++ to render multiple 3D shapes using OpenGL.
+            The core mesh building logic was written from scratch in Mesh.cpp, generating vertex and index data
+            for a plane, cube, sphere, torus, cylinder, and cone.
+            Each shape supports three rendering modes: textured, wireframe, and normal visualization,
+            all driven by a shared index buffer pattern.
+        </p>
 
         <h2>Tasks Completed</h2>
         <ul>
-            <li>Describe the tasks you completed for this project.</li>
-            <li>Be specific about your contributions and the technologies used.</li>
+            <li>Implemented create_plane_vertices() to generate a grid of vertices with correct position, normal, and UV
+                coordinates by iterating over stacks and slices.</li>
+            <li>Implemented build_index_buffer() to produce triangle indices by splitting each quad into two triangles
+                using a stride based pointer system.</li>
+            <li>Implemented convert_to_lines_pattern() to convert triangle indices into line indices for wireframe
+                rendering.</li>
+            <li>Implemented all six 3D shapes -> Plane, Cube, Sphere, Torus, Cylinder, and Cone. Implemented add_cap()
+                to handle the top and bottom caps of the cylinder and cone.</li>
+
         </ul>
 
         <h2>Reflection</h2>
-        <p>Reflect on the project, discussing any challenges faced, solutions implemented, and what you learned from the
-            experience.</p>
+        <p>This assignment taught me how 3D geometry is built procedurally from mathematical patterns.
+            The most challenging part was convert_to_lines_pattern() where understanding how a group of
+            6 indices maps to 4 edges for wireframe rendering required careful thought.
+            Rather than blindly following the pattern, working through each pointer index manually
+            made the logic click. Seeing the same index buffer reused across the sphere, torus, cylinder,
+            and cone also reinforced how powerful a single well-designed function can be.
+        </p>
     </div>
 
     <div class="portfolio-item-individual">
         <h2>Demo</h2>
-        <iframe id="demo" src="../webgl/D02ProceduralMeshes/graphics_fun.html?start=meshes" tabindex="-1"></iframe>
+        <iframe id="demo" src="../project/hw2/index.html?start=meshes" tabindex="-1"></iframe>
     </div>
 
     <!-- Footer -->
