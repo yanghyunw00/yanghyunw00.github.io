@@ -69,17 +69,27 @@
 
     <div class="portfolio-item-individual">
         <h2>Project Overview</h2>
-        <p>Provide a brief description of the project, its purpose, and what you aimed to achieve.</p>
+        <p>This assignment implements shadow mapping in C++ using OpenGL, rendering accurate per-object shadows cast by a perspective light source.
+            The implementation builds a FrameBuffer class for off-screen depth rendering and implements a two-pass pipeline: a depth pre-pass from the light's point of view, followed by a shadow-projection pass in the main render.
+            The demo supports interactive controls for light FOV, near/far distances, depth bit precision, shadow map resolution and live visualization of both the depth texture and the light's frustum.</p>
 
         <h2>Tasks Completed</h2>
         <ul>
-            <li>Describe the tasks you completed for this project.</li>
-            <li>Be specific about your contributions and the technologies used.</li>
+            <li>Implemented LoadAsDepthTexture() and LoadAsRGBA() in Texture.cpp to create GPU-side depth and RGBA8 textures with proper OpenGL parameters, including depth comparison mode (GL_COMPARE_REF_TO_TEXTURE) and edge clamping.</li>
+            <li>Implemented ViewMatrix() and ToWorldMatrix() in Camera.hpp to construct correct camera-space and world-space transformation matrices from the camera's right, up, and back basis vectors.</li>
+            <li>Implemented LoadWithSpecification() in FrameBuffer.cpp to create and manage OpenGL framebuffer objects with optional depth and color texture attachments, including completeness verification</li>
+            <li>Implemented renderToDepthBuffer() to render the full scene from the light's perspective into the shadow framebuffer, with polygon offset to reduce shadow acne.</li>
+            <li>Implemented renderToScreen() to apply the shadow map in the main render pass by binding the depth texture and drawing with the shadow shader.</li>
+            <li>Implemented drawLightFrustum() to visualize the light's view frustum by rendering an NDC cube transformed by the inverse light projection and the light's world matrix.</li>
+            <li>Implemented drawDepthTexture() to display the shadow map on a screen-space quad for debugging.</li>
+            <li>Implemented shadow.vert and shadow.frag shaders: the vertex shader transforms positions into shadow space and the fragment shader performs a textureProj() lookup against the depth map, applies a light-behind-object check. </li>
         </ul>
 
         <h2>Reflection</h2>
-        <p>Reflect on the project, discussing any challenges faced, solutions implemented, and what you learned from the
-            experience.</p>
+        <p>This assignment clarified how multi-pass rendering works in practice.
+            The same scene is processed twice, each time from a different camera perspective, and the results are composed in the final pass.
+            The most challenging part was understanding shadow.frag. The key difficulty was tracing exactly what textureProj() returns when the texture has GL_COMPARE_REF_TO_TEXTURE enabled: OpenGL performs the depth comparison internally and returns a shadow factor rather than a raw depth value, which is not obvious at first glance.
+            Going through each step manually rather than guessing made every piece eventually click.</p>
     </div>
 
     <div class="portfolio-item-individual">
