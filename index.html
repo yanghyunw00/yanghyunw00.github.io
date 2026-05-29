@@ -54,6 +54,32 @@
     text-transform: uppercase;
   }
 
+  .hero-links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 14px;
+  }
+
+  .hero-links a {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--ink3);
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    transition: color 0.15s;
+  }
+
+  .hero-links a:hover {
+    color: var(--accent);
+  }
+
+  .hero-links-sep {
+    color: var(--border);
+    font-size: 0.8rem;
+  }
+
   .hero-divider {
     width: 40px;
     height: 3px;
@@ -190,7 +216,12 @@
 
 <div class="hero">
   <div class="hero-name">Hyunwoo Yang</div>
-  <div class="hero-sub">Gameplay Engineer &nbsp;·&nbsp; DigiPen Korea</div>
+  <div class="hero-sub">Gameplay Engineer</div>
+  <div class="hero-links">
+    <a href="https://linkedin.com/in/yanghyunwoo" target="_blank" rel="noopener">linkedin.com/in/yanghyunwoo</a>
+    <span class="hero-links-sep">/</span>
+    <a href="mailto:jtpgns2015@gmail.com">jtpgns2015@gmail.com</a>
+  </div>
   <div class="hero-divider"></div>
 </div>
 
@@ -231,7 +262,7 @@
         <div class="card-left">
           <div class="card-icon">🖥️</div>
           <div class="card-text">
-            <div class="card-title">DigiPen Graphics I</div>
+            <div class="card-title">I.G.Y</div>
             <div class="card-desc">WebAssembly graphics demo — CS200 final</div>
           </div>
         </div>
