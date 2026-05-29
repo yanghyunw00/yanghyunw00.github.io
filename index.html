@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hyunwoo Yang</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #F4F2ED;
+    --ink: #0D0C0A;
+    --ink2: #3A3A36;
+    --ink3: #7A7A74;
+    --accent: #C8451A;
+    --card-bg: #ECEAE4;
+    --card-hover: #E0DDD6;
+    --border: #D4D1CA;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Space Grotesk', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 60px 20px 80px;
+  }
+
+  .hero {
+    text-align: center;
+    margin-bottom: 56px;
+  }
+
+  .hero-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 10vw, 6rem);
+    letter-spacing: 0.04em;
+    line-height: 1;
+    color: var(--ink);
+  }
+
+  .hero-sub {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--ink3);
+    margin-top: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .hero-divider {
+    width: 40px;
+    height: 3px;
+    background: var(--accent);
+    margin: 20px auto 0;
+    border-radius: 2px;
+  }
+
+  .sections {
+    width: 100%;
+    max-width: 560px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink3);
+    margin-bottom: 12px;
+    padding-left: 2px;
+  }
+
+  .card-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 22px;
+    text-decoration: none;
+    color: var(--ink);
+    transition: background 0.15s, transform 0.15s, border-color 0.15s;
+    cursor: pointer;
+  }
+
+  .card:hover {
+    background: var(--card-hover);
+    border-color: #BFBCB5;
+    transform: translateY(-1px);
+  }
+
+  .card-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .card-icon {
+    font-size: 1.3rem;
+    width: 28px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .card-text {}
+
+  .card-title {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+
+  .card-desc {
+    font-size: 0.78rem;
+    color: var(--ink3);
+    margin-top: 2px;
+  }
+
+  .card-arrow {
+    color: var(--ink3);
+    font-size: 1rem;
+    flex-shrink: 0;
+    transition: color 0.15s, transform 0.15s;
+  }
+
+  .card:hover .card-arrow {
+    color: var(--accent);
+    transform: translateX(2px);
+  }
+
+  .sub-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 8px;
+  }
+
+  .sub-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 10px;
+    text-decoration: none;
+    color: var(--ink2);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+
+  .sub-card:hover {
+    background: var(--card-hover);
+    border-color: #BFBCB5;
+    color: var(--accent);
+  }
+
+  footer {
+    margin-top: 60px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--ink3);
+    letter-spacing: 0.05em;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-name">Hyunwoo Yang</div>
+  <div class="hero-sub">Gameplay Engineer &nbsp;·&nbsp; DigiPen Korea</div>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="sections">
+
+  <!-- Portfolio & Resume -->
+  <div>
+    <div class="section-label">Portfolio</div>
+    <div class="card-list">
+      <a class="card" href="./resume2/">
+        <div class="card-left">
+          <div class="card-icon">🎮</div>
+          <div class="card-text">
+            <div class="card-title">Gameplay Engineer Resume</div>
+            <div class="card-desc">Latest portfolio — projects, skills, contact</div>
+          </div>
+        </div>
+        <div class="card-arrow">→</div>
+      </a>
+      <a class="card" href="./resume/">
+        <div class="card-left">
+          <div class="card-icon">💼</div>
+          <div class="card-text">
+            <div class="card-title">Portfolio Website</div>
+            <div class="card-desc">Earlier portfolio site</div>
+          </div>
+        </div>
+        <div class="card-arrow">→</div>
+      </a>
+    </div>
+  </div>
+
+  <!-- Projects -->
+  <div>
+    <div class="section-label">Projects</div>
+    <div class="card-list">
+      <a class="card" href="./igy/">
+        <div class="card-left">
+          <div class="card-icon">🖥️</div>
+          <div class="card-text">
+            <div class="card-title">DigiPen Graphics I</div>
+            <div class="card-desc">WebAssembly graphics demo — CS200 final</div>
+          </div>
+        </div>
+        <div class="card-arrow">→</div>
+      </a>
+      <a class="card" href="./project/timer/">
+        <div class="card-left">
+          <div class="card-icon">⏱️</div>
+          <div class="card-text">
+            <div class="card-title">Pomodoro Timer</div>
+            <div class="card-desc">DigiPen Hangout study timer</div>
+          </div>
+        </div>
+        <div class="card-arrow">→</div>
+      </a>
+    </div>
+  </div>
+
+  <!-- CS200 -->
+  <div>
+    <div class="section-label">CS200 — Computer Graphics I</div>
+    <div class="sub-grid">
+      <a class="sub-card" href="./cs200/hw1/">HW 1</a>
+      <a class="sub-card" href="./cs200/hw2/">HW 2</a>
+      <a class="sub-card" href="./cs200/hw3/">HW 3</a>
+      <a class="sub-card" href="./cs200/hw4/">HW 4</a>
+      <a class="sub-card" href="./cs200/hw5/">HW 5</a>
+      <a class="sub-card" href="./cs200/hw6/">HW 6</a>
+      <a class="sub-card" href="./cs200/hw7/">HW 7</a>
+      <a class="sub-card" href="./cs200/hw8/">HW 8</a>
+      <a class="sub-card" href="./cs200/port_230/">Port 230</a>
+    </div>
+  </div>
+
+  <!-- CS250 -->
+  <div>
+    <div class="section-label">CS250 — Computer Graphics II</div>
+    <div class="sub-grid">
+      <a class="sub-card" href="./cs250/hw1/">HW 1</a>
+      <a class="sub-card" href="./cs250/hw2/">HW 2</a>
+    </div>
+  </div>
+
+</div>
+
+<footer>yanghyunw00.github.io</footer>
+
+</body>
+</html>
