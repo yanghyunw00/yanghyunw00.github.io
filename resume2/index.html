@@ -741,6 +741,68 @@
   }
   .gallery-slot image-slot { width: 100%; height: 100%; }
 
+  /* Games list (minigame collection) */
+  .games-block { margin-bottom: 48px; }
+  .games-list {
+    border-top: 2px solid var(--ink);
+  }
+  .game-row {
+    display: grid;
+    grid-template-columns: 64px minmax(280px, 1fr) minmax(420px, 1.1fr);
+    gap: 40px;
+    align-items: start;
+    padding: 44px 8px;
+    border-bottom: 2px solid var(--ink);
+  }
+  .game-no {
+    font-family: var(--ff-mono);
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--ink3);
+    padding-top: 6px;
+  }
+  .game-name {
+    font-family: var(--ff-display);
+    font-size: clamp(34px, 3.6vw, 52px);
+    line-height: 0.98;
+    letter-spacing: 0.01em;
+    margin-bottom: 14px;
+  }
+  .game-desc {
+    font-size: 19px;
+    line-height: 1.55;
+    color: var(--ink2);
+    max-width: 520px;
+  }
+  .game-media {
+    margin-top: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .game-media image-slot {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    border: 2px solid var(--ink);
+    overflow: hidden;
+    background: linear-gradient(135deg, #ECE9E1, #D9D4C7);
+  }
+  .game-tag {
+    display: inline-block;
+    margin-bottom: 18px;
+    font-family: var(--ff-mono);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 2px solid var(--accent);
+    padding: 9px 15px;
+    white-space: nowrap;
+  }
+
   /* Next project */
   .next-project {
     margin-top: 80px;
@@ -1092,6 +1154,7 @@
     word-break: break-word;
     transition: color 0.3s;
   }
+  .contact-card-value .email-split { display: block; line-height: 1.04; }
   .contact-card-foot {
     display: flex; align-items: flex-end; justify-content: space-between;
     gap: 12px;
@@ -1146,6 +1209,8 @@
     .contact-card:nth-child(1), .contact-card:nth-child(2) { border-bottom: 2px solid var(--ink); }
     .gallery-grid { grid-template-columns: 1fr 1fr; }
     .next-project-name { font-size: 40px; }
+    .game-row { grid-template-columns: 1fr; gap: 20px; }
+    .game-media { grid-template-columns: 1fr 1fr; }
     .next-project { padding: 28px; }
     .btn-primary, .btn-secondary { padding: 16px 24px; font-size: 14px; }
   }
@@ -1280,6 +1345,47 @@ const PROJECTS = [
       "Built networked multiplayer using Unity Relay for friend-to-friend sessions",
       "Implemented host/client connection flow and synchronized game state across peers",
       "Used the project to deepen hands-on understanding of real-time multiplayer architecture",
+    ],
+    video: null,
+    gallery: [null, null, null],
+  },
+  {
+    id: "minigames",
+    type: "solo",
+    name: "MINIGAME COLLECTION",
+    subtitle: "Three Games in Raylib",
+    year: "2025",
+    role: "Solo Developer",
+    team: "Solo",
+    duration: "July 2025",
+    tech: ["C++", "Raylib"],
+    blurb: "A trio of small games built from scratch in Raylib — each one a focused study of a different algorithm or system.",
+    overview: "A minigame collection built in C++ with Raylib. Rather than one big game, I used it as a sandbox to implement three self-contained games, each exploring a distinct technical problem — pathfinding, constraint solving, and gameplay simulation.",
+    games: [
+      {
+        no: "01",
+        name: "Maze Escape",
+        tag: "A* Pathfinding",
+        desc: "A 2D maze-escape game. The player must reach the exit while avoiding roaming enemies that hunt the player using A* pathfinding on the maze grid.",
+      },
+      {
+        no: "02",
+        name: "Sudoku",
+        tag: "Backtracking",
+        desc: "A playable Sudoku game with puzzle generation and solving driven by a recursive backtracking algorithm that fills and validates the board.",
+      },
+      {
+        no: "03",
+        name: "Futsal Manager",
+        tag: "Gameplay Simulation",
+        desc: "A prototype 4-vs-4 futsal simulation game. Models player movement, possession, and match flow as a real-time gameplay simulation sandbox.",
+      },
+    ],
+    contributions: [
+      "Built three independent games from scratch in C++ with Raylib",
+      "Implemented A* pathfinding for enemy hunting behavior in the maze game",
+      "Wrote a recursive backtracking solver to generate and validate Sudoku boards",
+      "Prototyped a real-time 4v4 futsal simulation with player movement and match flow",
     ],
     video: null,
     gallery: [null, null, null],
@@ -1449,7 +1555,7 @@ function Work() {
             <div className="cat-num">— Category 01</div>
             <h2 className="cat-title">TEAM<br/>PROJECTS</h2>
             <p className="cat-desc">
-              Group projects built with squads of 4–5 at DigiPen. Engine architecture, gameplay systems, and pipeline integration as TechLead.
+              Team projects built together with my teammates at DigiPen.
             </p>
             <div className="cat-foot">
               <div className="cat-foot-meta">{TEAM_PROJECTS.length} Projects · Enter</div>
@@ -1570,14 +1676,38 @@ function ProjectDetail({ id }) {
         </div>
       </div>
 
+      {!project.games && (
       <div className="project-hero-media">
         <image-slot id={`hero-${project.id}`} shape="rect" placeholder={`Hero image — ${project.name}`}></image-slot>
       </div>
+      )}
 
       <div className="project-body">
         <div className="project-section-label">— Overview</div>
         <div className="project-section-content">{project.overview}</div>
       </div>
+
+      {project.games && (
+        <div className="games-block">
+          <div className="project-section-label">— The Games</div>
+          <div className="games-list">
+            {project.games.map((g) => (
+              <div key={g.no} className="game-row">
+                <div className="game-no">{g.no}</div>
+                <div className="game-main">
+                  <div className="game-name">{g.name}</div>
+                  <div className="game-tag">{g.tag}</div>
+                  <div className="game-desc">{g.desc}</div>
+                </div>
+                <div className="game-media">
+                  <image-slot id={`game-${project.id}-${g.no}-a`} shape="rect" placeholder={`${g.name} — screenshot 1`}></image-slot>
+                  <image-slot id={`game-${project.id}-${g.no}-b`} shape="rect" placeholder={`${g.name} — screenshot 2`}></image-slot>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="project-body">
         <div className="project-section-label">— My Role</div>
@@ -1588,6 +1718,7 @@ function ProjectDetail({ id }) {
         </div>
       </div>
 
+      {!project.games && (
       <div style={{marginBottom: 32}}>
         <div className="gallery-label">— Gameplay / Demo Video</div>
         <div className="video-slot">
@@ -1603,7 +1734,9 @@ function ProjectDetail({ id }) {
           )}
         </div>
       </div>
+      )}
 
+      {!project.games && (
       <div>
         <div className="gallery-label">— Screenshots / Gallery</div>
         <div className="gallery-grid">
@@ -1614,6 +1747,7 @@ function ProjectDetail({ id }) {
           ))}
         </div>
       </div>
+      )}
 
       {next && next.id !== project.id && (
         <a href={`#project/${next.id}`} className="next-project">
@@ -1645,7 +1779,7 @@ function About() {
 
       <div className="about-grid">
         <h2 className="bio-large">
-          Gameplay engineer building <span>real-time systems</span> from C++ up — and shipping them with small, sharp teams.
+          Gameplay engineer who wants to build <span>games that bring people joy</span> — every kind of fun, made to actually run.
         </h2>
         <div className="bio-body">
           {PROFILE.longBio.map((p, i) => <p key={i}>{p}</p>)}
@@ -1728,7 +1862,7 @@ function About() {
 
 function Contact() {
   const cards = [
-    { num: '01', label: 'Email', value: PROFILE.email, cta: 'Send a message', href: `mailto:${PROFILE.email}`, icon: <Icon.mail />, target: null },
+    { num: '01', label: 'Email', value: <span className="email-split">{PROFILE.email.split('@')[0]}<br/>@{PROFILE.email.split('@')[1]}</span>, cta: 'Send a message', href: `mailto:${PROFILE.email}`, icon: <Icon.mail />, target: null },
     { num: '02', label: 'GitHub', value: 'yanghyunw00', cta: 'View repositories', href: PROFILE.github, icon: <Icon.github />, target: '_blank' },
     { num: '03', label: 'LinkedIn', value: 'yanghyunwoo', cta: 'Connect with me', href: PROFILE.linkedin, icon: <Icon.linkedin />, target: '_blank' },
     { num: '04', label: 'Resume', value: 'Download PDF', cta: 'Latest version', href: PROFILE.resume, icon: <Icon.download />, target: '_blank' },
