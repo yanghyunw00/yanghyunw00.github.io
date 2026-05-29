@@ -1,0 +1,1808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hyunwoo Yang — Gameplay Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="image-slot.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  :root {
+    --bg: #F4F2ED;
+    --ink: #0D0C0A;
+    --ink2: #3A3A36;
+    --ink3: #7A7770;
+    --accent: #D4581A;
+    --accent-soft: rgba(212, 88, 26, 0.08);
+    --border: rgba(13,12,10,0.14);
+    --card: #FFFFFF;
+    --ff-display: 'Bebas Neue', sans-serif;
+    --ff-body: 'Space Grotesk', sans-serif;
+    --ff-mono: 'Space Mono', monospace;
+  }
+
+  html, body { height: 100%; }
+  html { font-size: 18px; }
+  
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--ff-body);
+    font-size: 18px;
+    line-height: 1.55;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection { background: var(--accent); color: #fff; }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--ink); }
+
+  a { color: inherit; text-decoration: none; }
+  button { background: none; border: none; font: inherit; color: inherit; cursor: pointer; padding: 0; }
+
+  /* ====== NAV ====== */
+  nav.topbar {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    padding: 22px 48px;
+    background: var(--bg);
+    border-bottom: 2px solid var(--ink);
+    gap: 32px;
+  }
+  .nav-brand {
+    display: flex; align-items: center; gap: 16px;
+  }
+  .brand-mark {
+    width: 56px; height: 56px;
+    background: var(--ink);
+    color: var(--bg);
+    font-family: var(--ff-display);
+    font-size: 38px;
+    display: flex; align-items: center; justify-content: center;
+    letter-spacing: -0.02em;
+  }
+  .brand-name {
+    font-family: var(--ff-mono);
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .brand-name .brand-role {
+    display: block;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--ink3);
+    letter-spacing: 0.2em;
+    margin-top: 4px;
+  }
+  .nav-links {
+    display: flex; gap: 6px;
+    justify-self: center;
+  }
+  .nav-link {
+    position: relative;
+    font-family: var(--ff-mono);
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 18px 28px;
+    color: var(--ink2);
+    transition: color 0.2s;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .nav-link:hover { color: var(--ink); }
+  .nav-link.active { color: var(--accent); }
+  .nav-link .num {
+    font-size: 14px;
+    opacity: 0.5;
+    font-weight: 400;
+  }
+  .nav-link.active .num { opacity: 1; color: var(--accent); }
+  .nav-link.active::after {
+    content: '';
+    position: absolute;
+    left: 28px; right: 28px;
+    bottom: 8px;
+    height: 3px;
+    background: var(--accent);
+  }
+  .nav-right {
+    display: flex; align-items: center; gap: 14px;
+  }
+  .nav-icon-btn {
+    width: 60px; height: 60px;
+    border: 2px solid var(--ink);
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+    color: var(--ink);
+  }
+  .nav-icon-btn:hover { background: var(--ink); color: var(--bg); transform: translate(-2px, -2px); box-shadow: 4px 4px 0 var(--accent); }
+  .nav-icon-btn svg { width: 28px; height: 28px; }
+
+  /* ====== VIEWPORT ====== */
+  main.view {
+    padding-top: 122px;
+    min-height: 100vh;
+    animation: viewIn 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @keyframes viewIn {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ====== SHARED BUTTONS ====== */
+  .btn-primary, .btn-secondary {
+    display: inline-flex; align-items: center; gap: 14px;
+    font-family: var(--ff-mono);
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 20px 32px;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .btn-primary {
+    background: var(--ink);
+    color: var(--bg);
+    border: 2px solid var(--ink);
+  }
+  .btn-primary:hover { background: var(--accent); border-color: var(--accent); transform: translate(-3px, -3px); box-shadow: 6px 6px 0 var(--ink); }
+  .btn-secondary {
+    border: 2px solid var(--ink);
+    color: var(--ink);
+    background: transparent;
+  }
+  .btn-secondary:hover { background: var(--ink); color: var(--bg); transform: translate(-3px, -3px); box-shadow: 6px 6px 0 var(--accent); }
+  .btn-primary svg, .btn-secondary svg { width: 18px; height: 18px; }
+
+  /* ====== PAGE HEADER ====== */
+  .page-header {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    margin-bottom: 64px;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 28px;
+    gap: 40px;
+  }
+  .page-title {
+    font-family: var(--ff-display);
+    font-size: clamp(72px, 11vw, 168px);
+    line-height: 0.88;
+    letter-spacing: 0;
+  }
+  .page-meta {
+    text-align: right;
+    display: grid;
+    gap: 4px;
+  }
+  .page-meta-num {
+    font-family: var(--ff-display);
+    font-size: 40px;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .page-meta-text {
+    font-family: var(--ff-mono);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink2);
+  }
+
+  /* ====== HOME ====== */
+  .home {
+    min-height: calc(100vh - 122px);
+    display: grid;
+    grid-template-rows: 1fr auto;
+    padding: 0 48px 48px;
+    position: relative;
+    overflow: hidden;
+  }
+  .home-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    align-items: center;
+    gap: 60px;
+    padding-top: 32px;
+  }
+  .home-left { position: relative; z-index: 2; }
+  .home-tag {
+    display: inline-flex; align-items: center; gap: 14px;
+    font-family: var(--ff-mono);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 28px;
+  }
+  .home-tag::before {
+    content: '';
+    width: 36px; height: 2px;
+    background: var(--accent);
+  }
+  .home-name {
+    font-family: var(--ff-display);
+    font-size: clamp(96px, 13vw, 200px);
+    line-height: 0.86;
+    letter-spacing: 0;
+  }
+  .home-name .second-line {
+    display: block;
+    color: transparent;
+    -webkit-text-stroke: 2.5px var(--ink);
+  }
+  .home-bio {
+    margin-top: 32px;
+    max-width: 560px;
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--ink);
+  }
+  .home-bio strong {
+    color: var(--ink);
+    font-weight: 700;
+    background: linear-gradient(transparent 60%, var(--accent-soft) 60%);
+    padding: 0 4px;
+  }
+  .home-bio-sub {
+    margin-top: 14px;
+    max-width: 540px;
+    font-size: 18px;
+    color: var(--ink2);
+    font-weight: 400;
+  }
+  .home-cta-row {
+    display: flex; gap: 14px; flex-wrap: wrap;
+    margin-top: 40px;
+  }
+
+  /* Home right side big visual */
+  .home-right {
+    position: relative;
+    height: 100%;
+    min-height: 520px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .home-stack-num {
+    position: absolute;
+    top: -20px; right: -30px;
+    font-family: var(--ff-display);
+    font-size: clamp(240px, 36vw, 520px);
+    line-height: 1;
+    color: transparent;
+    -webkit-text-stroke: 2px rgba(212, 88, 26, 0.18);
+    user-select: none;
+    pointer-events: none;
+  }
+  .home-portrait-slot {
+    position: relative;
+    width: 360px;
+    height: 460px;
+    z-index: 2;
+    border: 2px solid var(--ink);
+    overflow: hidden;
+  }
+  .home-portrait-slot image-slot {
+    width: 100%; height: 100%;
+  }
+  .home-portrait-deco {
+    position: absolute;
+    inset: 24px -24px -24px 24px;
+    border: 2px solid var(--ink);
+    z-index: 1;
+    background: var(--accent);
+  }
+
+  .home-meta-row {
+    display: grid;
+    grid-template-columns: repeat(2, max-content);
+    gap: 0;
+    padding-top: 36px;
+    border-top: 2px solid var(--ink);
+    margin-top: 40px;
+  }
+  .meta-cell {
+    padding: 0 28px;
+    border-right: 1px solid var(--border);
+  }
+  .meta-cell:first-child { padding-left: 0; }
+  .meta-cell:last-child { border-right: none; padding-right: 0; }
+  .meta-cell .meta-label {
+    font-family: var(--ff-mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink3);
+    margin-bottom: 10px;
+  }
+  .meta-cell .meta-value {
+    font-family: var(--ff-display);
+    font-size: 32px;
+    letter-spacing: 0.02em;
+    line-height: 1.05;
+  }
+
+  /* ====== WORK CATEGORY LANDING ====== */
+  .work {
+    padding: 56px 48px 80px;
+  }
+  .category-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+  }
+  .category-card {
+    position: relative;
+    display: block;
+    background: var(--card);
+    border: 2px solid var(--ink);
+    padding: 48px 44px 44px;
+    min-height: 440px;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s;
+    overflow: hidden;
+  }
+  .category-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--ink);
+    transform: translateY(101%);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 0;
+  }
+  .category-card:hover { transform: translate(-6px, -6px); box-shadow: 12px 12px 0 var(--ink); }
+  .category-card:hover::before { transform: translateY(0); }
+  .category-card:hover .cat-inner { color: var(--bg); }
+  .category-card:hover .cat-arrow { color: var(--accent); transform: translateX(8px); }
+  .category-card:hover .cat-count-bg { color: transparent; -webkit-text-stroke: 2px var(--accent); }
+  .cat-inner {
+    position: relative; z-index: 1;
+    display: grid; gap: 20px;
+    height: 100%;
+    grid-template-rows: auto auto 1fr auto;
+  }
+  .cat-num {
+    font-family: var(--ff-mono);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+  .cat-title {
+    font-family: var(--ff-display);
+    font-size: clamp(56px, 7vw, 96px);
+    line-height: 0.92;
+    letter-spacing: 0.005em;
+  }
+  .cat-desc {
+    font-size: 19px;
+    line-height: 1.5;
+    color: inherit;
+    opacity: 0.85;
+    max-width: 480px;
+  }
+  .cat-count-bg {
+    position: absolute;
+    bottom: -30px; right: -10px;
+    font-family: var(--ff-display);
+    font-size: clamp(180px, 24vw, 320px);
+    line-height: 1;
+    color: transparent;
+    -webkit-text-stroke: 2px rgba(13,12,10,0.08);
+    user-select: none;
+    pointer-events: none;
+    z-index: 0;
+    transition: all 0.3s;
+  }
+  .cat-foot {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-top: 24px;
+    border-top: 1.5px solid currentColor;
+    opacity: 1;
+  }
+  .cat-foot-meta {
+    font-family: var(--ff-mono);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .cat-arrow {
+    font-family: var(--ff-mono);
+    font-size: 32px;
+    transition: all 0.3s;
+  }
+
+  /* ====== WORK LIST (filtered) ====== */
+  .work-list {
+    padding: 40px 48px 80px;
+  }
+  .work-back {
+    display: inline-flex; align-items: center; gap: 12px;
+    font-family: var(--ff-mono);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink2);
+    margin-bottom: 28px;
+    padding: 12px 20px;
+    border: 2px solid var(--ink);
+    transition: all 0.2s;
+  }
+  .work-back:hover { background: var(--ink); color: var(--bg); }
+  .work-back svg { width: 16px; height: 16px; }
+
+  .work-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+  }
+  .work-card {
+    display: block;
+    background: var(--card);
+    border: 2px solid var(--ink);
+    overflow: hidden;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s;
+    position: relative;
+  }
+  .work-card:hover {
+    transform: translate(-6px, -6px);
+    box-shadow: 12px 12px 0 var(--ink);
+  }
+  .work-card-media {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    background: linear-gradient(135deg, #ECE9E1 0%, #D9D4C7 100%);
+    position: relative;
+    overflow: hidden;
+    border-bottom: 2px solid var(--ink);
+  }
+  .work-card-media image-slot {
+    width: 100%; height: 100%; display: block;
+  }
+  .work-card-badge {
+    position: absolute;
+    top: 16px; left: 16px;
+    background: var(--ink);
+    color: var(--bg);
+    font-family: var(--ff-mono);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    padding: 8px 14px;
+    text-transform: uppercase;
+    z-index: 2;
+  }
+  .work-card-badge.team { background: var(--accent); }
+  .work-card-body {
+    padding: 32px 32px 30px;
+    display: grid;
+    gap: 16px;
+  }
+  .work-card-top {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 18px;
+  }
+  .work-card-name {
+    font-family: var(--ff-display);
+    font-size: 52px;
+    line-height: 0.95;
+    letter-spacing: 0.005em;
+  }
+  .work-card-year {
+    font-family: var(--ff-mono);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink3);
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+  }
+  .work-card-desc {
+    font-size: 18px;
+    color: var(--ink2);
+    line-height: 1.5;
+    font-weight: 400;
+  }
+  .work-card-foot {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 8px;
+    padding-top: 20px;
+    border-top: 1.5px solid var(--border);
+  }
+  .work-card-tags {
+    display: flex; gap: 8px; flex-wrap: wrap;
+  }
+  .work-card-tag {
+    font-family: var(--ff-mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1.5px solid var(--accent);
+    padding: 6px 12px;
+  }
+  .work-card-arrow {
+    font-family: var(--ff-mono);
+    font-size: 26px;
+    color: var(--ink);
+    transition: transform 0.3s;
+    font-weight: 700;
+  }
+  .work-card:hover .work-card-arrow { transform: translateX(8px); color: var(--accent); }
+
+  /* ====== PROJECT DETAIL ====== */
+  .project {
+    padding: 40px 48px 100px;
+  }
+  .back-link {
+    display: inline-flex; align-items: center; gap: 12px;
+    font-family: var(--ff-mono);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin-bottom: 36px;
+    padding: 12px 20px;
+    border: 2px solid var(--ink);
+    transition: all 0.2s;
+  }
+  .back-link:hover { background: var(--ink); color: var(--bg); transform: translate(-2px, -2px); box-shadow: 4px 4px 0 var(--accent); }
+  .back-link svg { width: 16px; height: 16px; }
+
+  .project-header {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 60px;
+    align-items: end;
+    margin-bottom: 56px;
+    padding-bottom: 32px;
+    border-bottom: 2px solid var(--ink);
+  }
+  .project-title {
+    font-family: var(--ff-display);
+    font-size: clamp(72px, 9.5vw, 152px);
+    line-height: 0.9;
+    letter-spacing: 0;
+  }
+  .project-subtitle {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--accent);
+    font-family: var(--ff-mono);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  .project-meta {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 28px 32px;
+  }
+  .project-meta-cell .label {
+    font-family: var(--ff-mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink3);
+    margin-bottom: 8px;
+  }
+  .project-meta-cell .value {
+    font-family: var(--ff-display);
+    font-size: 26px;
+    letter-spacing: 0.02em;
+    line-height: 1.1;
+  }
+
+  /* Hero media */
+  .project-hero-media {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: 2px solid var(--ink);
+    background: linear-gradient(135deg, #ECE9E1, #D9D4C7);
+    margin-bottom: 64px;
+    overflow: hidden;
+  }
+  .project-hero-media image-slot { width: 100%; height: 100%; }
+
+  /* Video slot */
+  .video-slot {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: 2px solid var(--ink);
+    background: var(--ink);
+    color: #FAFAF6;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+    gap: 16px;
+    position: relative;
+    margin-bottom: 64px;
+    overflow: hidden;
+  }
+  .video-slot video, .video-slot iframe {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    border: 0;
+  }
+  .video-slot .video-placeholder {
+    text-align: center;
+    z-index: 2;
+    padding: 20px;
+  }
+  .video-slot .play-icon {
+    width: 80px; height: 80px;
+    border: 2px solid #FAFAF6;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 18px;
+  }
+  .video-slot .play-icon::after {
+    content: '';
+    width: 0; height: 0;
+    border-left: 22px solid #FAFAF6;
+    border-top: 13px solid transparent;
+    border-bottom: 13px solid transparent;
+    margin-left: 6px;
+  }
+  .video-slot .video-label {
+    font-family: var(--ff-mono);
+    font-size: 14px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    opacity: 0.85;
+    font-weight: 700;
+  }
+
+  /* Content blocks */
+  .project-body {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 40px 64px;
+    margin-bottom: 56px;
+  }
+  .project-section-label {
+    font-family: var(--ff-mono);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    padding-top: 8px;
+  }
+  .project-section-content {
+    font-size: 21px;
+    line-height: 1.55;
+    color: var(--ink);
+    font-weight: 400;
+  }
+  .project-section-content ul {
+    list-style: none;
+    display: grid;
+    gap: 18px;
+  }
+  .project-section-content li {
+    position: relative;
+    padding-left: 32px;
+  }
+  .project-section-content li::before {
+    content: '→';
+    position: absolute;
+    left: 0; top: 0;
+    color: var(--accent);
+    font-family: var(--ff-mono);
+    font-weight: 700;
+    font-size: 22px;
+  }
+
+  /* Media gallery */
+  .gallery-label {
+    font-family: var(--ff-mono);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink2);
+    margin-bottom: 20px;
+  }
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .gallery-slot {
+    aspect-ratio: 4 / 3;
+    border: 2px solid var(--ink);
+    overflow: hidden;
+    background: linear-gradient(135deg, #ECE9E1, #D9D4C7);
+  }
+  .gallery-slot image-slot { width: 100%; height: 100%; }
+
+  /* Next project */
+  .next-project {
+    margin-top: 80px;
+    padding: 48px;
+    border: 2px solid var(--ink);
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--card);
+    transition: all 0.3s;
+    gap: 32px;
+  }
+  .next-project:hover {
+    background: var(--ink);
+    color: var(--bg);
+    transform: translate(-4px, -4px);
+    box-shadow: 8px 8px 0 var(--accent);
+  }
+  .next-project:hover .next-project-name { color: var(--bg); }
+  .next-project:hover .next-label { color: var(--accent); }
+  .next-label {
+    font-family: var(--ff-mono);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  .next-project-name {
+    font-family: var(--ff-display);
+    font-size: 60px;
+    line-height: 0.95;
+    color: var(--ink);
+    transition: color 0.2s;
+  }
+  .next-arrow {
+    font-family: var(--ff-mono);
+    font-size: 44px;
+    transition: transform 0.3s;
+  }
+  .next-project:hover .next-arrow { transform: translateX(12px); }
+
+  /* ====== ABOUT ====== */
+  .about {
+    padding: 56px 48px 100px;
+  }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 64px;
+    margin-bottom: 56px;
+  }
+  .bio-large {
+    font-family: var(--ff-display);
+    font-size: clamp(44px, 5vw, 72px);
+    line-height: 1.05;
+    letter-spacing: 0;
+    text-wrap: balance;
+  }
+  .bio-large span { color: var(--accent); }
+  .bio-body {
+    font-size: 26px;
+    line-height: 1.55;
+    color: var(--ink);
+    font-weight: 400;
+  }
+  .bio-body p + p { margin-top: 22px; }
+  .bio-body .resume-btn-wrap { margin-top: 32px; }
+
+  .about-section {
+    padding: 56px 0;
+    border-top: 2px solid var(--ink);
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 56px;
+  }
+  .about-section-title {
+    font-family: var(--ff-display);
+    font-size: clamp(64px, 6vw, 96px);
+    letter-spacing: 0.01em;
+    line-height: 0.95;
+  }
+  .about-section-num {
+    font-family: var(--ff-mono);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.22em;
+    margin-bottom: 18px;
+  }
+
+  /* Education entry */
+  .edu-entry {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 24px;
+    align-items: start;
+  }
+  .edu-entry + .edu-entry {
+    margin-top: 36px;
+    padding-top: 36px;
+    border-top: 2px solid var(--border);
+  }
+  .edu-school {
+    font-family: var(--ff-display);
+    font-size: 60px;
+    letter-spacing: 0.01em;
+    margin-bottom: 16px;
+    line-height: 1;
+  }
+  .edu-detail {
+    font-size: 24px;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .edu-detail strong { color: var(--ink); font-weight: 700; }
+  .edu-date {
+    font-family: var(--ff-mono);
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    text-align: right;
+    white-space: nowrap;
+    padding: 10px 18px;
+    border: 2px solid var(--accent);
+  }
+  .edu-courses {
+    margin-top: 20px;
+    font-size: 22px;
+    color: var(--ink2);
+    font-weight: 400;
+    line-height: 1.5;
+  }
+
+  /* Skills */
+  .skill-cluster {
+    display: grid;
+    gap: 32px;
+  }
+  .skill-row {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+  .skill-row-label {
+    font-family: var(--ff-mono);
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink2);
+    padding-top: 14px;
+  }
+  .skill-tags { display: flex; flex-wrap: wrap; gap: 12px; }
+  .skill-tag {
+    display: inline-flex; align-items: center;
+    padding: 14px 24px;
+    border: 2px solid var(--ink);
+    font-family: var(--ff-mono);
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--ink);
+    transition: all 0.15s;
+  }
+  .skill-tag:hover { background: var(--ink); color: var(--bg); transform: translate(-2px, -2px); box-shadow: 4px 4px 0 var(--accent); }
+
+  /* Leadership */
+  .lead-entry {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 24px;
+    padding: 24px 0;
+    border-top: 1.5px solid var(--border);
+    align-items: center;
+  }
+  .lead-entry:first-child { border-top: none; padding-top: 0; }
+  .lead-name {
+    font-family: var(--ff-display);
+    font-size: 52px;
+    letter-spacing: 0.01em;
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+  .lead-desc {
+    font-size: 22px;
+    color: var(--ink2);
+    line-height: 1.5;
+  }
+  .lead-location {
+    display: inline-block;
+    margin-top: 10px;
+    font-family: var(--ff-mono);
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: var(--ink3);
+    text-transform: uppercase;
+  }
+  .lead-role {
+    font-family: var(--ff-mono);
+    font-size: 17px;
+    color: var(--bg);
+    background: var(--accent);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    padding: 12px 20px;
+  }
+
+  /* ====== CONTACT ====== */
+  .contact {
+    padding: 48px 48px 48px;
+    min-height: calc(100vh - 122px);
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+  .contact-hero {
+    display: block;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 24px;
+  }
+  .contact-title {
+    font-family: var(--ff-display);
+    font-size: clamp(120px, 18vw, 320px);
+    line-height: 0.82;
+    letter-spacing: -0.005em;
+    margin: 0;
+  }
+  .contact-title .out {
+    color: transparent;
+    -webkit-text-stroke: 2.5px var(--ink);
+    display: inline-block;
+  }
+  .contact-meta { display: flex; flex-direction: column; gap: 18px; padding-bottom: 14px; }
+  .contact-status {
+    display: inline-flex; align-items: center; gap: 12px;
+    font-family: var(--ff-mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .contact-status::before {
+    content: '';
+    width: 10px; height: 10px;
+    background: var(--accent);
+    border-radius: 50%;
+    box-shadow: 0 0 0 4px var(--accent-soft);
+    animation: contact-pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes contact-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.45; }
+  }
+  .contact-blurb {
+    font-size: 20px;
+    color: var(--ink);
+    line-height: 1.4;
+    font-weight: 500;
+    margin: 0;
+  }
+  .contact-blurb-sub {
+    font-family: var(--ff-mono);
+    font-size: 13px;
+    color: var(--ink2);
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  .contact-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    flex: 1;
+    min-height: 320px;
+    border-top: 2px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+    margin-top: auto;
+  }
+  .contact-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 40px 36px 36px;
+    border-right: 2px solid var(--ink);
+    color: var(--ink);
+    position: relative;
+    overflow: hidden;
+    transition: background 0.2s;
+    min-height: 360px;
+  }
+  .contact-card:last-child { border-right: none; }
+  .contact-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--ink);
+    transform: translateY(101%);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 0;
+  }
+  .contact-card:hover::before { transform: translateY(0); }
+  .contact-card:hover .contact-card-label { color: var(--accent); }
+  .contact-card:hover .contact-card-value,
+  .contact-card:hover .contact-card-num,
+  .contact-card:hover .contact-card-icon { color: var(--bg); }
+  .contact-card:hover .contact-card-icon { border-color: var(--bg); }
+  .contact-card:hover .contact-card-arrow { color: var(--accent); transform: translate(6px, -6px); }
+  .contact-card > * { position: relative; z-index: 1; }
+  .contact-card-head {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 16px;
+  }
+  .contact-card-num {
+    font-family: var(--ff-mono);
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    color: var(--ink3);
+    transition: color 0.3s;
+  }
+  .contact-card-icon {
+    width: 80px; height: 80px;
+    border: 2px solid var(--ink);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--ink);
+    transition: all 0.3s;
+  }
+  .contact-card-icon svg { width: 38px; height: 38px; }
+  .contact-card-body { display: flex; flex-direction: column; gap: 18px; }
+  .contact-card-label {
+    font-family: var(--ff-mono);
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink3);
+    transition: color 0.3s;
+  }
+  .contact-card-value {
+    font-family: var(--ff-display);
+    font-size: clamp(40px, 4vw, 64px);
+    letter-spacing: 0.01em;
+    line-height: 1;
+    word-break: break-word;
+    transition: color 0.3s;
+  }
+  .contact-card-foot {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    gap: 12px;
+    margin-top: 18px;
+  }
+  .contact-card-cta {
+    font-family: var(--ff-mono);
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink3);
+    transition: color 0.3s;
+  }
+  .contact-card:hover .contact-card-cta { color: var(--bg); }
+  .contact-card-arrow {
+    font-family: var(--ff-mono);
+    font-size: 52px;
+    color: var(--ink);
+    transition: all 0.3s;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 960px) {
+    html { font-size: 16px; }
+    nav.topbar { padding: 14px 20px; gap: 14px; }
+    .nav-links { display: none; }
+    .brand-name .brand-role { display: none; }
+    .home, .work, .work-list, .project, .about, .contact { padding-left: 20px; padding-right: 20px; }
+    .home-grid { grid-template-columns: 1fr; gap: 40px; }
+    .home-right { min-height: 360px; }
+    .home-portrait-slot { width: 280px; height: 360px; }
+    .home-meta-row { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+    .meta-cell { border-right: none; padding: 0; }
+    .category-grid { grid-template-columns: 1fr; }
+    .category-card { min-height: 320px; padding: 32px 28px; }
+    .work-grid { grid-template-columns: 1fr; }
+    .work-card-name { font-size: 38px; }
+    .project-header { grid-template-columns: 1fr; gap: 32px; }
+    .project-body { grid-template-columns: 1fr; gap: 14px; }
+    .about-grid { grid-template-columns: 1fr; gap: 32px; }
+    .about-section { grid-template-columns: 1fr; gap: 24px; padding: 32px 0; }
+    .about-section-title { font-size: 56px; }
+    .contact { padding-top: 24px; padding-bottom: 24px; gap: 32px; }
+    .contact-hero { grid-template-columns: 1fr; gap: 28px; padding-bottom: 24px; }
+    .contact-meta { padding-bottom: 0; }
+    .contact-grid { grid-template-columns: 1fr 1fr; min-height: 0; }
+    .contact-card { min-height: 200px; padding: 22px 20px; }
+    .contact-card:nth-child(2) { border-right: none; }
+    .contact-card:nth-child(1), .contact-card:nth-child(2) { border-bottom: 2px solid var(--ink); }
+    .gallery-grid { grid-template-columns: 1fr 1fr; }
+    .next-project-name { font-size: 40px; }
+    .next-project { padding: 28px; }
+    .btn-primary, .btn-secondary { padding: 16px 24px; font-size: 14px; }
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" data-presets="env,react">
+const { useState, useEffect } = React;
+
+/* =====================================================
+   CONFIG — EDIT THESE TO UPDATE YOUR PORTFOLIO
+   ===================================================== */
+
+const PROFILE = {
+  firstName: "HYUNWOO",
+  lastName: "YANG",
+  role: "Gameplay Engineer",
+  location: "Daegu, South Korea",
+  bioHead: "",
+  bio: "Gameplay engineer focused on real-time rendering, low-level C/C++ systems, and shipping games that actually run.",
+  bioSub: "",
+  longBio: [
+    "I'm a Computer Science student at DigiPen Institute of Technology with a focus on game engine architecture, real-time rendering, and low-level systems programming.",
+    "I lead small teams as a TechLead, ship gameplay systems in C/C++ and Unreal, and care about clean code that survives contact with real deadlines and real players."
+  ],
+  email: "jtpgns2015@gmail.com",
+  github: "https://github.com/yanghyunw00",
+  linkedin: "https://www.linkedin.com/in/yanghyunwoo",
+  resume: "uploads/Resume.pdf",
+};
+
+const PROJECTS = [
+  {
+    id: "igy",
+    type: "team",
+    name: "I.G.Y",
+    subtitle: "Isometric City-Builder",
+    year: "2025 — Now",
+    role: "TechLead",
+    team: "5 members",
+    duration: "Ongoing",
+    tech: ["C++", "OpenGL", "Custom Engine"],
+    blurb: "Isometric quarter-view city-builder simulation game inspired by Caesar 3. Built on a custom engine from the ground up.",
+    overview: "I.G.Y is a quarter-view city-builder where players design and run an ancient settlement. Citizens, economy, and infrastructure interact through a simulation core I architected from scratch alongside a team of five.",
+    contributions: [
+      "Led technical architecture across simulation, rendering, and AI subsystems",
+      "Developed core engine modules: scene graph, resource manager, and event bus",
+      "Designed citizen AI behaviour using utility-based decision making",
+      "Coordinated 5 developers and integrated their work into the engine pipeline",
+    ],
+    video: null, // ← set YouTube embed URL or local mp4 path
+    gallery: [null, null, null],
+  },
+  {
+    id: "doctor-water",
+    type: "team",
+    name: "HELP ME! DOCTOR WATER",
+    subtitle: "2D Vertical-Scroll Action",
+    year: "2023",
+    role: "QA",
+    team: "4 members",
+    duration: "March 2023",
+    tech: ["C++", "Custom Engine"],
+    blurb: "2D vertical-scrolling escape-action game. Dr. Water ascends an erupting volcano. Microdegree Expo Best Award winner.",
+    overview: "Dr. Water climbs a volcano on the verge of eruption, fighting through enemies and boss encounters with an arsenal of weapons. Awarded Microdegree Expo Best Award 2023.",
+    contributions: [
+      "Ensured gameplay quality through systematic playtesting across all stages and bosses",
+      "Identified and documented bugs in enemy behaviour, weapon interactions, and level progression",
+      "Worked closely with engineers to validate fixes and regression tests",
+      "Won Microdegree Expo Best Award, 2023",
+    ],
+    video: null,
+    gallery: [null, null, null],
+  },
+  {
+    id: "legacy-of-dragons",
+    type: "team",
+    name: "LEGACY OF DRAGONS",
+    subtitle: "2D Action-Survival",
+    year: "2022",
+    role: "TechLead",
+    team: "4 members",
+    duration: "September 2022",
+    tech: ["C++", "Custom Engine"],
+    blurb: "2D top-down shooter where a dragon hero battles waves across multiple stages and 2 boss encounters.",
+    overview: "A top-down action-survival shooter set in a dragon-vs-dragon world. The player carves through enemy waves across multiple stages, capped by two boss fights.",
+    contributions: [
+      "Led development of core gameplay systems including enemy wave mechanics and stage progression",
+      "Directed technical architecture as TechLead, coordinating system integration across the team",
+      "Worked with a team of 4 to ship a complete vertical slice",
+    ],
+    video: null,
+    gallery: [null, null, null],
+  },
+  {
+    id: "hangout-timer",
+    type: "solo",
+    name: "HANGOUT TIMER",
+    subtitle: "Collaborative Pomodoro",
+    year: "2025",
+    role: "Full-Stack Developer",
+    team: "Solo",
+    duration: "September 2025",
+    tech: ["Web", "Claude", "Gemini Pro"],
+    blurb: "Online collaborative Pomodoro timer. Friends join shared study sessions in real time.",
+    overview: "A web app that turns the Pomodoro technique into a shared activity. Built end-to-end as a full-stack developer, with AI-assisted iteration on UX flows and backend logic.",
+    contributions: [
+      "Designed and built the full stack — frontend, real-time sync, and persistence",
+      "Implemented shared room logic so friends can join and run a timer together",
+      "Used Claude and Gemini Pro for rapid prototyping and code review",
+      "Shipped as a deployable web application used by DigiPen peers",
+    ],
+    video: null,
+    gallery: [null, null, null],
+  },
+  {
+    id: "lostguns",
+    type: "solo",
+    name: "LOSTGUNS",
+    subtitle: "Mobile Game Copy Study",
+    year: "2026",
+    role: "Solo Developer",
+    team: "Solo",
+    duration: "Jan 2026 — Mar 2026",
+    tech: ["Unity", "C#", "Unity Relay"],
+    blurb: "A copy-study recreation of the mobile game LostGuns, built in Unity up to working friend-to-friend multiplayer.",
+    overview: "LostGuns is a self-driven copy-study project where I recreated the core mechanics of the mobile game LostGuns in Unity. I pushed it all the way to functional online multiplayer using Unity Relay, letting friends connect and play together.",
+    contributions: [
+      "Recreated core gameplay of the mobile game LostGuns from scratch in Unity",
+      "Built networked multiplayer using Unity Relay for friend-to-friend sessions",
+      "Implemented host/client connection flow and synchronized game state across peers",
+      "Used the project to deepen hands-on understanding of real-time multiplayer architecture",
+    ],
+    video: null,
+    gallery: [null, null, null],
+  },
+];
+
+const TEAM_PROJECTS = PROJECTS.filter(p => p.type === "team");
+const SOLO_PROJECTS = PROJECTS.filter(p => p.type === "solo");
+
+const SKILLS = [
+  { label: "Languages", items: ["C", "C++", "C#", "Blueprint", "HTML5"] },
+  { label: "Engines", items: ["Unreal Engine 5", "Unity", "Custom Engine"] },
+  { label: "Graphics", items: ["OpenGL", "GLSL", "Rendering Pipeline"] },
+  { label: "Soft Skills", items: ["Solution-Oriented", "Adaptable", "Quality-Focused", "Team Building"] },
+];
+
+const LEADERSHIP = [
+  { name: "Linkers", role: "Leader", location: "Daegu, KR", desc: "Collaborated with World Vision to provide aid to vulnerable populations." },
+  { name: "암흑회 FS", role: "Captain", location: "Daegu, KR", desc: "Captain of a futsal team based in Daegu, South Korea." },
+];
+
+/* =====================================================
+   ICONS
+   ===================================================== */
+
+const Icon = {
+  github: () => <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.6.5.5 5.6.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.2.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.7.4-1.3.7-1.5-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.4-2.3 1.2-3.1-.1-.3-.5-1.5.1-3 0 0 1-.3 3.2 1.2.9-.3 1.9-.4 2.9-.4s2 .1 2.9.4c2.2-1.5 3.2-1.2 3.2-1.2.6 1.5.2 2.7.1 3 .7.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.2c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.6 18.4.5 12 .5z"/></svg>,
+  linkedin: () => <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3A2 2 0 0 1 21 5v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14M8.3 18.3V10H5.7v8.3h2.6M7 8.8a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3M18.3 18.3v-4.5c0-2.4-1.3-3.5-3-3.5-1.4 0-2 .8-2.4 1.3V10h-2.6v8.3h2.6V14a1.7 1.7 0 0 1 1.7-1.8c1 0 1.4.8 1.4 1.9v4.2h2.3"/></svg>,
+  mail: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="m3 7 9 6 9-6"/></svg>,
+  phone: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.7a2 2 0 0 1-.5 2.1L8 9.7a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5 12.8 12.8 0 0 0 2.7.6 2 2 0 0 1 1.7 2z"/></svg>,
+  download: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>,
+  arrow: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>,
+  back: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>,
+};
+
+/* =====================================================
+   ROUTING
+   ===================================================== */
+
+function useHashRoute() {
+  const [hash, setHash] = useState(window.location.hash || '#home');
+  useEffect(() => {
+    const onChange = () => {
+      setHash(window.location.hash || '#home');
+      window.scrollTo(0, 0);
+    };
+    window.addEventListener('hashchange', onChange);
+    return () => window.removeEventListener('hashchange', onChange);
+  }, []);
+  return hash;
+}
+
+function parseRoute(hash) {
+  const cleaned = hash.replace(/^#\/?/, '') || 'home';
+  const [page, ...rest] = cleaned.split('/');
+  return { page, params: rest };
+}
+
+/* =====================================================
+   NAV
+   ===================================================== */
+
+function Nav({ currentPage }) {
+  const links = [
+    { page: 'home', label: 'Home', num: '00' },
+    { page: 'work', label: 'Work', num: '01' },
+    { page: 'about', label: 'About', num: '02' },
+    { page: 'contact', label: 'Contact', num: '03' },
+  ];
+  const isWorkActive = currentPage === 'work' || currentPage === 'project';
+  return (
+    <nav className="topbar">
+      <a href="#home" className="nav-brand">
+        <div className="brand-mark">H</div>
+        <div className="brand-name">
+          Hyunwoo Yang
+          <span className="brand-role">Gameplay Engineer</span>
+        </div>
+      </a>
+      <div className="nav-links">
+        {links.map(l => (
+          <a key={l.page} href={`#${l.page}`}
+            className={`nav-link ${currentPage === l.page || (l.page === 'work' && isWorkActive) ? 'active' : ''}`}>
+            <span className="num">{l.num}</span>
+            <span>{l.label}</span>
+          </a>
+        ))}
+      </div>
+      <div className="nav-right">
+        <a className="nav-icon-btn" href={PROFILE.github} target="_blank" rel="noreferrer" aria-label="GitHub"><Icon.github /></a>
+        <a className="nav-icon-btn" href={PROFILE.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn"><Icon.linkedin /></a>
+        <a className="nav-icon-btn" href={`mailto:${PROFILE.email}`} aria-label="Email"><Icon.mail /></a>
+      </div>
+    </nav>
+  );
+}
+
+/* =====================================================
+   HOME
+   ===================================================== */
+
+function Home() {
+  return (
+    <main className="view home" data-screen-label="Home">
+      <div className="home-grid">
+        <div className="home-left">
+          <div className="home-tag">{PROFILE.role}</div>
+          <h1 className="home-name">
+            {PROFILE.firstName}
+            <span className="second-line">{PROFILE.lastName}</span>
+          </h1>
+          <p className="home-bio">
+            {PROFILE.bio}
+          </p>
+          <div className="home-cta-row">
+            <a href="#work" className="btn-primary">
+              View Projects <Icon.arrow />
+            </a>
+            <a href="#contact" className="btn-secondary">
+              Get in Touch
+            </a>
+          </div>
+        </div>
+        <div className="home-right">
+          <div className="home-stack-num">HY</div>
+          <div className="home-portrait-deco" />
+          <div className="home-portrait-slot">
+            <image-slot id="home-portrait" shape="rect" placeholder="Drop your portrait"></image-slot>
+          </div>
+        </div>
+      </div>
+
+      <div className="home-meta-row">
+        <div className="meta-cell">
+          <div className="meta-label">Status</div>
+          <div className="meta-value">Open to Work</div>
+        </div>
+        <div className="meta-cell">
+          <div className="meta-label">School</div>
+          <div className="meta-value">DigiPen, WA</div>
+        </div>
+      </div>
+    </main>
+  );
+}
+
+/* =====================================================
+   WORK LANDING — Team / Solo categories
+   ===================================================== */
+
+function Work() {
+  return (
+    <main className="view work" data-screen-label="Work">
+      <div className="page-header">
+        <h1 className="page-title">Selected<br/>Work.</h1>
+        <div className="page-meta">
+          <div className="page-meta-num">{PROJECTS.length}</div>
+          <div className="page-meta-text">Projects Shipped</div>
+          <div className="page-meta-text" style={{color: 'var(--ink3)'}}>2022 — 2025</div>
+        </div>
+      </div>
+
+      <div className="category-grid">
+        <a href="#work/team" className="category-card">
+          <div className="cat-count-bg">{TEAM_PROJECTS.length}</div>
+          <div className="cat-inner">
+            <div className="cat-num">— Category 01</div>
+            <h2 className="cat-title">TEAM<br/>PROJECTS</h2>
+            <p className="cat-desc">
+              Group projects built with squads of 4–5 at DigiPen. Engine architecture, gameplay systems, and pipeline integration as TechLead.
+            </p>
+            <div className="cat-foot">
+              <div className="cat-foot-meta">{TEAM_PROJECTS.length} Projects · Enter</div>
+              <div className="cat-arrow">→</div>
+            </div>
+          </div>
+        </a>
+
+        <a href="#work/solo" className="category-card">
+          <div className="cat-count-bg">{SOLO_PROJECTS.length}</div>
+          <div className="cat-inner">
+            <div className="cat-num">— Category 02</div>
+            <h2 className="cat-title">SOLO<br/>PROJECTS</h2>
+            <p className="cat-desc">
+              Personal builds shipped end-to-end. Full-stack, AI-assisted iteration, and small experiments that escaped the lab.
+            </p>
+            <div className="cat-foot">
+              <div className="cat-foot-meta">{SOLO_PROJECTS.length} Project · Enter</div>
+              <div className="cat-arrow">→</div>
+            </div>
+          </div>
+        </a>
+      </div>
+    </main>
+  );
+}
+
+/* =====================================================
+   WORK LIST — filtered (team or solo)
+   ===================================================== */
+
+function WorkList({ category }) {
+  const list = category === 'team' ? TEAM_PROJECTS : SOLO_PROJECTS;
+  const title = category === 'team' ? 'Team Projects' : 'Solo Projects';
+  return (
+    <main className="view work-list" data-screen-label={title}>
+      <a href="#work" className="work-back"><Icon.back /> Back to Categories</a>
+      <div className="page-header">
+        <h1 className="page-title">{title.split(' ')[0]}<br/>{title.split(' ')[1]}.</h1>
+        <div className="page-meta">
+          <div className="page-meta-num">{list.length}</div>
+          <div className="page-meta-text">{category === 'team' ? 'Team-led builds' : 'Solo builds'}</div>
+        </div>
+      </div>
+      <div className="work-grid">
+        {list.map((p, i) => (
+          <a key={p.id} href={`#project/${p.id}`} className="work-card">
+            <div className="work-card-media">
+              <div className={`work-card-badge ${p.type === 'team' ? 'team' : ''}`}>
+                {p.type === 'team' ? `Team · ${p.team}` : 'Solo'}
+              </div>
+              <image-slot id={`card-${p.id}`} shape="rect" placeholder={`${p.name} cover`}></image-slot>
+            </div>
+            <div className="work-card-body">
+              <div className="work-card-top">
+                <div className="work-card-name">{p.name}</div>
+                <div className="work-card-year">{p.year}</div>
+              </div>
+              <div className="work-card-desc">{p.blurb}</div>
+              <div className="work-card-foot">
+                <div className="work-card-tags">
+                  {p.tech.slice(0, 3).map(t => <span key={t} className="work-card-tag">{t}</span>)}
+                </div>
+                <div className="work-card-arrow">→</div>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </main>
+  );
+}
+
+/* =====================================================
+   PROJECT DETAIL
+   ===================================================== */
+
+function ProjectDetail({ id }) {
+  const project = PROJECTS.find(p => p.id === id);
+  if (!project) {
+    return (
+      <main className="view project">
+        <a href="#work" className="back-link"><Icon.back /> Back to Work</a>
+        <h1 className="project-title">Not found.</h1>
+      </main>
+    );
+  }
+  const sameCategory = PROJECTS.filter(p => p.type === project.type);
+  const idx = sameCategory.findIndex(p => p.id === id);
+  const next = sameCategory[(idx + 1) % sameCategory.length];
+  const backHash = project.type === 'team' ? '#work/team' : '#work/solo';
+  return (
+    <main className="view project" data-screen-label={`Project: ${project.name}`}>
+      <a href={backHash} className="back-link"><Icon.back /> Back to {project.type === 'team' ? 'Team Projects' : 'Solo Projects'}</a>
+
+      <div className="project-header">
+        <div>
+          <div className="project-subtitle">{project.subtitle}</div>
+          <h1 className="project-title">{project.name}</h1>
+        </div>
+        <div className="project-meta">
+          <div className="project-meta-cell">
+            <div className="label">Role</div>
+            <div className="value">{project.role}</div>
+          </div>
+          <div className="project-meta-cell">
+            <div className="label">Team</div>
+            <div className="value">{project.team}</div>
+          </div>
+          <div className="project-meta-cell">
+            <div className="label">Year</div>
+            <div className="value">{project.year}</div>
+          </div>
+          <div className="project-meta-cell">
+            <div className="label">Stack</div>
+            <div className="value" style={{fontFamily: 'var(--ff-mono)', fontSize: 14, lineHeight: 1.4}}>{project.tech.join(' · ')}</div>
+          </div>
+        </div>
+      </div>
+
+      <div className="project-hero-media">
+        <image-slot id={`hero-${project.id}`} shape="rect" placeholder={`Hero image — ${project.name}`}></image-slot>
+      </div>
+
+      <div className="project-body">
+        <div className="project-section-label">— Overview</div>
+        <div className="project-section-content">{project.overview}</div>
+      </div>
+
+      <div className="project-body">
+        <div className="project-section-label">— My Role</div>
+        <div className="project-section-content">
+          <ul>
+            {project.contributions.map((c, i) => <li key={i}>{c}</li>)}
+          </ul>
+        </div>
+      </div>
+
+      <div style={{marginBottom: 32}}>
+        <div className="gallery-label">— Gameplay / Demo Video</div>
+        <div className="video-slot">
+          {project.video ? (
+            project.video.includes('youtube') || project.video.includes('youtu.be')
+              ? <iframe src={project.video} allow="autoplay; encrypted-media" allowFullScreen></iframe>
+              : <video src={project.video} controls></video>
+          ) : (
+            <div className="video-placeholder">
+              <div className="play-icon"></div>
+              <div className="video-label">Drop a Video — set <code style={{background:'rgba(255,255,255,0.12)',padding:'4px 8px',fontSize:13}}>video</code> in PROJECTS</div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div>
+        <div className="gallery-label">— Screenshots / Gallery</div>
+        <div className="gallery-grid">
+          {project.gallery.map((g, i) => (
+            <div key={i} className="gallery-slot">
+              <image-slot id={`gallery-${project.id}-${i}`} shape="rect" placeholder={`Screenshot ${i + 1}`}></image-slot>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {next && next.id !== project.id && (
+        <a href={`#project/${next.id}`} className="next-project">
+          <div>
+            <div className="next-label">Next Project — {project.type === 'team' ? 'Team' : 'Solo'}</div>
+            <div className="next-project-name">{next.name}</div>
+          </div>
+          <div className="next-arrow">→</div>
+        </a>
+      )}
+    </main>
+  );
+}
+
+/* =====================================================
+   ABOUT
+   ===================================================== */
+
+function About() {
+  return (
+    <main className="view about" data-screen-label="About">
+      <div className="page-header">
+        <h1 className="page-title">About.</h1>
+        <div className="page-meta">
+          <div className="page-meta-num">02</div>
+          <div className="page-meta-text">The Maker</div>
+        </div>
+      </div>
+
+      <div className="about-grid">
+        <h2 className="bio-large">
+          Gameplay engineer building <span>real-time systems</span> from C++ up — and shipping them with small, sharp teams.
+        </h2>
+        <div className="bio-body">
+          {PROFILE.longBio.map((p, i) => <p key={i}>{p}</p>)}
+          <div className="resume-btn-wrap">
+            <a href={PROFILE.resume} target="_blank" rel="noreferrer" className="btn-primary">
+              <Icon.download /> Download Resume
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <section className="about-section">
+        <div>
+          <div className="about-section-num">— 01</div>
+          <h3 className="about-section-title">EDUCATION</h3>
+        </div>
+        <div>
+          <div className="edu-entry">
+            <div>
+              <div className="edu-school">Keimyung University</div>
+              <div className="edu-detail"><strong>B.S. in Computer Science</strong> · Daegu, South Korea</div>
+              <div className="edu-detail">Dual-degree program with DigiPen Institute of Technology</div>
+            </div>
+            <div className="edu-date">2022 — Spring 2026</div>
+          </div>
+          <div className="edu-entry">
+            <div>
+              <div className="edu-school">DigiPen Institute of Technology</div>
+              <div className="edu-detail"><strong>B.S. in Computer Science</strong> · Redmond, Washington</div>
+              <div className="edu-detail">Dual-degree program with Keimyung University</div>
+              <div className="edu-courses">Relevant Courses: Computer Graphics · Advanced C/C++ · Game Projects · Data Structures</div>
+            </div>
+            <div className="edu-date">2026 — 2028</div>
+          </div>
+        </div>
+      </section>
+
+      <section className="about-section">
+        <div>
+          <div className="about-section-num">— 02</div>
+          <h3 className="about-section-title">SKILLS</h3>
+        </div>
+        <div className="skill-cluster">
+          {SKILLS.map(group => (
+            <div key={group.label} className="skill-row">
+              <div className="skill-row-label">{group.label}</div>
+              <div className="skill-tags">
+                {group.items.map(s => <span key={s} className="skill-tag">{s}</span>)}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="about-section">
+        <div>
+          <div className="about-section-num">— 03</div>
+          <h3 className="about-section-title">LEADERSHIP</h3>
+        </div>
+        <div>
+          {LEADERSHIP.map(l => (
+            <div key={l.name} className="lead-entry">
+              <div>
+                <div className="lead-name">{l.name}</div>
+                <div className="lead-desc">{l.desc}</div>
+                <span className="lead-location">{l.location}</span>
+              </div>
+              <div className="lead-role">{l.role}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+    </main>
+  );
+}
+
+/* =====================================================
+   CONTACT
+   ===================================================== */
+
+function Contact() {
+  const cards = [
+    { num: '01', label: 'Email', value: PROFILE.email, cta: 'Send a message', href: `mailto:${PROFILE.email}`, icon: <Icon.mail />, target: null },
+    { num: '02', label: 'GitHub', value: 'yanghyunw00', cta: 'View repositories', href: PROFILE.github, icon: <Icon.github />, target: '_blank' },
+    { num: '03', label: 'LinkedIn', value: 'yanghyunwoo', cta: 'Connect with me', href: PROFILE.linkedin, icon: <Icon.linkedin />, target: '_blank' },
+    { num: '04', label: 'Resume', value: 'Download PDF', cta: 'Latest version', href: PROFILE.resume, icon: <Icon.download />, target: '_blank' },
+  ];
+  return (
+    <main className="view contact" data-screen-label="Contact">
+      <section className="contact-hero">
+        <h1 className="contact-title">
+          <span className="out">CON</span>TACT.
+        </h1>
+      </section>
+      <section className="contact-grid">
+        {cards.map((c) => (
+          <a
+            key={c.num}
+            className="contact-card"
+            href={c.href}
+            {...(c.target ? { target: c.target, rel: 'noreferrer' } : {})}
+          >
+            <div className="contact-card-head">
+              <span className="contact-card-num">{c.num}</span>
+              <div className="contact-card-icon">{c.icon}</div>
+            </div>
+            <div className="contact-card-body">
+              <div className="contact-card-label">{c.label}</div>
+              <div className="contact-card-value">{c.value}</div>
+            </div>
+            <div className="contact-card-foot">
+              <span className="contact-card-cta">{c.cta}</span>
+              <span className="contact-card-arrow">↗</span>
+            </div>
+          </a>
+        ))}
+      </section>
+    </main>
+  );
+}
+
+/* =====================================================
+   APP
+   ===================================================== */
+
+function App() {
+  const hash = useHashRoute();
+  const route = parseRoute(hash);
+  let view;
+  switch (route.page) {
+    case 'home':
+      view = <Home />; break;
+    case 'work':
+      if (route.params[0] === 'team' || route.params[0] === 'solo') {
+        view = <WorkList category={route.params[0]} />;
+      } else {
+        view = <Work />;
+      }
+      break;
+    case 'project':
+      view = <ProjectDetail id={route.params[0]} />; break;
+    case 'about':
+      view = <About />; break;
+    case 'contact':
+      view = <Contact />; break;
+    default:
+      view = <Home />;
+  }
+  return (
+    <>
+      <Nav currentPage={route.page} />
+      {view}
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
