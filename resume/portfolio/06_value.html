@@ -69,17 +69,23 @@
 
     <div class="portfolio-item-individual">
         <h2>Project Overview</h2>
-        <p>Provide a brief description of the project, its purpose, and what you aimed to achieve.</p>
+        <p>This assignment implements Value Noise in C++ using OpenGL, procedurally generating seamlessly tileable noise textures displayed on a screen-space quad.
+            The implementation builds a reusable noise system around a permutation hash and configurable interpolation, supporting 1D, 2D, and 3D evaluation, multiple patterns
+            and live ImGui controls for period size, smoothing method, tiling scale, and dimension.</p>
 
         <h2>Tasks Completed</h2>
         <ul>
-            <li>Describe the tasks you completed for this project.</li>
-            <li>Be specific about your contributions and the technologies used.</li>
+            <li>Implemented ValueNoise.hpp that builds a permutation table and a table of random values from the period size and performs 1D, 2D, and 3D evaluation using linear, bilinear, and trilinear interpolation.</li>
+            <li>Implemented simple.vert / simple.frag to display the generated texture and adding the UploadAsRGBA texture enhancement to push freshly generated pixels to the GPU.</li>
+            <li>Implemented the permutation-hash lookup : the table is randomly shuffled at construction and coordinates are folded together by chaining lookups.</li>
+
         </ul>
 
         <h2>Reflection</h2>
-        <p>Reflect on the project, discussing any challenges faced, solutions implemented, and what you learned from the
-            experience.</p>
+        <p>This assignment was less about the rendering pipeline and more about the math and data structures behind procedural generation, so most of the difficulty came from understanding new vocabulary rather than OpenGL itself.
+            The hardest concept was the permutation hash, since the idea that one shuffled table could deterministically produce pseudo-random values for any coordinate was not intuitive at first.
+            It also took time to understand how the bitwise mask creates seamless tiling, which only became clear once the tiling scale was set higher.
+            Working through each piece concretely instead of treating the noise as a black box made the whole system eventually make sense.</p>
     </div>
 
     <div class="portfolio-item-individual">
