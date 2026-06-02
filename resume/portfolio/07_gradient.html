@@ -68,17 +68,23 @@
 
     <div class="portfolio-item-individual">
         <h2>Project Overview</h2>
-        <p>Provide a brief description of the project, its purpose, and what you aimed to achieve.</p>
+        <p>This assignment implements Improved 3D Perlin Gradient Noise entirely in GLSL, rendering a 2D slice of the noise into an offscreen R32F framebuffer which is then visualized either as a screen-space textured quad or as a height-displaced 3D surface.
+            Unlike value noise, gradient noise assigns one of 12 fixed direction vectors to each lattice point and dots them against the offset vectors, then blends the results with a quintic fade curve to eliminate derivative discontinuities at grid boundaries.</p>
 
         <h2>Tasks Completed</h2>
         <ul>
-            <li>Describe the tasks you completed for this project.</li>
-            <li>Be specific about your contributions and the technologies used.</li>
+            <li>Extended Texture and Framebuffer to support configurable color formats (RGBA8, RGBA32F, R32F) so the noise framebuffer can store raw floating point values.</li>
+            <li>Implemented gen_gradient_noise.frag with a hardcoded permutation table and 12 fixed gradient vectors; the hash folds x, y, z coordinates through cascading permutation lookups, then trilinearly interpolates eight corner dot-products.</li>
+            <li>Implemented five noise patterns: Plain Gradient, Fractal Sum, Turbulence (absolute-value layering), Marble (cosine wave distorted by turbulence), and Wood (fractional repetition of scaled gradient noise).</li>
+            <li>Implemented surface.vert to displace a plane mesh in the z direction by sampling the noise texture and reused simple.frag to color the surface with the same noise values.</li>
+
         </ul>
 
         <h2>Reflection</h2>
-        <p>Reflect on the project, discussing any challenges faced, solutions implemented, and what you learned from the
-            experience.</p>
+        <p>The biggest conceptual shift from value noise was moving the noise computation onto the GPU and working with gradient vectors instead of random scalar values.
+            Understanding why exactly 12 directions are used took time and it was not obvious at first why using more directions would not simply be better.
+            The quintic fade curve was also new linear interpolation produced visible grid artifacts, and seeing them disappear after switching to the 6t⁵ - 15t⁴ + 10t³ formula made the math feel concrete.
+            Rendering into an R32F framebuffer instead of uploading CPU data each frame was a cleaner approach overall and seeing the marble and turbulence patterns emerge from just sign and modulation changes on the same underlying noise was satisfying.</p>
     </div>
 
     <div class="portfolio-item-individual">
