@@ -6,24 +6,48 @@
 <title>🏠 미국 집 구하기</title>
 <style>
   :root {
-    --bg: #16181a;
-    --surface: #1e2123;
-    --surface2: #272b2e;
-    --border: #30363a;
-    --border2: #3d4449;
-    --accent: #7a9e7e;
-    --accent2: #5e8463;
-    --accent-bg: #7a9e7e1a;
-    --terra: #b07a5a;
-    --terra-bg: #b07a5a1a;
-    --text: #cec9c1;
-    --text2: #8a8880;
-    --text3: #55524e;
-    --red: #a05a5a;
-    --red-bg: #a05a5a1a;
+    --bg: #f5f5f5;
+    --surface: #ffffff;
+    --surface2: #f0f0f0;
+    --border: #e0e0e0;
+    --border2: #d0d0d0;
+    --accent: #2563eb;
+    --accent2: #1d4ed8;
+    --accent-bg: #2563eb12;
+    --fav: #e53e3e;
+    --fav-bg: #e53e3e12;
+    --text: #111111;
+    --text2: #555555;
+    --text3: #999999;
+    --green: #16a34a;
+    --green-bg: #16a34a12;
+    --red: #dc2626;
+    --red-bg: #dc262612;
+    --orange: #d97706;
+    --orange-bg: #d9770612;
     --radius: 8px;
     --radius-sm: 5px;
-    font-family: 'Georgia', 'Times New Roman', serif;
+  }
+  [data-theme="dark"] {
+    --bg: #111111;
+    --surface: #1c1c1c;
+    --surface2: #242424;
+    --border: #333333;
+    --border2: #404040;
+    --accent: #3b82f6;
+    --accent2: #2563eb;
+    --accent-bg: #3b82f612;
+    --fav: #f87171;
+    --fav-bg: #f8717112;
+    --text: #f0f0f0;
+    --text2: #a0a0a0;
+    --text3: #606060;
+    --green: #4ade80;
+    --green-bg: #4ade8012;
+    --red: #f87171;
+    --red-bg: #f8717112;
+    --orange: #fbbf24;
+    --orange-bg: #fbbf2412;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -34,9 +58,11 @@
     min-height: 100vh;
     font-size: 14px;
     line-height: 1.6;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    transition: background .2s, color .2s;
   }
 
-  /* ── 상단 헤더 ── */
+  /* ── 헤더 ── */
   .app-header {
     background: var(--surface);
     border-bottom: 1px solid var(--border);
@@ -53,24 +79,36 @@
     font-size: 15px;
     font-weight: 700;
     color: var(--text);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    letter-spacing: 0.02em;
   }
-  .header-right { display: flex; align-items: center; gap: 10px; }
+  .header-right { display: flex; align-items: center; gap: 8px; }
+
   .sync-badge {
-    font-size: 11px;
+    font-size: 12px;
     padding: 3px 10px;
     border-radius: 4px;
-    background: var(--accent-bg);
-    color: var(--accent);
-    border: 1px solid var(--accent2);
+    background: var(--green-bg);
+    color: var(--green);
+    border: 1px solid var(--green);
     display: none;
-    font-family: 'Segoe UI', system-ui, sans-serif;
   }
   .sync-badge.visible { display: inline-block; }
   .sync-badge.error { background: var(--red-bg); color: var(--red); border-color: var(--red); }
+
+  /* 다크모드 토글 */
+  .theme-toggle {
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 4px;
+    color: var(--text2);
+    cursor: pointer;
+    font-size: 16px;
+    height: 32px;
+    width: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
 
   /* ── Firebase 설정 배너 ── */
   .setup-banner {
@@ -78,39 +116,34 @@
     border: 1px solid var(--border2);
     border-radius: var(--radius);
     padding: 28px 32px;
-    margin: 24px;
+    margin: 20px 24px;
     display: none;
   }
   .setup-banner.visible { display: block; }
-  .setup-banner h2 { font-size: 17px; color: var(--accent); margin-bottom: 6px; }
-  .setup-banner p { color: var(--text2); margin-bottom: 16px; font-size: 13px; line-height: 1.7; font-family: 'Segoe UI', system-ui, sans-serif; }
-  .setup-steps { display: grid; gap: 10px; margin-bottom: 20px; }
+  .setup-banner h2 { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+  .setup-banner p { color: var(--text2); margin-bottom: 16px; font-size: 13px; line-height: 1.7; }
+  .setup-steps { display: grid; gap: 8px; margin-bottom: 20px; }
   .setup-step {
-    background: var(--bg);
+    background: var(--surface2);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     padding: 12px 16px;
     font-size: 13px;
     color: var(--text2);
-    font-family: 'Segoe UI', system-ui, sans-serif;
   }
   .setup-step strong { color: var(--text); display: block; margin-bottom: 4px; }
   .setup-step code {
-    background: var(--surface2);
+    background: var(--bg);
     color: var(--accent);
     padding: 1px 6px;
     border-radius: 3px;
     font-family: monospace;
     font-size: 12px;
+    border: 1px solid var(--border);
   }
-  .config-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 16px;
-  }
+  .config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
   .config-field { display: flex; flex-direction: column; gap: 4px; }
-  .config-field label { font-size: 11px; color: var(--text2); font-family: 'Segoe UI', system-ui, sans-serif; }
+  .config-field label { font-size: 11px; color: var(--text2); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
   .config-field input {
     background: var(--bg);
     border: 1px solid var(--border2);
@@ -118,17 +151,17 @@
     color: var(--text);
     padding: 8px 12px;
     font-size: 13px;
-    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-family: inherit;
   }
-  .config-field input:focus { outline: none; border-color: var(--accent); }
+  .config-field input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-bg); }
 
-  /* ── 메인 레이아웃 ── */
+  /* ── 메인 ── */
   .main { padding: 20px 24px; }
 
-  /* ── 통계 카드 ── */
+  /* ── 통계 ── */
   .stats-row {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
     gap: 10px;
     margin-bottom: 20px;
   }
@@ -136,18 +169,18 @@
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 14px 18px;
+    padding: 14px 16px;
   }
-  .stat-card .label { font-size: 11px; color: var(--text3); margin-bottom: 4px; font-family: 'Segoe UI', system-ui, sans-serif; text-transform: uppercase; letter-spacing: 0.06em; }
+  .stat-card .label { font-size: 11px; color: var(--text3); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
   .stat-card .value { font-size: 22px; font-weight: 700; color: var(--text); }
   .stat-card .value.accent { color: var(--accent); }
-  .stat-card .value.green { color: var(--accent); }
+  .stat-card .value.green { color: var(--green); }
 
-  /* ── 컨트롤 바 ── */
+  /* ── 컨트롤 ── */
   .controls {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     flex-wrap: wrap;
     margin-bottom: 16px;
   }
@@ -159,9 +192,13 @@
     padding: 7px 12px;
     font-size: 13px;
     height: 36px;
-    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-family: inherit;
   }
-  .controls select:focus, .controls input:focus { outline: none; border-color: var(--accent); }
+  .controls select:focus, .controls input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-bg);
+  }
   .controls input[type=text] { min-width: 180px; }
   .sep { flex: 1; }
 
@@ -170,28 +207,23 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 7px 16px;
+    padding: 0 16px;
     border-radius: var(--radius-sm);
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
-    border: none;
+    border: 1px solid transparent;
     height: 36px;
-    transition: opacity .15s, transform .1s;
-    font-family: 'Segoe UI', system-ui, sans-serif;
-    letter-spacing: 0.01em;
+    transition: background .15s, border-color .15s, transform .1s;
+    font-family: inherit;
   }
   .btn:active { transform: scale(0.97); }
-  .btn-primary { background: var(--accent2); color: #e8e4de; }
-  .btn-primary:hover { background: var(--accent); }
-  .btn-ghost {
-    background: var(--surface);
-    color: var(--text2);
-    border: 1px solid var(--border2);
-  }
+  .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent2); }
+  .btn-primary:hover { background: var(--accent2); }
+  .btn-ghost { background: var(--surface); color: var(--text2); border-color: var(--border2); }
   .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
-  .btn-danger { background: var(--red-bg); color: var(--red); border: 1px solid var(--red); }
-  .btn-sm { height: 28px; padding: 4px 10px; font-size: 12px; }
+  .btn-danger { background: var(--red-bg); color: var(--red); border-color: var(--red); }
+  .btn-sm { height: 28px; padding: 0 10px; font-size: 12px; }
 
   /* ── 카드 그리드 ── */
   .cards-grid {
@@ -205,151 +237,107 @@
     border: 1px solid var(--border);
     border-radius: var(--radius);
     overflow: hidden;
-    transition: border-color .2s, transform .2s;
+    transition: border-color .2s, box-shadow .2s;
     display: flex;
     flex-direction: column;
   }
-  .house-card:hover { border-color: var(--accent); transform: translateY(-2px); }
-  .house-card.fav { border-color: var(--terra); }
+  .house-card:hover { border-color: var(--accent); box-shadow: 0 2px 12px rgba(0,0,0,.08); }
+  .house-card.fav { border-color: var(--fav); }
 
-  /* 사진 영역 */
-  .card-img {
-    width: 100%;
-    height: 175px;
-    object-fit: cover;
-    background: var(--surface2);
-    display: block;
-  }
+  .card-img { width: 100%; height: 175px; object-fit: cover; display: block; background: var(--surface2); }
   .card-img-placeholder {
-    width: 100%;
-    height: 175px;
+    width: 100%; height: 175px;
     background: var(--surface2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text3);
-    font-size: 36px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text3); font-size: 36px;
   }
 
-  /* 카드 본문 */
   .card-body { padding: 16px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
 
   .card-top { display: flex; justify-content: space-between; align-items: flex-start; }
   .card-name { font-size: 15px; font-weight: 700; color: var(--text); line-height: 1.3; }
-  .card-location { font-size: 12px; color: var(--text3); margin-top: 3px; font-family: 'Segoe UI', system-ui, sans-serif; }
+  .card-location { font-size: 12px; color: var(--text3); margin-top: 3px; }
 
   .fav-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 18px;
-    line-height: 1;
-    color: var(--text3);
-    transition: color .15s, transform .15s;
-    flex-shrink: 0;
+    background: none; border: none; cursor: pointer;
+    font-size: 18px; line-height: 1; color: var(--text3);
+    transition: color .15s, transform .15s; flex-shrink: 0;
   }
   .fav-btn:hover { transform: scale(1.2); }
-  .fav-btn.active { color: var(--terra); }
+  .fav-btn.active { color: var(--fav); }
 
-  /* 가격 행 */
-  .price-row {
-    display: flex;
-    align-items: baseline;
-    gap: 14px;
-  }
+  .price-row { display: flex; align-items: baseline; gap: 14px; }
   .price-main { font-size: 22px; font-weight: 700; color: var(--text); }
-  .price-per { font-size: 13px; color: var(--accent); font-weight: 600; font-family: 'Segoe UI', system-ui, sans-serif; }
-  .price-label { font-size: 11px; color: var(--text3); font-family: 'Segoe UI', system-ui, sans-serif; }
+  .price-per { font-size: 13px; color: var(--green); font-weight: 600; }
+  .price-label { font-size: 11px; color: var(--text3); }
 
-  /* 태그 행 */
   .tag-row { display: flex; gap: 6px; flex-wrap: wrap; }
   .tag {
-    font-size: 11px;
-    padding: 3px 9px;
-    border-radius: 3px;
-    font-weight: 500;
-    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 11px; padding: 2px 9px;
+    border-radius: 4px; font-weight: 600;
+    border: 1px solid transparent;
   }
-  .tag-car-no { background: var(--accent-bg); color: var(--accent); border: 1px solid var(--accent2); }
-  .tag-car-opt { background: var(--terra-bg); color: var(--terra); border: 1px solid var(--terra); }
-  .tag-car-yes { background: var(--red-bg); color: var(--red); border: 1px solid var(--red); }
-  .tag-mode { background: var(--surface2); color: var(--text2); border: 1px solid var(--border2); }
-  .tag-priority { background: var(--surface2); color: var(--text2); border: 1px solid var(--border2); }
+  .tag-car-no  { background: var(--green-bg);  color: var(--green);  border-color: var(--green); }
+  .tag-car-opt { background: var(--orange-bg); color: var(--orange); border-color: var(--orange); }
+  .tag-car-yes { background: var(--red-bg);    color: var(--red);    border-color: var(--red); }
+  .tag-mode    { background: var(--surface2);  color: var(--text2);  border-color: var(--border2); }
 
-  /* 거리 행 */
-  .dist-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-  }
+  .dist-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .dist-item {
     background: var(--surface2);
+    border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     padding: 8px 10px;
-    border: 1px solid var(--border);
   }
-  .dist-item .di-label { font-size: 10px; color: var(--text3); margin-bottom: 2px; font-family: 'Segoe UI', system-ui, sans-serif; text-transform: uppercase; letter-spacing: 0.05em; }
-  .dist-item .di-val { font-size: 13px; font-weight: 600; color: var(--text); }
-  .dist-item .di-sub { font-size: 10px; color: var(--text3); font-family: 'Segoe UI', system-ui, sans-serif; }
-  .di-km { font-size: 11px; color: var(--text3); font-weight: 400; }
+  .dist-item .di-label { font-size: 10px; color: var(--text3); margin-bottom: 3px; text-transform: uppercase; letter-spacing: .05em; font-weight: 600; }
+  .dist-item .di-val { font-size: 13px; font-weight: 700; color: var(--text); }
+  .dist-item .di-sub { font-size: 11px; color: var(--text2); margin-top: 1px; }
+  .di-km { font-size: 12px; color: var(--text2); font-weight: 400; }
 
-  /* 메모 */
   .card-note {
-    font-size: 12px;
-    color: var(--text2);
-    border-left: 2px solid var(--accent2);
-    padding-left: 10px;
-    line-height: 1.6;
-    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 13px; color: var(--text2);
+    border-left: 3px solid var(--border2);
+    padding-left: 10px; line-height: 1.6;
   }
 
-  /* 카드 액션 */
   .card-actions {
-    display: flex;
-    gap: 8px;
-    padding: 11px 16px;
+    display: flex; gap: 8px;
+    padding: 10px 16px;
     border-top: 1px solid var(--border);
+    background: var(--surface2);
   }
   .card-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 12px;
-    color: var(--accent);
-    text-decoration: none;
-    font-weight: 500;
-    font-family: 'Segoe UI', system-ui, sans-serif;
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 12px; color: var(--accent);
+    text-decoration: none; font-weight: 600;
   }
   .card-link:hover { text-decoration: underline; }
 
   /* ── 모달 ── */
   .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.75);
-    z-index: 200;
-    display: none;
-    align-items: center;
-    justify-content: center;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.5);
+    z-index: 200; display: none;
+    align-items: center; justify-content: center;
     padding: 20px;
+    backdrop-filter: blur(2px);
   }
   .modal-overlay.open { display: flex; }
   .modal {
     background: var(--surface);
     border: 1px solid var(--border2);
     border-radius: 10px;
-    width: 100%;
-    max-width: 560px;
-    max-height: 90vh;
-    overflow-y: auto;
+    width: 100%; max-width: 560px;
+    max-height: 90vh; overflow-y: auto;
     padding: 28px;
+    box-shadow: 0 8px 32px rgba(0,0,0,.15);
   }
   .modal h3 { font-size: 16px; font-weight: 700; margin-bottom: 20px; color: var(--text); }
 
   .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .form-grid .full { grid-column: 1 / -1; }
   .form-group { display: flex; flex-direction: column; gap: 5px; }
-  .form-group label { font-size: 11px; color: var(--text2); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; font-family: 'Segoe UI', system-ui, sans-serif; }
+  .form-group label { font-size: 11px; color: var(--text2); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
   .form-group input,
   .form-group select,
   .form-group textarea {
@@ -359,51 +347,37 @@
     color: var(--text);
     padding: 9px 12px;
     font-size: 13px;
-    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-family: inherit;
   }
   .form-group input:focus,
   .form-group select:focus,
-  .form-group textarea:focus { outline: none; border-color: var(--accent); }
-  .form-group textarea { min-height: 72px; resize: vertical; font-family: 'Segoe UI', system-ui, sans-serif; }
-  .form-hint { font-size: 11px; color: var(--text3); margin-top: 2px; font-family: 'Segoe UI', system-ui, sans-serif; }
+  .form-group textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-bg); }
+  .form-group textarea { min-height: 72px; resize: vertical; }
+  .form-hint { font-size: 11px; color: var(--text3); margin-top: 2px; }
 
   .modal-footer { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
 
   /* ── 빈 상태 ── */
-  .empty-state {
-    text-align: center;
-    padding: 60px 20px;
-    color: var(--text3);
-  }
+  .empty-state { text-align: center; padding: 60px 20px; }
   .empty-state .icon { font-size: 44px; margin-bottom: 16px; }
-  .empty-state p { font-size: 15px; color: var(--text2); margin-bottom: 20px; font-family: 'Segoe UI', system-ui, sans-serif; }
+  .empty-state p { font-size: 15px; color: var(--text2); margin-bottom: 20px; }
 
   /* ── 우선순위 뱃지 ── */
-  .priority-badge {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background: var(--surface);
-    color: var(--terra);
-    font-size: 11px;
-    font-weight: 700;
-    padding: 3px 8px;
-    border-radius: 3px;
-    border: 1px solid var(--terra);
-    font-family: 'Segoe UI', system-ui, sans-serif;
-  }
   .card-img-wrap { position: relative; }
-
-  /* ── 정렬 아이콘 ── */
-  .sort-arrow { font-size: 10px; }
+  .priority-badge {
+    position: absolute; top: 10px; left: 10px;
+    background: var(--accent); color: #fff;
+    font-size: 11px; font-weight: 700;
+    padding: 2px 8px; border-radius: 4px;
+  }
 
   /* 반응형 */
   @media (max-width: 600px) {
-    .main { padding: 16px; }
+    .main { padding: 14px; }
     .form-grid { grid-template-columns: 1fr; }
     .form-grid .full { grid-column: 1; }
     .config-grid { grid-template-columns: 1fr; }
-    .app-header { padding: 0 16px; }
+    .app-header { padding: 0 14px; }
     .cards-grid { grid-template-columns: 1fr; }
   }
 </style>
@@ -415,7 +389,8 @@
   <div class="logo">미국 집 구하기</div>
   <div class="header-right">
     <span class="sync-badge" id="sync-badge">● 연결됨</span>
-    <button class="btn btn-ghost btn-sm" onclick="openSetup()">⚙ Firebase 설정</button>
+    <button class="theme-toggle" id="theme-btn" onclick="toggleTheme()" title="다크/라이트 모드">🌙</button>
+    <button class="btn btn-ghost btn-sm" onclick="openSetup()">⚙ 설정</button>
     <button class="btn btn-primary" onclick="openModal()">+ 집 추가</button>
   </div>
 </header>
@@ -606,6 +581,25 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getDatabase, ref, set, onValue, remove, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
+// ── 다크모드 ──
+(function() {
+  const saved = localStorage.getItem("theme");
+  if (saved === "dark") document.documentElement.setAttribute("data-theme", "dark");
+})();
+
+window.toggleTheme = function() {
+  const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+  if (isDark) {
+    document.documentElement.removeAttribute("data-theme");
+    localStorage.setItem("theme", "light");
+    document.getElementById("theme-btn").textContent = "🌙";
+  } else {
+    document.documentElement.setAttribute("data-theme", "dark");
+    localStorage.setItem("theme", "dark");
+    document.getElementById("theme-btn").textContent = "☀️";
+  }
+};
+
 // ── 전역 상태 ──
 let db = null;
 let entries = {};   // { firebaseKey: entryObject }
@@ -633,6 +627,9 @@ function initFirebase(cfg) {
 
 // 저장된 설정 자동 로드
 window.addEventListener("DOMContentLoaded", () => {
+  if (document.documentElement.getAttribute("data-theme") === "dark") {
+    document.getElementById("theme-btn").textContent = "☀️";
+  }
   const saved = localStorage.getItem("fb_config");
   if (saved) {
     const cfg = JSON.parse(saved);
