@@ -6,26 +6,24 @@
 <title>🏠 미국 집 구하기</title>
 <style>
   :root {
-    --bg: #0f1117;
-    --surface: #1a1d27;
-    --surface2: #22263a;
-    --border: #2e3350;
-    --border2: #3d4266;
-    --accent: #6c8aff;
-    --accent2: #4f6ef7;
-    --accent-bg: #6c8aff18;
-    --text: #e8eaf6;
-    --text2: #8b90b8;
-    --text3: #555a80;
-    --green: #4caf82;
-    --green-bg: #4caf8218;
-    --red: #f06a6a;
-    --red-bg: #f06a6a18;
-    --yellow: #f5c842;
-    --yellow-bg: #f5c84218;
-    --radius: 10px;
-    --radius-sm: 6px;
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    --bg: #16181a;
+    --surface: #1e2123;
+    --surface2: #272b2e;
+    --border: #30363a;
+    --border2: #3d4449;
+    --accent: #7a9e7e;
+    --accent2: #5e8463;
+    --accent-bg: #7a9e7e1a;
+    --terra: #b07a5a;
+    --terra-bg: #b07a5a1a;
+    --text: #cec9c1;
+    --text2: #8a8880;
+    --text3: #55524e;
+    --red: #a05a5a;
+    --red-bg: #a05a5a1a;
+    --radius: 8px;
+    --radius-sm: 5px;
+    font-family: 'Georgia', 'Times New Roman', serif;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -35,7 +33,7 @@
     color: var(--text);
     min-height: 100vh;
     font-size: 14px;
-    line-height: 1.5;
+    line-height: 1.6;
   }
 
   /* ── 상단 헤더 ── */
@@ -46,44 +44,46 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 56px;
+    height: 54px;
     position: sticky;
     top: 0;
     z-index: 100;
   }
   .app-header .logo {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 700;
-    color: var(--accent);
+    color: var(--text);
     display: flex;
     align-items: center;
     gap: 8px;
+    letter-spacing: 0.02em;
   }
   .header-right { display: flex; align-items: center; gap: 10px; }
   .sync-badge {
     font-size: 11px;
     padding: 3px 10px;
-    border-radius: 20px;
-    background: var(--green-bg);
-    color: var(--green);
-    border: 1px solid var(--green);
+    border-radius: 4px;
+    background: var(--accent-bg);
+    color: var(--accent);
+    border: 1px solid var(--accent2);
     display: none;
+    font-family: 'Segoe UI', system-ui, sans-serif;
   }
   .sync-badge.visible { display: inline-block; }
   .sync-badge.error { background: var(--red-bg); color: var(--red); border-color: var(--red); }
 
   /* ── Firebase 설정 배너 ── */
   .setup-banner {
-    background: linear-gradient(135deg, #1a1d27 0%, #22263a 100%);
-    border: 1px solid var(--accent);
+    background: var(--surface);
+    border: 1px solid var(--border2);
     border-radius: var(--radius);
     padding: 28px 32px;
     margin: 24px;
     display: none;
   }
   .setup-banner.visible { display: block; }
-  .setup-banner h2 { font-size: 18px; color: var(--accent); margin-bottom: 6px; }
-  .setup-banner p { color: var(--text2); margin-bottom: 16px; font-size: 13px; line-height: 1.7; }
+  .setup-banner h2 { font-size: 17px; color: var(--accent); margin-bottom: 6px; }
+  .setup-banner p { color: var(--text2); margin-bottom: 16px; font-size: 13px; line-height: 1.7; font-family: 'Segoe UI', system-ui, sans-serif; }
   .setup-steps { display: grid; gap: 10px; margin-bottom: 20px; }
   .setup-step {
     background: var(--bg);
@@ -92,13 +92,14 @@
     padding: 12px 16px;
     font-size: 13px;
     color: var(--text2);
+    font-family: 'Segoe UI', system-ui, sans-serif;
   }
   .setup-step strong { color: var(--text); display: block; margin-bottom: 4px; }
   .setup-step code {
     background: var(--surface2);
     color: var(--accent);
     padding: 1px 6px;
-    border-radius: 4px;
+    border-radius: 3px;
     font-family: monospace;
     font-size: 12px;
   }
@@ -109,7 +110,7 @@
     margin-bottom: 16px;
   }
   .config-field { display: flex; flex-direction: column; gap: 4px; }
-  .config-field label { font-size: 11px; color: var(--text2); }
+  .config-field label { font-size: 11px; color: var(--text2); font-family: 'Segoe UI', system-ui, sans-serif; }
   .config-field input {
     background: var(--bg);
     border: 1px solid var(--border2);
@@ -117,6 +118,7 @@
     color: var(--text);
     padding: 8px 12px;
     font-size: 13px;
+    font-family: 'Segoe UI', system-ui, sans-serif;
   }
   .config-field input:focus { outline: none; border-color: var(--accent); }
 
@@ -127,7 +129,7 @@
   .stats-row {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 12px;
+    gap: 10px;
     margin-bottom: 20px;
   }
   .stat-card {
@@ -136,10 +138,10 @@
     border-radius: var(--radius);
     padding: 14px 18px;
   }
-  .stat-card .label { font-size: 11px; color: var(--text3); margin-bottom: 4px; }
+  .stat-card .label { font-size: 11px; color: var(--text3); margin-bottom: 4px; font-family: 'Segoe UI', system-ui, sans-serif; text-transform: uppercase; letter-spacing: 0.06em; }
   .stat-card .value { font-size: 22px; font-weight: 700; color: var(--text); }
   .stat-card .value.accent { color: var(--accent); }
-  .stat-card .value.green { color: var(--green); }
+  .stat-card .value.green { color: var(--accent); }
 
   /* ── 컨트롤 바 ── */
   .controls {
@@ -157,6 +159,7 @@
     padding: 7px 12px;
     font-size: 13px;
     height: 36px;
+    font-family: 'Segoe UI', system-ui, sans-serif;
   }
   .controls select:focus, .controls input:focus { outline: none; border-color: var(--accent); }
   .controls input[type=text] { min-width: 180px; }
@@ -175,9 +178,11 @@
     border: none;
     height: 36px;
     transition: opacity .15s, transform .1s;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    letter-spacing: 0.01em;
   }
   .btn:active { transform: scale(0.97); }
-  .btn-primary { background: var(--accent2); color: #fff; }
+  .btn-primary { background: var(--accent2); color: #e8e4de; }
   .btn-primary:hover { background: var(--accent); }
   .btn-ghost {
     background: var(--surface);
@@ -192,7 +197,7 @@
   .cards-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 16px;
+    gap: 14px;
   }
 
   .house-card {
@@ -205,69 +210,70 @@
     flex-direction: column;
   }
   .house-card:hover { border-color: var(--accent); transform: translateY(-2px); }
-  .house-card.fav { border-color: var(--yellow); }
+  .house-card.fav { border-color: var(--terra); }
 
   /* 사진 영역 */
   .card-img {
     width: 100%;
-    height: 180px;
+    height: 175px;
     object-fit: cover;
     background: var(--surface2);
     display: block;
   }
   .card-img-placeholder {
     width: 100%;
-    height: 180px;
+    height: 175px;
     background: var(--surface2);
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--text3);
-    font-size: 40px;
+    font-size: 36px;
   }
 
   /* 카드 본문 */
   .card-body { padding: 16px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
 
   .card-top { display: flex; justify-content: space-between; align-items: flex-start; }
-  .card-name { font-size: 15px; font-weight: 700; color: var(--text); }
-  .card-location { font-size: 12px; color: var(--text3); margin-top: 2px; }
+  .card-name { font-size: 15px; font-weight: 700; color: var(--text); line-height: 1.3; }
+  .card-location { font-size: 12px; color: var(--text3); margin-top: 3px; font-family: 'Segoe UI', system-ui, sans-serif; }
 
   .fav-btn {
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 20px;
+    font-size: 18px;
     line-height: 1;
     color: var(--text3);
     transition: color .15s, transform .15s;
     flex-shrink: 0;
   }
   .fav-btn:hover { transform: scale(1.2); }
-  .fav-btn.active { color: var(--yellow); }
+  .fav-btn.active { color: var(--terra); }
 
   /* 가격 행 */
   .price-row {
     display: flex;
     align-items: baseline;
-    gap: 12px;
+    gap: 14px;
   }
-  .price-main { font-size: 22px; font-weight: 700; color: var(--accent); }
-  .price-per { font-size: 13px; color: var(--green); font-weight: 600; }
-  .price-label { font-size: 11px; color: var(--text3); }
+  .price-main { font-size: 22px; font-weight: 700; color: var(--text); }
+  .price-per { font-size: 13px; color: var(--accent); font-weight: 600; font-family: 'Segoe UI', system-ui, sans-serif; }
+  .price-label { font-size: 11px; color: var(--text3); font-family: 'Segoe UI', system-ui, sans-serif; }
 
   /* 태그 행 */
   .tag-row { display: flex; gap: 6px; flex-wrap: wrap; }
   .tag {
     font-size: 11px;
     padding: 3px 9px;
-    border-radius: 20px;
+    border-radius: 3px;
     font-weight: 500;
+    font-family: 'Segoe UI', system-ui, sans-serif;
   }
-  .tag-car-no { background: var(--green-bg); color: var(--green); }
-  .tag-car-opt { background: var(--yellow-bg); color: var(--yellow); }
-  .tag-car-yes { background: var(--red-bg); color: var(--red); }
-  .tag-mode { background: var(--accent-bg); color: var(--accent); }
+  .tag-car-no { background: var(--accent-bg); color: var(--accent); border: 1px solid var(--accent2); }
+  .tag-car-opt { background: var(--terra-bg); color: var(--terra); border: 1px solid var(--terra); }
+  .tag-car-yes { background: var(--red-bg); color: var(--red); border: 1px solid var(--red); }
+  .tag-mode { background: var(--surface2); color: var(--text2); border: 1px solid var(--border2); }
   .tag-priority { background: var(--surface2); color: var(--text2); border: 1px solid var(--border2); }
 
   /* 거리 행 */
@@ -280,25 +286,28 @@
     background: var(--surface2);
     border-radius: var(--radius-sm);
     padding: 8px 10px;
+    border: 1px solid var(--border);
   }
-  .dist-item .di-label { font-size: 10px; color: var(--text3); margin-bottom: 2px; }
+  .dist-item .di-label { font-size: 10px; color: var(--text3); margin-bottom: 2px; font-family: 'Segoe UI', system-ui, sans-serif; text-transform: uppercase; letter-spacing: 0.05em; }
   .dist-item .di-val { font-size: 13px; font-weight: 600; color: var(--text); }
-  .dist-item .di-sub { font-size: 10px; color: var(--text3); }
+  .dist-item .di-sub { font-size: 10px; color: var(--text3); font-family: 'Segoe UI', system-ui, sans-serif; }
+  .di-km { font-size: 11px; color: var(--text3); font-weight: 400; }
 
   /* 메모 */
   .card-note {
     font-size: 12px;
     color: var(--text2);
-    border-left: 2px solid var(--border2);
+    border-left: 2px solid var(--accent2);
     padding-left: 10px;
     line-height: 1.6;
+    font-family: 'Segoe UI', system-ui, sans-serif;
   }
 
   /* 카드 액션 */
   .card-actions {
     display: flex;
     gap: 8px;
-    padding: 12px 16px;
+    padding: 11px 16px;
     border-top: 1px solid var(--border);
   }
   .card-link {
@@ -309,6 +318,7 @@
     color: var(--accent);
     text-decoration: none;
     font-weight: 500;
+    font-family: 'Segoe UI', system-ui, sans-serif;
   }
   .card-link:hover { text-decoration: underline; }
 
@@ -316,7 +326,7 @@
   .modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,.7);
+    background: rgba(0,0,0,.75);
     z-index: 200;
     display: none;
     align-items: center;
@@ -327,19 +337,19 @@
   .modal {
     background: var(--surface);
     border: 1px solid var(--border2);
-    border-radius: 14px;
+    border-radius: 10px;
     width: 100%;
     max-width: 560px;
     max-height: 90vh;
     overflow-y: auto;
     padding: 28px;
   }
-  .modal h3 { font-size: 17px; font-weight: 700; margin-bottom: 20px; color: var(--text); }
+  .modal h3 { font-size: 16px; font-weight: 700; margin-bottom: 20px; color: var(--text); }
 
   .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .form-grid .full { grid-column: 1 / -1; }
   .form-group { display: flex; flex-direction: column; gap: 5px; }
-  .form-group label { font-size: 11px; color: var(--text2); font-weight: 600; text-transform: uppercase; letter-spacing: .05em; }
+  .form-group label { font-size: 11px; color: var(--text2); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; font-family: 'Segoe UI', system-ui, sans-serif; }
   .form-group input,
   .form-group select,
   .form-group textarea {
@@ -349,13 +359,13 @@
     color: var(--text);
     padding: 9px 12px;
     font-size: 13px;
-    font-family: inherit;
+    font-family: 'Segoe UI', system-ui, sans-serif;
   }
   .form-group input:focus,
   .form-group select:focus,
   .form-group textarea:focus { outline: none; border-color: var(--accent); }
-  .form-group textarea { min-height: 72px; resize: vertical; }
-  .form-hint { font-size: 11px; color: var(--text3); margin-top: 2px; }
+  .form-group textarea { min-height: 72px; resize: vertical; font-family: 'Segoe UI', system-ui, sans-serif; }
+  .form-hint { font-size: 11px; color: var(--text3); margin-top: 2px; font-family: 'Segoe UI', system-ui, sans-serif; }
 
   .modal-footer { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
 
@@ -365,20 +375,22 @@
     padding: 60px 20px;
     color: var(--text3);
   }
-  .empty-state .icon { font-size: 48px; margin-bottom: 16px; }
-  .empty-state p { font-size: 15px; color: var(--text2); margin-bottom: 20px; }
+  .empty-state .icon { font-size: 44px; margin-bottom: 16px; }
+  .empty-state p { font-size: 15px; color: var(--text2); margin-bottom: 20px; font-family: 'Segoe UI', system-ui, sans-serif; }
 
   /* ── 우선순위 뱃지 ── */
   .priority-badge {
     position: absolute;
     top: 10px;
     left: 10px;
-    background: var(--accent2);
-    color: #fff;
+    background: var(--surface);
+    color: var(--terra);
     font-size: 11px;
     font-weight: 700;
     padding: 3px 8px;
-    border-radius: 20px;
+    border-radius: 3px;
+    border: 1px solid var(--terra);
+    font-family: 'Segoe UI', system-ui, sans-serif;
   }
   .card-img-wrap { position: relative; }
 
@@ -400,7 +412,7 @@
 
 <!-- 헤더 -->
 <header class="app-header">
-  <div class="logo">🏠 미국 집 구하기</div>
+  <div class="logo">미국 집 구하기</div>
   <div class="header-right">
     <span class="sync-badge" id="sync-badge">● 연결됨</span>
     <button class="btn btn-ghost btn-sm" onclick="openSetup()">⚙ Firebase 설정</button>
@@ -665,6 +677,11 @@ function showSync(ok, msg) {
 
 // ── 설정 모달 ──
 window.openSetup = function() {
+  const pw = prompt("비밀번호를 입력하세요:");
+  if (pw !== "1258") {
+    if (pw !== null) alert("비밀번호가 틀렸습니다.");
+    return;
+  }
   document.getElementById("setup-banner").classList.add("visible");
 };
 window.closeSetup = function() {
@@ -790,7 +807,28 @@ window.renderCards = function() {
     "필수": `<span class="tag tag-car-yes">❌ 차 필수</span>`,
   };
 
-  grid.innerHTML = list.map(e => `
+  // Redmond WA 기준 평균 속도 (mph)
+  const speedMph = { "도보": 3.0, "자전거": 9.0, "버스": 11.0, "차": 22.0 };
+  function toKm(mi) { return mi ? (mi * 1.60934).toFixed(1) : null; }
+  function travelMin(mi, mode) {
+    if (!mi || !mode) return null;
+    const spd = speedMph[mode] || 3.0;
+    return Math.round((mi / spd) * 60);
+  }
+  // 식료품점은 mode 없으므로 도보+차 둘 다 보여줌
+  function groceryTimes(mi) {
+    if (!mi) return "";
+    const walk = Math.round((mi / 3.0) * 60);
+    const car  = Math.round((mi / 22.0) * 60);
+    return `도보 ${walk}분 · 차 ${car}분`;
+  }
+
+  grid.innerHTML = list.map(e => {
+    const sKm  = toKm(e.schoolDist);
+    const sMin = travelMin(e.schoolDist, e.schoolMode);
+    const gKm  = toKm(e.groceryDist);
+
+    return `
     <div class="house-card${e.fav ? " fav" : ""}">
       <div class="card-img-wrap">
         ${e.img
@@ -828,12 +866,13 @@ window.renderCards = function() {
         <div class="dist-row">
           <div class="dist-item">
             <div class="di-label">🎓 학교까지</div>
-            <div class="di-val">${e.schoolDist ? e.schoolDist + " mi" : "—"}</div>
-            <div class="di-sub">${e.schoolMode || ""}</div>
+            <div class="di-val">${e.schoolDist ? `${e.schoolDist} mi <span class="di-km">(${sKm} km)</span>` : "—"}</div>
+            <div class="di-sub">${sMin != null ? `${e.schoolMode} 약 ${sMin}분` : (e.schoolMode || "")}</div>
           </div>
           <div class="dist-item">
             <div class="di-label">🛒 ${e.groceryName || "식료품점"}</div>
-            <div class="di-val">${e.groceryDist ? e.groceryDist + " mi" : "—"}</div>
+            <div class="di-val">${e.groceryDist ? `${e.groceryDist} mi <span class="di-km">(${gKm} km)</span>` : "—"}</div>
+            <div class="di-sub">${groceryTimes(e.groceryDist)}</div>
           </div>
         </div>
 
@@ -846,7 +885,8 @@ window.renderCards = function() {
         <button class="btn btn-danger btn-sm" onclick="deleteEntry('${e._key}')">삭제</button>
       </div>
     </div>
-  `).join("");
+  `;
+  }).join("");
 };
 
 window.updateStats = function() {
