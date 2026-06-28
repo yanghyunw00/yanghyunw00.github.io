@@ -291,6 +291,7 @@
   .dist-item .di-label { font-size: 10px; color: var(--text3); margin-bottom: 2px; font-family: 'Segoe UI', system-ui, sans-serif; text-transform: uppercase; letter-spacing: 0.05em; }
   .dist-item .di-val { font-size: 13px; font-weight: 600; color: var(--text); }
   .dist-item .di-sub { font-size: 10px; color: var(--text3); font-family: 'Segoe UI', system-ui, sans-serif; }
+  .di-km { font-size: 11px; color: var(--text3); font-weight: 400; }
 
   /* 메모 */
   .card-note {
@@ -806,7 +807,28 @@ window.renderCards = function() {
     "필수": `<span class="tag tag-car-yes">❌ 차 필수</span>`,
   };
 
-  grid.innerHTML = list.map(e => `
+  // Redmond WA 기준 평균 속도 (mph)
+  const speedMph = { "도보": 3.0, "자전거": 9.0, "버스": 11.0, "차": 22.0 };
+  function toKm(mi) { return mi ? (mi * 1.60934).toFixed(1) : null; }
+  function travelMin(mi, mode) {
+    if (!mi || !mode) return null;
+    const spd = speedMph[mode] || 3.0;
+    return Math.round((mi / spd) * 60);
+  }
+  // 식료품점은 mode 없으므로 도보+차 둘 다 보여줌
+  function groceryTimes(mi) {
+    if (!mi) return "";
+    const walk = Math.round((mi / 3.0) * 60);
+    const car  = Math.round((mi / 22.0) * 60);
+    return `도보 ${walk}분 · 차 ${car}분`;
+  }
+
+  grid.innerHTML = list.map(e => {
+    const sKm  = toKm(e.schoolDist);
+    const sMin = travelMin(e.schoolDist, e.schoolMode);
+    const gKm  = toKm(e.groceryDist);
+
+    return `
     <div class="house-card${e.fav ? " fav" : ""}">
       <div class="card-img-wrap">
         ${e.img
@@ -844,12 +866,13 @@ window.renderCards = function() {
         <div class="dist-row">
           <div class="dist-item">
             <div class="di-label">🎓 학교까지</div>
-            <div class="di-val">${e.schoolDist ? e.schoolDist + " mi" : "—"}</div>
-            <div class="di-sub">${e.schoolMode || ""}</div>
+            <div class="di-val">${e.schoolDist ? `${e.schoolDist} mi <span class="di-km">(${sKm} km)</span>` : "—"}</div>
+            <div class="di-sub">${sMin != null ? `${e.schoolMode} 약 ${sMin}분` : (e.schoolMode || "")}</div>
           </div>
           <div class="dist-item">
             <div class="di-label">🛒 ${e.groceryName || "식료품점"}</div>
-            <div class="di-val">${e.groceryDist ? e.groceryDist + " mi" : "—"}</div>
+            <div class="di-val">${e.groceryDist ? `${e.groceryDist} mi <span class="di-km">(${gKm} km)</span>` : "—"}</div>
+            <div class="di-sub">${groceryTimes(e.groceryDist)}</div>
           </div>
         </div>
 
@@ -862,7 +885,8 @@ window.renderCards = function() {
         <button class="btn btn-danger btn-sm" onclick="deleteEntry('${e._key}')">삭제</button>
       </div>
     </div>
-  `).join("");
+  `;
+  }).join("");
 };
 
 window.updateStats = function() {
