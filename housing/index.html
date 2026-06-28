@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🏠 미국 집 구하기</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #22263a;
+    --border: #2e3350;
+    --border2: #3d4266;
+    --accent: #6c8aff;
+    --accent2: #4f6ef7;
+    --accent-bg: #6c8aff18;
+    --text: #e8eaf6;
+    --text2: #8b90b8;
+    --text3: #555a80;
+    --green: #4caf82;
+    --green-bg: #4caf8218;
+    --red: #f06a6a;
+    --red-bg: #f06a6a18;
+    --yellow: #f5c842;
+    --yellow-bg: #f5c84218;
+    --radius: 10px;
+    --radius-sm: 6px;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  /* ── 상단 헤더 ── */
+  .app-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .app-header .logo {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .header-right { display: flex; align-items: center; gap: 10px; }
+  .sync-badge {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: var(--green-bg);
+    color: var(--green);
+    border: 1px solid var(--green);
+    display: none;
+  }
+  .sync-badge.visible { display: inline-block; }
+  .sync-badge.error { background: var(--red-bg); color: var(--red); border-color: var(--red); }
+
+  /* ── Firebase 설정 배너 ── */
+  .setup-banner {
+    background: linear-gradient(135deg, #1a1d27 0%, #22263a 100%);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    margin: 24px;
+    display: none;
+  }
+  .setup-banner.visible { display: block; }
+  .setup-banner h2 { font-size: 18px; color: var(--accent); margin-bottom: 6px; }
+  .setup-banner p { color: var(--text2); margin-bottom: 16px; font-size: 13px; line-height: 1.7; }
+  .setup-steps { display: grid; gap: 10px; margin-bottom: 20px; }
+  .setup-step {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--text2);
+  }
+  .setup-step strong { color: var(--text); display: block; margin-bottom: 4px; }
+  .setup-step code {
+    background: var(--surface2);
+    color: var(--accent);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 12px;
+  }
+  .config-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .config-field { display: flex; flex-direction: column; gap: 4px; }
+  .config-field label { font-size: 11px; color: var(--text2); }
+  .config-field input {
+    background: var(--bg);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+  .config-field input:focus { outline: none; border-color: var(--accent); }
+
+  /* ── 메인 레이아웃 ── */
+  .main { padding: 20px 24px; }
+
+  /* ── 통계 카드 ── */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+  }
+  .stat-card .label { font-size: 11px; color: var(--text3); margin-bottom: 4px; }
+  .stat-card .value { font-size: 22px; font-weight: 700; color: var(--text); }
+  .stat-card .value.accent { color: var(--accent); }
+  .stat-card .value.green { color: var(--green); }
+
+  /* ── 컨트롤 바 ── */
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .controls select, .controls input[type=text] {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    padding: 7px 12px;
+    font-size: 13px;
+    height: 36px;
+  }
+  .controls select:focus, .controls input:focus { outline: none; border-color: var(--accent); }
+  .controls input[type=text] { min-width: 180px; }
+  .sep { flex: 1; }
+
+  /* ── 버튼 ── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    height: 36px;
+    transition: opacity .15s, transform .1s;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn-primary { background: var(--accent2); color: #fff; }
+  .btn-primary:hover { background: var(--accent); }
+  .btn-ghost {
+    background: var(--surface);
+    color: var(--text2);
+    border: 1px solid var(--border2);
+  }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-danger { background: var(--red-bg); color: var(--red); border: 1px solid var(--red); }
+  .btn-sm { height: 28px; padding: 4px 10px; font-size: 12px; }
+
+  /* ── 카드 그리드 ── */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+  }
+
+  .house-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: border-color .2s, transform .2s;
+    display: flex;
+    flex-direction: column;
+  }
+  .house-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .house-card.fav { border-color: var(--yellow); }
+
+  /* 사진 영역 */
+  .card-img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    background: var(--surface2);
+    display: block;
+  }
+  .card-img-placeholder {
+    width: 100%;
+    height: 180px;
+    background: var(--surface2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text3);
+    font-size: 40px;
+  }
+
+  /* 카드 본문 */
+  .card-body { padding: 16px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
+
+  .card-top { display: flex; justify-content: space-between; align-items: flex-start; }
+  .card-name { font-size: 15px; font-weight: 700; color: var(--text); }
+  .card-location { font-size: 12px; color: var(--text3); margin-top: 2px; }
+
+  .fav-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    line-height: 1;
+    color: var(--text3);
+    transition: color .15s, transform .15s;
+    flex-shrink: 0;
+  }
+  .fav-btn:hover { transform: scale(1.2); }
+  .fav-btn.active { color: var(--yellow); }
+
+  /* 가격 행 */
+  .price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+  .price-main { font-size: 22px; font-weight: 700; color: var(--accent); }
+  .price-per { font-size: 13px; color: var(--green); font-weight: 600; }
+  .price-label { font-size: 11px; color: var(--text3); }
+
+  /* 태그 행 */
+  .tag-row { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tag {
+    font-size: 11px;
+    padding: 3px 9px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+  .tag-car-no { background: var(--green-bg); color: var(--green); }
+  .tag-car-opt { background: var(--yellow-bg); color: var(--yellow); }
+  .tag-car-yes { background: var(--red-bg); color: var(--red); }
+  .tag-mode { background: var(--accent-bg); color: var(--accent); }
+  .tag-priority { background: var(--surface2); color: var(--text2); border: 1px solid var(--border2); }
+
+  /* 거리 행 */
+  .dist-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .dist-item {
+    background: var(--surface2);
+    border-radius: var(--radius-sm);
+    padding: 8px 10px;
+  }
+  .dist-item .di-label { font-size: 10px; color: var(--text3); margin-bottom: 2px; }
+  .dist-item .di-val { font-size: 13px; font-weight: 600; color: var(--text); }
+  .dist-item .di-sub { font-size: 10px; color: var(--text3); }
+
+  /* 메모 */
+  .card-note {
+    font-size: 12px;
+    color: var(--text2);
+    border-left: 2px solid var(--border2);
+    padding-left: 10px;
+    line-height: 1.6;
+  }
+
+  /* 카드 액션 */
+  .card-actions {
+    display: flex;
+    gap: 8px;
+    padding: 12px 16px;
+    border-top: 1px solid var(--border);
+  }
+  .card-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .card-link:hover { text-decoration: underline; }
+
+  /* ── 모달 ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.7);
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 14px;
+    width: 100%;
+    max-width: 560px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 28px;
+  }
+  .modal h3 { font-size: 17px; font-weight: 700; margin-bottom: 20px; color: var(--text); }
+
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .form-grid .full { grid-column: 1 / -1; }
+  .form-group { display: flex; flex-direction: column; gap: 5px; }
+  .form-group label { font-size: 11px; color: var(--text2); font-weight: 600; text-transform: uppercase; letter-spacing: .05em; }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    background: var(--bg);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    padding: 9px 12px;
+    font-size: 13px;
+    font-family: inherit;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus { outline: none; border-color: var(--accent); }
+  .form-group textarea { min-height: 72px; resize: vertical; }
+  .form-hint { font-size: 11px; color: var(--text3); margin-top: 2px; }
+
+  .modal-footer { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+
+  /* ── 빈 상태 ── */
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text3);
+  }
+  .empty-state .icon { font-size: 48px; margin-bottom: 16px; }
+  .empty-state p { font-size: 15px; color: var(--text2); margin-bottom: 20px; }
+
+  /* ── 우선순위 뱃지 ── */
+  .priority-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: var(--accent2);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 20px;
+  }
+  .card-img-wrap { position: relative; }
+
+  /* ── 정렬 아이콘 ── */
+  .sort-arrow { font-size: 10px; }
+
+  /* 반응형 */
+  @media (max-width: 600px) {
+    .main { padding: 16px; }
+    .form-grid { grid-template-columns: 1fr; }
+    .form-grid .full { grid-column: 1; }
+    .config-grid { grid-template-columns: 1fr; }
+    .app-header { padding: 0 16px; }
+    .cards-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 헤더 -->
+<header class="app-header">
+  <div class="logo">🏠 미국 집 구하기</div>
+  <div class="header-right">
+    <span class="sync-badge" id="sync-badge">● 연결됨</span>
+    <button class="btn btn-ghost btn-sm" onclick="openSetup()">⚙ Firebase 설정</button>
+    <button class="btn btn-primary" onclick="openModal()">+ 집 추가</button>
+  </div>
+</header>
+
+<!-- Firebase 설정 배너 -->
+<div class="setup-banner" id="setup-banner">
+  <h2>⚡ Firebase 연결 설정</h2>
+  <p>아래 단계를 따라 Firebase를 연결하면 5명이 실시간으로 데이터를 공유할 수 있어요.</p>
+  <div class="setup-steps">
+    <div class="setup-step">
+      <strong>① Firebase 프로젝트 만들기</strong>
+      <a href="https://console.firebase.google.com" target="_blank" style="color: var(--accent)">console.firebase.google.com</a> → 새 프로젝트 생성 → Realtime Database 활성화
+    </div>
+    <div class="setup-step">
+      <strong>② 데이터베이스 규칙 설정 (임시, 테스트용)</strong>
+      Rules 탭에서: <code>{ "rules": { ".read": true, ".write": true } }</code>
+      <div style="margin-top:6px; font-size:11px; color: var(--yellow)">⚠ 나중에 인증 추가 권장</div>
+    </div>
+    <div class="setup-step">
+      <strong>③ 프로젝트 설정 → 내 앱 → 웹 앱 추가 → 아래에 설정값 입력</strong>
+    </div>
+  </div>
+  <div class="config-grid">
+    <div class="config-field">
+      <label>API Key</label>
+      <input id="cfg-apiKey" placeholder="AIzaSy...">
+    </div>
+    <div class="config-field">
+      <label>Auth Domain</label>
+      <input id="cfg-authDomain" placeholder="your-app.firebaseapp.com">
+    </div>
+    <div class="config-field full">
+      <label>Database URL</label>
+      <input id="cfg-databaseURL" placeholder="https://your-app-default-rtdb.firebaseio.com">
+    </div>
+    <div class="config-field">
+      <label>Project ID</label>
+      <input id="cfg-projectId" placeholder="your-app">
+    </div>
+    <div class="config-field">
+      <label>App ID</label>
+      <input id="cfg-appId" placeholder="1:123456:web:abc123">
+    </div>
+  </div>
+  <div style="display:flex; gap:10px">
+    <button class="btn btn-primary" onclick="saveConfig()">저장 & 연결</button>
+    <button class="btn btn-ghost" onclick="closeSetup()">닫기</button>
+  </div>
+</div>
+
+<!-- 메인 -->
+<div class="main" id="main-area">
+  <!-- 통계 -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="label">등록 매물</div>
+      <div class="value accent" id="st-count">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">평균 월세</div>
+      <div class="value" id="st-avg">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">1인당 평균</div>
+      <div class="value green" id="st-per">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">차 불필요</div>
+      <div class="value" id="st-nocar">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">즐겨찾기</div>
+      <div class="value" id="st-fav">0</div>
+    </div>
+  </div>
+
+  <!-- 컨트롤 -->
+  <div class="controls">
+    <input type="text" id="search-input" placeholder="🔍 이름·주소 검색..." oninput="renderCards()">
+    <select id="sort-col" onchange="renderCards()">
+      <option value="priority">우선순위순</option>
+      <option value="rent">월세순</option>
+      <option value="perPerson">1인당순</option>
+      <option value="schoolDist">학교 거리순</option>
+      <option value="groceryDist">식료품점 거리순</option>
+      <option value="name">이름순</option>
+    </select>
+    <select id="sort-dir" onchange="renderCards()">
+      <option value="asc">오름차순 ↑</option>
+      <option value="desc">내림차순 ↓</option>
+    </select>
+    <select id="filter-car" onchange="renderCards()">
+      <option value="">차 여부: 전체</option>
+      <option value="불필요">차 불필요</option>
+      <option value="가끔 필요">가끔 필요</option>
+      <option value="필수">차 필수</option>
+    </select>
+    <select id="filter-fav" onchange="renderCards()">
+      <option value="">즐겨찾기: 전체</option>
+      <option value="1">★ 즐겨찾기만</option>
+    </select>
+  </div>
+
+  <!-- 카드 그리드 -->
+  <div class="cards-grid" id="cards-grid"></div>
+</div>
+
+<!-- 추가/수정 모달 -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <h3 id="modal-title">집 추가</h3>
+    <div class="form-grid">
+      <div class="form-group full">
+        <label>매물 이름 / 별명</label>
+        <input id="f-name" placeholder="예: UCLA 근처 2BR — Westwood">
+      </div>
+      <div class="form-group full">
+        <label>리스팅 URL</label>
+        <input id="f-url" placeholder="https://zillow.com/...">
+        <div class="form-hint">Zillow, Apartments.com, Craigslist 등</div>
+      </div>
+      <div class="form-group full">
+        <label>사진 URL</label>
+        <input id="f-img" placeholder="https://.../photo.jpg" oninput="previewImg(this.value)">
+        <div class="form-hint">이미지 직접 링크 (.jpg .png .webp) — 붙여넣으면 아래에 미리보기</div>
+        <img id="img-preview" style="margin-top:8px;border-radius:8px;max-height:120px;display:none;object-fit:cover;border:1px solid var(--border2)">
+      </div>
+      <div class="form-group">
+        <label>월세 ($)</label>
+        <input id="f-rent" type="number" placeholder="2500">
+      </div>
+      <div class="form-group">
+        <label>인원 수</label>
+        <input id="f-people" type="number" placeholder="5" value="5">
+      </div>
+      <div class="form-group">
+        <label>학교까지 거리 (miles)</label>
+        <input id="f-school" type="number" placeholder="1.2" step="0.1">
+      </div>
+      <div class="form-group">
+        <label>학교 이동 수단</label>
+        <select id="f-school-mode">
+          <option value="도보">🚶 도보</option>
+          <option value="버스">🚌 버스</option>
+          <option value="자전거">🚲 자전거</option>
+          <option value="차">🚗 차</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>식료품점 이름</label>
+        <input id="f-grocery-name" placeholder="Trader Joe's, H-Mart...">
+      </div>
+      <div class="form-group">
+        <label>식료품점 거리 (miles)</label>
+        <input id="f-grocery" type="number" placeholder="0.5" step="0.1">
+      </div>
+      <div class="form-group">
+        <label>차 필요 여부</label>
+        <select id="f-car">
+          <option value="불필요">✅ 불필요 (도보·대중교통)</option>
+          <option value="가끔 필요">⚠️ 가끔 필요</option>
+          <option value="필수">❌ 필수</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>우선순위</label>
+        <input id="f-priority" type="number" placeholder="1" min="1">
+        <div class="form-hint">1이 최상위</div>
+      </div>
+      <div class="form-group full">
+        <label>주소 / 위치</label>
+        <input id="f-location" placeholder="예: Westwood, Los Angeles CA">
+      </div>
+      <div class="form-group full">
+        <label>메모</label>
+        <textarea id="f-note" placeholder="층수, 주차, 반려동물, 세탁기, 보증금 등 자유롭게..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal()">취소</button>
+      <button class="btn btn-primary" onclick="saveEntry()">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- Firebase SDK -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, set, onValue, remove, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+// ── 전역 상태 ──
+let db = null;
+let entries = {};   // { firebaseKey: entryObject }
+let editKey = null;
+
+// ── Firebase 초기화 ──
+function initFirebase(cfg) {
+  try {
+    const app = initializeApp(cfg);
+    db = getDatabase(app);
+    // 실시간 리스너
+    onValue(ref(db, "houses"), (snap) => {
+      entries = snap.val() || {};
+      renderCards();
+      updateStats();
+    });
+    showSync(true);
+    localStorage.setItem("fb_config", JSON.stringify(cfg));
+    closeSetup();
+  } catch(e) {
+    showSync(false, e.message);
+    alert("Firebase 연결 실패: " + e.message);
+  }
+}
+
+// 저장된 설정 자동 로드
+window.addEventListener("DOMContentLoaded", () => {
+  const saved = localStorage.getItem("fb_config");
+  if (saved) {
+    const cfg = JSON.parse(saved);
+    fillConfigFields(cfg);
+    initFirebase(cfg);
+  } else {
+    document.getElementById("setup-banner").classList.add("visible");
+  }
+});
+
+function fillConfigFields(cfg) {
+  document.getElementById("cfg-apiKey").value = cfg.apiKey || "";
+  document.getElementById("cfg-authDomain").value = cfg.authDomain || "";
+  document.getElementById("cfg-databaseURL").value = cfg.databaseURL || "";
+  document.getElementById("cfg-projectId").value = cfg.projectId || "";
+  document.getElementById("cfg-appId").value = cfg.appId || "";
+}
+
+window.saveConfig = function() {
+  const cfg = {
+    apiKey: document.getElementById("cfg-apiKey").value.trim(),
+    authDomain: document.getElementById("cfg-authDomain").value.trim(),
+    databaseURL: document.getElementById("cfg-databaseURL").value.trim(),
+    projectId: document.getElementById("cfg-projectId").value.trim(),
+    appId: document.getElementById("cfg-appId").value.trim(),
+  };
+  if (!cfg.databaseURL) { alert("Database URL은 필수입니다."); return; }
+  initFirebase(cfg);
+};
+
+function showSync(ok, msg) {
+  const badge = document.getElementById("sync-badge");
+  badge.classList.add("visible");
+  if (ok) {
+    badge.textContent = "● 연결됨";
+    badge.classList.remove("error");
+  } else {
+    badge.textContent = "● 연결 실패";
+    badge.classList.add("error");
+  }
+}
+
+// ── 설정 모달 ──
+window.openSetup = function() {
+  document.getElementById("setup-banner").classList.add("visible");
+};
+window.closeSetup = function() {
+  document.getElementById("setup-banner").classList.remove("visible");
+};
+
+// ── 집 추가/수정 모달 ──
+window.openModal = function(key) {
+  editKey = key || null;
+  const e = key ? entries[key] : {};
+  document.getElementById("modal-title").textContent = key ? "집 수정" : "집 추가";
+  document.getElementById("f-name").value = e.name || "";
+  document.getElementById("f-url").value = e.url || "";
+  document.getElementById("f-img").value = e.img || "";
+  document.getElementById("f-rent").value = e.rent || "";
+  document.getElementById("f-people").value = e.people || 5;
+  document.getElementById("f-school").value = e.schoolDist || "";
+  document.getElementById("f-school-mode").value = e.schoolMode || "도보";
+  document.getElementById("f-grocery-name").value = e.groceryName || "";
+  document.getElementById("f-grocery").value = e.groceryDist || "";
+  document.getElementById("f-car").value = e.car || "불필요";
+  document.getElementById("f-priority").value = e.priority || (Object.keys(entries).length + 1);
+  document.getElementById("f-location").value = e.location || "";
+  document.getElementById("f-note").value = e.note || "";
+  const prev = document.getElementById("img-preview");
+  if (e.img) { prev.src = e.img; prev.style.display = "block"; }
+  else prev.style.display = "none";
+  document.getElementById("modal-overlay").classList.add("open");
+};
+
+window.closeModal = function() {
+  document.getElementById("modal-overlay").classList.remove("open");
+  editKey = null;
+};
+
+window.previewImg = function(url) {
+  const prev = document.getElementById("img-preview");
+  if (url && url.startsWith("http")) {
+    prev.src = url;
+    prev.style.display = "block";
+    prev.onerror = () => { prev.style.display = "none"; };
+  } else {
+    prev.style.display = "none";
+  }
+};
+
+window.saveEntry = function() {
+  if (!db) { alert("Firebase 연결 후 사용하세요. ⚙ 설정 버튼을 눌러주세요."); return; }
+  const rent = parseFloat(document.getElementById("f-rent").value) || 0;
+  const people = parseInt(document.getElementById("f-people").value) || 5;
+  const entry = {
+    name: document.getElementById("f-name").value || "이름 없음",
+    url: document.getElementById("f-url").value,
+    img: document.getElementById("f-img").value,
+    rent, people,
+    perPerson: people > 0 ? Math.round(rent / people) : 0,
+    schoolDist: parseFloat(document.getElementById("f-school").value) || 0,
+    schoolMode: document.getElementById("f-school-mode").value,
+    groceryName: document.getElementById("f-grocery-name").value,
+    groceryDist: parseFloat(document.getElementById("f-grocery").value) || 0,
+    car: document.getElementById("f-car").value,
+    priority: parseInt(document.getElementById("f-priority").value) || 99,
+    location: document.getElementById("f-location").value,
+    note: document.getElementById("f-note").value,
+    fav: editKey && entries[editKey] ? (entries[editKey].fav || 0) : 0,
+    updatedAt: Date.now(),
+  };
+  if (editKey) {
+    set(ref(db, "houses/" + editKey), entry);
+  } else {
+    push(ref(db, "houses"), entry);
+  }
+  closeModal();
+};
+
+window.deleteEntry = function(key) {
+  if (!confirm("이 매물을 삭제할까요?")) return;
+  remove(ref(db, "houses/" + key));
+};
+
+window.toggleFav = function(key) {
+  if (!db) return;
+  const cur = entries[key];
+  if (!cur) return;
+  set(ref(db, "houses/" + key + "/fav"), cur.fav ? 0 : 1);
+};
+
+// ── 렌더링 ──
+window.renderCards = function() {
+  const search = document.getElementById("search-input").value.toLowerCase();
+  const sortCol = document.getElementById("sort-col").value;
+  const sortDir = document.getElementById("sort-dir").value;
+  const filterCar = document.getElementById("filter-car").value;
+  const filterFav = document.getElementById("filter-fav").value;
+
+  let list = Object.entries(entries).map(([k,v]) => ({ ...v, _key: k }));
+
+  if (search) list = list.filter(e => (e.name + e.location).toLowerCase().includes(search));
+  if (filterCar) list = list.filter(e => e.car === filterCar);
+  if (filterFav) list = list.filter(e => e.fav);
+
+  list.sort((a, b) => {
+    let va = a[sortCol] ?? 9999, vb = b[sortCol] ?? 9999;
+    if (typeof va === "string") return sortDir === "asc" ? va.localeCompare(vb) : vb.localeCompare(va);
+    return sortDir === "asc" ? va - vb : vb - va;
+  });
+
+  const grid = document.getElementById("cards-grid");
+
+  if (list.length === 0) {
+    grid.innerHTML = `
+      <div class="empty-state" style="grid-column:1/-1">
+        <div class="icon">🏡</div>
+        <p>${Object.keys(entries).length === 0 ? "아직 등록된 매물이 없어요. 첫 번째 집을 추가해보세요!" : "검색 결과가 없습니다."}</p>
+        ${Object.keys(entries).length === 0 ? '<button class="btn btn-primary" onclick="openModal()">+ 집 추가</button>' : ''}
+      </div>`;
+    return;
+  }
+
+  const carTag = {
+    "불필요": `<span class="tag tag-car-no">✅ 차 불필요</span>`,
+    "가끔 필요": `<span class="tag tag-car-opt">⚠ 가끔 필요</span>`,
+    "필수": `<span class="tag tag-car-yes">❌ 차 필수</span>`,
+  };
+
+  grid.innerHTML = list.map(e => `
+    <div class="house-card${e.fav ? " fav" : ""}">
+      <div class="card-img-wrap">
+        ${e.img
+          ? `<img class="card-img" src="${e.img}" alt="사진" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+          : ""}
+        <div class="card-img-placeholder" style="${e.img ? "display:none" : ""}">🏠</div>
+        ${e.priority ? `<div class="priority-badge">#${e.priority}</div>` : ""}
+      </div>
+      <div class="card-body">
+        <div class="card-top">
+          <div>
+            <div class="card-name">${e.name}</div>
+            <div class="card-location">📍 ${e.location || "위치 미입력"}</div>
+          </div>
+          <button class="fav-btn${e.fav ? " active" : ""}" onclick="toggleFav('${e._key}')" title="즐겨찾기">★</button>
+        </div>
+
+        <div class="price-row">
+          <div>
+            <div class="price-label">월세</div>
+            <div class="price-main">$${(e.rent||0).toLocaleString()}</div>
+          </div>
+          ${e.perPerson ? `
+          <div>
+            <div class="price-label">1인당 (${e.people}명)</div>
+            <div class="price-per">$${e.perPerson.toLocaleString()}/mo</div>
+          </div>` : ""}
+        </div>
+
+        <div class="tag-row">
+          ${carTag[e.car] || ""}
+          ${e.schoolMode ? `<span class="tag tag-mode">${e.schoolMode}</span>` : ""}
+        </div>
+
+        <div class="dist-row">
+          <div class="dist-item">
+            <div class="di-label">🎓 학교까지</div>
+            <div class="di-val">${e.schoolDist ? e.schoolDist + " mi" : "—"}</div>
+            <div class="di-sub">${e.schoolMode || ""}</div>
+          </div>
+          <div class="dist-item">
+            <div class="di-label">🛒 ${e.groceryName || "식료품점"}</div>
+            <div class="di-val">${e.groceryDist ? e.groceryDist + " mi" : "—"}</div>
+          </div>
+        </div>
+
+        ${e.note ? `<div class="card-note">${e.note}</div>` : ""}
+      </div>
+      <div class="card-actions">
+        ${e.url ? `<a class="card-link" href="${e.url}" target="_blank">🔗 리스팅 보기</a>` : ""}
+        <span style="flex:1"></span>
+        <button class="btn btn-ghost btn-sm" onclick="openModal('${e._key}')">✏ 수정</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteEntry('${e._key}')">삭제</button>
+      </div>
+    </div>
+  `).join("");
+};
+
+window.updateStats = function() {
+  const list = Object.values(entries);
+  const n = list.length;
+  document.getElementById("st-count").textContent = n;
+  if (n === 0) {
+    document.getElementById("st-avg").textContent = "—";
+    document.getElementById("st-per").textContent = "—";
+  } else {
+    const rents = list.filter(e => e.rent > 0);
+    const avg = rents.length ? Math.round(rents.reduce((s,e) => s + e.rent, 0) / rents.length) : 0;
+    const avgP = rents.length ? Math.round(rents.reduce((s,e) => s + e.perPerson, 0) / rents.length) : 0;
+    document.getElementById("st-avg").textContent = avg ? "$" + avg.toLocaleString() : "—";
+    document.getElementById("st-per").textContent = avgP ? "$" + avgP.toLocaleString() : "—";
+  }
+  document.getElementById("st-nocar").textContent = list.filter(e => e.car === "불필요").length;
+  document.getElementById("st-fav").textContent = list.filter(e => e.fav).length;
+};
+
+// 모달 바깥 클릭 닫기
+document.getElementById("modal-overlay").addEventListener("click", e => {
+  if (e.target === document.getElementById("modal-overlay")) closeModal();
+});
+
+renderCards();
+</script>
+</body>
+</html>
