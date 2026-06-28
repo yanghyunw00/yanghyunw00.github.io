@@ -676,6 +676,11 @@ function showSync(ok, msg) {
 
 // ── 설정 모달 ──
 window.openSetup = function() {
+  const pw = prompt("비밀번호를 입력하세요:");
+  if (pw !== "1258") {
+    if (pw !== null) alert("비밀번호가 틀렸습니다.");
+    return;
+  }
   document.getElementById("setup-banner").classList.add("visible");
 };
 window.closeSetup = function() {
