@@ -625,19 +625,24 @@ function initFirebase(cfg) {
   }
 }
 
-// 저장된 설정 자동 로드
+// 기본 Firebase config (하드코딩 — 누구든 자동 연결)
+const DEFAULT_CONFIG = {
+  apiKey: "AIzaSyCJFYFUjt-cs5pJFP_kltSFRq759lLZ9FI",
+  authDomain: "housing-8bdd2.firebaseapp.com",
+  databaseURL: "https://housing-8bdd2-default-rtdb.firebaseio.com",
+  projectId: "housing-8bdd2",
+  appId: "1:230341988234:web:d73226f8d160ce9fd54273",
+};
+
 window.addEventListener("DOMContentLoaded", () => {
   if (document.documentElement.getAttribute("data-theme") === "dark") {
     document.getElementById("theme-btn").textContent = "☀️";
   }
+  // localStorage에 커스텀 설정이 있으면 그걸 우선, 없으면 기본값으로 자동 연결
   const saved = localStorage.getItem("fb_config");
-  if (saved) {
-    const cfg = JSON.parse(saved);
-    fillConfigFields(cfg);
-    initFirebase(cfg);
-  } else {
-    document.getElementById("setup-banner").classList.add("visible");
-  }
+  const cfg = saved ? JSON.parse(saved) : DEFAULT_CONFIG;
+  fillConfigFields(cfg);
+  initFirebase(cfg);
 });
 
 function fillConfigFields(cfg) {
