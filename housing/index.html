@@ -617,7 +617,6 @@ function initFirebase(cfg) {
       updateStats();
     });
     showSync(true);
-    localStorage.setItem("fb_config", JSON.stringify(cfg));
     closeSetup();
   } catch(e) {
     showSync(false, e.message);
@@ -625,8 +624,7 @@ function initFirebase(cfg) {
   }
 }
 
-// 기본 Firebase config (하드코딩 — 누구든 자동 연결)
-const DEFAULT_CONFIG = {
+const FIREBASE_CONFIG = {
   apiKey: "AIzaSyCJFYFUjt-cs5pJFP_kltSFRq759lLZ9FI",
   authDomain: "housing-8bdd2.firebaseapp.com",
   databaseURL: "https://housing-8bdd2-default-rtdb.firebaseio.com",
@@ -638,11 +636,9 @@ window.addEventListener("DOMContentLoaded", () => {
   if (document.documentElement.getAttribute("data-theme") === "dark") {
     document.getElementById("theme-btn").textContent = "☀️";
   }
-  // localStorage에 커스텀 설정이 있으면 그걸 우선, 없으면 기본값으로 자동 연결
-  const saved = localStorage.getItem("fb_config");
-  const cfg = saved ? JSON.parse(saved) : DEFAULT_CONFIG;
-  fillConfigFields(cfg);
-  initFirebase(cfg);
+  localStorage.removeItem("fb_config");
+  fillConfigFields(FIREBASE_CONFIG);
+  initFirebase(FIREBASE_CONFIG);
 });
 
 function fillConfigFields(cfg) {
@@ -662,7 +658,7 @@ window.saveConfig = function() {
     appId: document.getElementById("cfg-appId").value.trim(),
   };
   if (!cfg.databaseURL) { alert("Database URL은 필수입니다."); return; }
-  initFirebase(cfg);
+  initFirebase(cfg); // localStorage 저장 안 함
 };
 
 function showSync(ok, msg) {
