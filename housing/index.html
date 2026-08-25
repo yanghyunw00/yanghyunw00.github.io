@@ -82,18 +82,6 @@
   }
   .header-right { display: flex; align-items: center; gap: 8px; }
 
-  .sync-badge {
-    font-size: 12px;
-    padding: 3px 10px;
-    border-radius: 4px;
-    background: var(--green-bg);
-    color: var(--green);
-    border: 1px solid var(--green);
-    display: none;
-  }
-  .sync-badge.visible { display: inline-block; }
-  .sync-badge.error { background: var(--red-bg); color: var(--red); border-color: var(--red); }
-
   /* 다크모드 토글 */
   .theme-toggle {
     background: var(--surface2);
@@ -109,51 +97,6 @@
     justify-content: center;
   }
   .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
-
-  /* ── Firebase 설정 배너 ── */
-  .setup-banner {
-    background: var(--surface);
-    border: 1px solid var(--border2);
-    border-radius: var(--radius);
-    padding: 28px 32px;
-    margin: 20px 24px;
-    display: none;
-  }
-  .setup-banner.visible { display: block; }
-  .setup-banner h2 { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
-  .setup-banner p { color: var(--text2); margin-bottom: 16px; font-size: 13px; line-height: 1.7; }
-  .setup-steps { display: grid; gap: 8px; margin-bottom: 20px; }
-  .setup-step {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 12px 16px;
-    font-size: 13px;
-    color: var(--text2);
-  }
-  .setup-step strong { color: var(--text); display: block; margin-bottom: 4px; }
-  .setup-step code {
-    background: var(--bg);
-    color: var(--accent);
-    padding: 1px 6px;
-    border-radius: 3px;
-    font-family: monospace;
-    font-size: 12px;
-    border: 1px solid var(--border);
-  }
-  .config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
-  .config-field { display: flex; flex-direction: column; gap: 4px; }
-  .config-field label { font-size: 11px; color: var(--text2); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
-  .config-field input {
-    background: var(--bg);
-    border: 1px solid var(--border2);
-    border-radius: var(--radius-sm);
-    color: var(--text);
-    padding: 8px 12px;
-    font-size: 13px;
-    font-family: inherit;
-  }
-  .config-field input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-bg); }
 
   /* ── 메인 ── */
   .main { padding: 20px 24px; }
@@ -376,7 +319,6 @@
     .main { padding: 14px; }
     .form-grid { grid-template-columns: 1fr; }
     .form-grid .full { grid-column: 1; }
-    .config-grid { grid-template-columns: 1fr; }
     .app-header { padding: 0 14px; }
     .cards-grid { grid-template-columns: 1fr; }
   }
@@ -388,58 +330,10 @@
 <header class="app-header">
   <div class="logo">미국 집 구하기</div>
   <div class="header-right">
-    <span class="sync-badge" id="sync-badge">● 연결됨</span>
     <button class="theme-toggle" id="theme-btn" onclick="toggleTheme()" title="다크/라이트 모드">🌙</button>
-    <button class="btn btn-ghost btn-sm" onclick="openSetup()">⚙ 설정</button>
     <button class="btn btn-primary" onclick="openModal()">+ 집 추가</button>
   </div>
 </header>
-
-<!-- Firebase 설정 배너 -->
-<div class="setup-banner" id="setup-banner">
-  <h2>⚡ Firebase 연결 설정</h2>
-  <p>아래 단계를 따라 Firebase를 연결하면 5명이 실시간으로 데이터를 공유할 수 있어요.</p>
-  <div class="setup-steps">
-    <div class="setup-step">
-      <strong>① Firebase 프로젝트 만들기</strong>
-      <a href="https://console.firebase.google.com" target="_blank" style="color: var(--accent)">console.firebase.google.com</a> → 새 프로젝트 생성 → Realtime Database 활성화
-    </div>
-    <div class="setup-step">
-      <strong>② 데이터베이스 규칙 설정 (임시, 테스트용)</strong>
-      Rules 탭에서: <code>{ "rules": { ".read": true, ".write": true } }</code>
-      <div style="margin-top:6px; font-size:11px; color: var(--yellow)">⚠ 나중에 인증 추가 권장</div>
-    </div>
-    <div class="setup-step">
-      <strong>③ 프로젝트 설정 → 내 앱 → 웹 앱 추가 → 아래에 설정값 입력</strong>
-    </div>
-  </div>
-  <div class="config-grid">
-    <div class="config-field">
-      <label>API Key</label>
-      <input id="cfg-apiKey" placeholder="AIzaSy...">
-    </div>
-    <div class="config-field">
-      <label>Auth Domain</label>
-      <input id="cfg-authDomain" placeholder="your-app.firebaseapp.com">
-    </div>
-    <div class="config-field full">
-      <label>Database URL</label>
-      <input id="cfg-databaseURL" placeholder="https://your-app-default-rtdb.firebaseio.com">
-    </div>
-    <div class="config-field">
-      <label>Project ID</label>
-      <input id="cfg-projectId" placeholder="your-app">
-    </div>
-    <div class="config-field">
-      <label>App ID</label>
-      <input id="cfg-appId" placeholder="1:123456:web:abc123">
-    </div>
-  </div>
-  <div style="display:flex; gap:10px">
-    <button class="btn btn-primary" onclick="saveConfig()">저장 & 연결</button>
-    <button class="btn btn-ghost" onclick="closeSetup()">닫기</button>
-  </div>
-</div>
 
 <!-- 메인 -->
 <div class="main" id="main-area">
@@ -576,11 +470,7 @@
   </div>
 </div>
 
-<!-- Firebase SDK -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, set, onValue, remove, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
-
+<script>
 // ── 다크모드 ──
 (function() {
   const saved = localStorage.getItem("theme");
@@ -601,90 +491,30 @@ window.toggleTheme = function() {
 };
 
 // ── 전역 상태 ──
-let db = null;
-let entries = {};   // { firebaseKey: entryObject }
+const STORAGE_KEY = "housing_entries";
+let entries = {};   // { localKey: entryObject }
 let editKey = null;
 
-// ── Firebase 초기화 ──
-function initFirebase(cfg) {
+function loadEntries() {
   try {
-    const app = initializeApp(cfg);
-    db = getDatabase(app);
-    // 실시간 리스너
-    onValue(ref(db, "houses"), (snap) => {
-      entries = snap.val() || {};
-      renderCards();
-      updateStats();
-    });
-    showSync(true);
-    closeSetup();
+    entries = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
   } catch(e) {
-    showSync(false, e.message);
-    alert("Firebase 연결 실패: " + e.message);
+    entries = {};
   }
 }
 
-const FIREBASE_CONFIG = {
-  apiKey: "AIzaSyCJFYFUjt-cs5pJFP_kltSFRq759lLZ9FI",
-  authDomain: "housing-8bdd2.firebaseapp.com",
-  databaseURL: "https://housing-8bdd2-default-rtdb.firebaseio.com",
-  projectId: "housing-8bdd2",
-  appId: "1:230341988234:web:d73226f8d160ce9fd54273",
-};
+function saveEntries() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+}
 
 window.addEventListener("DOMContentLoaded", () => {
   if (document.documentElement.getAttribute("data-theme") === "dark") {
     document.getElementById("theme-btn").textContent = "☀️";
   }
-  localStorage.removeItem("fb_config");
-  fillConfigFields(FIREBASE_CONFIG);
-  initFirebase(FIREBASE_CONFIG);
+  loadEntries();
+  renderCards();
+  updateStats();
 });
-
-function fillConfigFields(cfg) {
-  document.getElementById("cfg-apiKey").value = cfg.apiKey || "";
-  document.getElementById("cfg-authDomain").value = cfg.authDomain || "";
-  document.getElementById("cfg-databaseURL").value = cfg.databaseURL || "";
-  document.getElementById("cfg-projectId").value = cfg.projectId || "";
-  document.getElementById("cfg-appId").value = cfg.appId || "";
-}
-
-window.saveConfig = function() {
-  const cfg = {
-    apiKey: document.getElementById("cfg-apiKey").value.trim(),
-    authDomain: document.getElementById("cfg-authDomain").value.trim(),
-    databaseURL: document.getElementById("cfg-databaseURL").value.trim(),
-    projectId: document.getElementById("cfg-projectId").value.trim(),
-    appId: document.getElementById("cfg-appId").value.trim(),
-  };
-  if (!cfg.databaseURL) { alert("Database URL은 필수입니다."); return; }
-  initFirebase(cfg); // localStorage 저장 안 함
-};
-
-function showSync(ok, msg) {
-  const badge = document.getElementById("sync-badge");
-  badge.classList.add("visible");
-  if (ok) {
-    badge.textContent = "● 연결됨";
-    badge.classList.remove("error");
-  } else {
-    badge.textContent = "● 연결 실패";
-    badge.classList.add("error");
-  }
-}
-
-// ── 설정 모달 ──
-window.openSetup = function() {
-  const pw = prompt("비밀번호를 입력하세요:");
-  if (pw !== "1258") {
-    if (pw !== null) alert("비밀번호가 틀렸습니다.");
-    return;
-  }
-  document.getElementById("setup-banner").classList.add("visible");
-};
-window.closeSetup = function() {
-  document.getElementById("setup-banner").classList.remove("visible");
-};
 
 // ── 집 추가/수정 모달 ──
 window.openModal = function(key) {
@@ -727,7 +557,6 @@ window.previewImg = function(url) {
 };
 
 window.saveEntry = function() {
-  if (!db) { alert("Firebase 연결 후 사용하세요. ⚙ 설정 버튼을 눌러주세요."); return; }
   const rent = parseFloat(document.getElementById("f-rent").value) || 0;
   const people = parseInt(document.getElementById("f-people").value) || 5;
   const entry = {
@@ -748,23 +577,32 @@ window.saveEntry = function() {
     updatedAt: Date.now(),
   };
   if (editKey) {
-    set(ref(db, "houses/" + editKey), entry);
+    entries[editKey] = entry;
   } else {
-    push(ref(db, "houses"), entry);
+    const key = Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+    entries[key] = entry;
   }
+  saveEntries();
   closeModal();
+  renderCards();
+  updateStats();
 };
 
 window.deleteEntry = function(key) {
   if (!confirm("이 매물을 삭제할까요?")) return;
-  remove(ref(db, "houses/" + key));
+  delete entries[key];
+  saveEntries();
+  renderCards();
+  updateStats();
 };
 
 window.toggleFav = function(key) {
-  if (!db) return;
   const cur = entries[key];
   if (!cur) return;
-  set(ref(db, "houses/" + key + "/fav"), cur.fav ? 0 : 1);
+  cur.fav = cur.fav ? 0 : 1;
+  saveEntries();
+  renderCards();
+  updateStats();
 };
 
 // ── 렌더링 ──
@@ -909,8 +747,6 @@ window.updateStats = function() {
 document.getElementById("modal-overlay").addEventListener("click", e => {
   if (e.target === document.getElementById("modal-overlay")) closeModal();
 });
-
-renderCards();
 </script>
 </body>
 </html>
