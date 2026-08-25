@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -289,7 +289,7 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.3);
         }
 
-        /* 뮤트 & 집중 모드 버튼 */
+        /* Mute & Focus mode buttons */
         .mode-buttons {
             position: fixed;
             top: 80px;
@@ -332,7 +332,7 @@
         }
         
 
-        /* 집중 모드 스타일 */
+        /* Focus mode style */
         body.focus-mode #ui-container,
         body.focus-mode .window-frame,
         body.focus-mode .wall-decoration,
@@ -410,7 +410,7 @@
             box-shadow: 0 6px 0 #991b1b;
         }
 
-        /* 채팅 컨테이너 스타일 */
+        /* Chat container style */
         .chat-container {
             position: fixed;
             bottom: 20px;
@@ -611,7 +611,7 @@
             display: none !important;
         }
 
-        /* 순위표 스타일 */
+        /* Leaderboard style */
         .leaderboard-container {
             position: fixed;
             top: 20px;
@@ -835,7 +835,7 @@
             background: #f59e0b;
         }
 
-        /* 채팅창 왕관 스타일 */
+        /* Chat crown style */
         .chat-crown {
             width: 14px;
             height: 14px;
@@ -843,8 +843,8 @@
             vertical-align: middle;
         }
 
-        /* 온라인 사용자 목록 스타일 */
-        /* 온라인 사용자 컨테이너 (별도 팝업) */
+        /* Online users list style */
+        /* Online users container (separate popup) */
         .online-container {
             position: fixed;
             top: 540px;
@@ -997,7 +997,7 @@
             background: #fbbf24;
         }
 
-        /* YouTube 오디오 플레이어 스타일 */
+        /* YouTube audio player style */
         .yt-audio-controls {
             background: rgba(0,0,0,0.3);
             padding: 12px;
@@ -1091,7 +1091,7 @@
             height: 100%;
         }
 
-        /* 로그인 모달 스타일 */
+        /* Login modal style */
         .auth-modal {
             position: fixed;
             top: 0;
@@ -1276,7 +1276,7 @@
             box-shadow: 0 0 0 #991b1b;
         }
 
-        /* 프로필 설정 모달 */
+        /* Profile settings modal */
         .profile-modal {
             position: fixed;
             top: 0;
@@ -1468,51 +1468,53 @@
 </head>
 <body class="w-full h-screen flex items-center justify-center">
 
-    <!-- 로그인 모달 -->
+    <!-- Login modal -->
     <div id="authModal" class="auth-modal">
         <div class="auth-container">
-            <h2 class="auth-title" id="authTitle">로그인</h2>
+            <h2 class="auth-title" id="authTitle">Login</h2>
             <div id="authError" class="auth-error hidden"></div>
 
             <form id="authForm" class="auth-form">
-                <input type="email" id="authEmail" class="auth-input" placeholder="이메일" required>
-                <input type="password" id="authPassword" class="auth-input" placeholder="비밀번호" required>
-                <button type="submit" id="authSubmitBtn" class="auth-btn">로그인</button>
+                <input type="email" id="authEmail" class="auth-input" placeholder="Email" required>
+                <input type="password" id="authPassword" class="auth-input" placeholder="Password" required>
+                <button type="submit" id="authSubmitBtn" class="auth-btn">Login</button>
             </form>
 
             <div class="auth-divider">OR</div>
 
-            <button id="googleSignInBtn" class="auth-btn auth-btn-secondary">Google로 로그인</button>
+            <button id="googleSignInBtn" class="auth-btn auth-btn-secondary">Sign in with Google</button>
+
+            <button id="guestBtn" class="auth-btn" style="background: #6b7280; box-shadow: 0 4px 0 #374151; margin-top: 8px;">Continue as Guest</button>
 
             <div class="auth-toggle" id="authToggle">
-                계정이 없으신가요? <span style="color: #22c55e;">회원가입</span>
+                Don't have an account? <span style="color: #22c55e;">Sign Up</span>
             </div>
         </div>
     </div>
 
-    <!-- 사용자 프로필 -->
+    <!-- User profile -->
     <div id="userProfile" class="user-profile hidden">
         <span class="user-email" id="userEmail"></span>
-        <button id="editProfileBtn" class="edit-profile-btn">프로필</button>
-        <button id="logoutBtn" class="logout-btn">로그아웃</button>
+        <button id="editProfileBtn" class="edit-profile-btn">Profile</button>
+        <button id="logoutBtn" class="logout-btn">Logout</button>
     </div>
 
-    <!-- 프로필 설정 모달 -->
+    <!-- Profile settings modal -->
     <div id="profileModal" class="profile-modal hidden">
         <div class="profile-container">
             <div class="profile-header">
-                <h2 class="profile-title">프로필 설정</h2>
+                <h2 class="profile-title">Profile Settings</h2>
                 <button id="profileCloseBtn" class="profile-close-btn">×</button>
             </div>
 
             <div class="profile-form">
                 <div class="profile-field">
-                    <label class="profile-label">닉네임</label>
-                    <input type="text" id="profileNickname" class="profile-nickname-input" placeholder="닉네임을 입력하세요" maxlength="15">
+                    <label class="profile-label">Nickname</label>
+                    <input type="text" id="profileNickname" class="profile-nickname-input" placeholder="Enter your nickname" maxlength="15">
                 </div>
 
                 <div class="profile-field">
-                    <label class="profile-label">닉네임 색상</label>
+                    <label class="profile-label">Nickname Color</label>
                     <div class="color-picker-container" id="colorPicker">
                         <div class="color-option" data-color="#22c55e" style="background: #22c55e;"></div>
                         <div class="color-option" data-color="#3b82f6" style="background: #3b82f6;"></div>
@@ -1530,11 +1532,11 @@
                 </div>
 
                 <div class="profile-preview">
-                    <div class="profile-preview-label">미리보기</div>
-                    <div class="profile-preview-nickname" id="previewNickname">닉네임</div>
+                    <div class="profile-preview-label">Preview</div>
+                    <div class="profile-preview-nickname" id="previewNickname">Nickname</div>
                 </div>
 
-                <button id="profileSaveBtn" class="profile-save-btn">저장</button>
+                <button id="profileSaveBtn" class="profile-save-btn">Save</button>
             </div>
         </div>
     </div>
@@ -1565,7 +1567,7 @@
         </div>
     </div>
 
-    <!-- 모드 버튼들 -->
+    <!-- Mode buttons -->
     <div class="mode-buttons">
         <button id="muteBtn" class="mode-btn" onclick="toggleMute()">
             <span id="muteIcon">🔊</span>
@@ -1576,7 +1578,7 @@
         </button>
     </div>
 
-    <!-- 집중 모드 화면 -->
+    <!-- Focus mode screen -->
     <div class="focus-timer-display">
         <div class="timer" id="focusTimer">00:00</div>
         <div class="status" id="focusStatus">READY</div>
@@ -1588,40 +1590,40 @@
         </div>
     </div>
 
-    <!-- 투두 리스트 -->
-    <!-- 순위표 -->
+    <!-- Todo list -->
+    <!-- Leaderboard -->
     <div class="leaderboard-container" id="leaderboardContainer">
         <div class="leaderboard-header">
             <div class="leaderboard-title">🏆 LEADERBOARD</div>
             <div style="display: flex; gap: 8px;">
-                <button class="leaderboard-refresh-btn" onclick="refreshLeaderboard()" title="새로고침">🔄</button>
+                <button class="leaderboard-refresh-btn" onclick="refreshLeaderboard()" title="Refresh">🔄</button>
                 <button class="leaderboard-toggle-btn" onclick="toggleLeaderboard()">−</button>
             </div>
         </div>
 
         <div class="leaderboard-tabs">
-            <button class="leaderboard-tab active" onclick="switchLeaderboard('daily')">일간</button>
-            <button class="leaderboard-tab" onclick="switchLeaderboard('weekly')">주간</button>
-            <button class="leaderboard-tab" onclick="switchLeaderboard('monthly')">월간</button>
+            <button class="leaderboard-tab active" onclick="switchLeaderboard('daily')">Daily</button>
+            <button class="leaderboard-tab" onclick="switchLeaderboard('weekly')">Weekly</button>
+            <button class="leaderboard-tab" onclick="switchLeaderboard('monthly')">Monthly</button>
         </div>
 
         <div class="leaderboard-list" id="leaderboardList">
-            <!-- 동적으로 추가됨 -->
+            <!-- Dynamically added -->
         </div>
     </div>
 
-    <!-- 온라인 사용자 목록 (별도 팝업) -->
+    <!-- Online users list (separate popup) -->
     <div class="online-container" id="onlineContainer">
         <div class="online-header">
             <div class="online-title">👥 ONLINE (<span id="onlineCount">0</span>)</div>
             <button class="online-toggle-btn" onclick="toggleOnlineList()">−</button>
         </div>
         <div class="online-users-list" id="onlineUsersList">
-            <!-- 동적으로 추가됨 -->
+            <!-- Dynamically added -->
         </div>
     </div>
 
-    <!-- 실시간 채팅 -->
+    <!-- Live chat -->
     <div class="chat-container" id="chatContainer">
         <div class="chat-header">
             <div class="chat-title">💬 LIVE CHAT</div>
@@ -1685,9 +1687,9 @@
                     <button onclick="loadYoutube()" class="retro-button bg-red-700 text-white text-[10px] px-3 py-2 rounded border-b-4 border-red-900 hover:bg-red-600">LOAD</button>
                 </div>
                 
-                <!-- YouTube 오디오 컨트롤 -->
+                <!-- YouTube audio controls -->
                 <div id="ytAudioControls" class="yt-audio-controls hidden">
-                    <!-- 비디오 표시 토글 -->
+                    <!-- Video display toggle -->
                     <div class="yt-video-toggle">
                         <button id="ytVideoToggleBtn" onclick="toggleYoutubeVideo()" class="yt-video-toggle-btn">
                             📺 VIDEO OFF
@@ -1706,7 +1708,7 @@
                     </div>
                     <div class="text-[9px] text-amber-300 truncate" id="ytVideoTitle">YouTube Audio Player</div>
                     
-                    <!-- 비디오 표시 영역 -->
+                    <!-- Video display area -->
                     <div id="ytVideoContainer" class="yt-video-container">
                         <div class="yt-video-wrapper">
                             <div id="ytPlayerVisible"></div>
@@ -1714,7 +1716,7 @@
                     </div>
                 </div>
                 
-                <!-- 숨겨진 YouTube iframe (오디오 전용) -->
+                <!-- Hidden YouTube iframe (audio only) -->
                 <div id="ytPlayerContainer" style="position: absolute; left: -9999px; width: 1px; height: 1px;">
                     <div id="ytPlayer"></div>
                 </div>
@@ -1752,7 +1754,7 @@
             </div>
         </div>
 
-        <!-- 저장된 프리셋들 -->
+        <!-- Saved presets -->
         <div id="savedPresets" class="grid grid-cols-3 gap-2 mb-6"></div>
 
         <div class="flex items-center gap-3 mb-6 bg-amber-950/40 p-3 rounded border border-amber-900/30">
@@ -1772,11 +1774,11 @@
 
     <script>
         // ==========================================
-        // Firebase 설정 및 초기화
+        // Firebase configuration and initialization
         // ==========================================
 
-        // 여기에 Firebase 설정을 입력하세요
-        // Firebase Console에서 프로젝트를 만들고 아래 설정을 복사해서 붙여넣으세요
+        // Enter your Firebase configuration here
+        // Create a project in the Firebase Console and paste the config below
         const firebaseConfig = {
   apiKey: "AIzaSyBa2FDJ0iNsD67G1LvjFxMWN8bzJveQ6yI",
   authDomain: "mytimer-4add6.firebaseapp.com",
@@ -1788,7 +1790,7 @@
   measurementId: "G-WXR0K507LE"
 };
 
-        // Firebase 초기화
+        // Firebase initialization
         let database = null;
         let chatRef = null;
         let usersRef = null;
@@ -1809,18 +1811,18 @@
             usersRef = database.ref('users');
             console.log('Firebase connected successfully!');
 
-            // 실시간 메시지 리스너 (최근 100개만)
+            // Real-time message listener (last 100 only)
             chatRef.limitToLast(100).on('child_added', function(snapshot) {
                 const message = snapshot.val();
                 displayMessage(message, false);
             });
 
-            // 온라인 사용자 리스너
+            // Online users listener
             usersRef.on('value', function(snapshot) {
                 updateOnlineUsers(snapshot.val());
             });
 
-            // 오래된 메시지 자동 정리 (일주일 이상)
+            // Auto-clean old messages (older than a week)
             cleanOldMessages();
 
         } catch (error) {
@@ -1834,22 +1836,24 @@
         }
 
         // ==========================================
-        // 인증 기능
+        // Authentication features
         // ==========================================
 
         let isLoginMode = true;
+        let isGuest = false;
 
-        // 인증 상태 관찰
+        // Observe auth state
         auth.onAuthStateChanged(async (user) => {
             if (user) {
+                isGuest = false;
                 currentUser = user;
                 document.getElementById('authModal').classList.add('hidden');
                 document.getElementById('userProfile').classList.remove('hidden');
 
-                // 프로필 불러오기
+                // Load profile
                 await loadUserProfile();
 
-                // 사용자 온라인 상태 업데이트
+                // Update user online status
                 myUserId = user.uid;
                 myUserRef = usersRef.child(user.uid);
                 myUserRef.set({
@@ -1859,16 +1863,29 @@
                 });
                 myUserRef.onDisconnect().remove();
 
-                console.log('로그인 성공:', user.email);
+                console.log('Login successful:', user.email);
             } else {
                 currentUser = null;
-                document.getElementById('authModal').classList.remove('hidden');
-                document.getElementById('userProfile').classList.add('hidden');
-                console.log('로그아웃 상태');
+                if (!isGuest) {
+                    document.getElementById('authModal').classList.remove('hidden');
+                    document.getElementById('userProfile').classList.add('hidden');
+                }
+                console.log('Logged out');
             }
         });
 
-        // 폼 제출 처리
+        // Continue as guest (skip login, browse/use the timer without an account)
+        document.getElementById('guestBtn').addEventListener('click', () => {
+            isGuest = true;
+            document.getElementById('authModal').classList.add('hidden');
+            document.getElementById('userProfile').classList.remove('hidden');
+            document.getElementById('editProfileBtn').classList.add('hidden');
+            document.getElementById('userEmail').textContent = 'Guest';
+            document.getElementById('userEmail').style.color = '#9ca3af';
+            document.getElementById('logoutBtn').textContent = 'Login';
+        });
+
+        // Handle form submission
         document.getElementById('authForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('authEmail').value.trim();
@@ -1887,25 +1904,25 @@
                 }
                 document.getElementById('authForm').reset();
             } catch (error) {
-                console.error('인증 오류:', error);
+                console.error('Auth error:', error);
                 errorDiv.classList.remove('hidden');
 
-                let errorMessage = '오류가 발생했습니다.';
+                let errorMessage = 'An error occurred.';
                 switch (error.code) {
                     case 'auth/email-already-in-use':
-                        errorMessage = '이미 사용 중인 이메일입니다.';
+                        errorMessage = 'This email is already in use.';
                         break;
                     case 'auth/weak-password':
-                        errorMessage = '비밀번호는 최소 6자 이상이어야 합니다.';
+                        errorMessage = 'Password must be at least 6 characters.';
                         break;
                     case 'auth/user-not-found':
-                        errorMessage = '등록되지 않은 이메일입니다.';
+                        errorMessage = 'No account found with this email.';
                         break;
                     case 'auth/wrong-password':
-                        errorMessage = '잘못된 비밀번호입니다.';
+                        errorMessage = 'Incorrect password.';
                         break;
                     case 'auth/invalid-email':
-                        errorMessage = '유효하지 않은 이메일 주소입니다.';
+                        errorMessage = 'Invalid email address.';
                         break;
                     default:
                         errorMessage = error.message;
@@ -1916,7 +1933,7 @@
             }
         });
 
-        // Google 로그인
+        // Google sign-in
         document.getElementById('googleSignInBtn').addEventListener('click', async () => {
             const errorDiv = document.getElementById('authError');
             errorDiv.classList.add('hidden');
@@ -1925,13 +1942,13 @@
                 const provider = new firebase.auth.GoogleAuthProvider();
                 await auth.signInWithPopup(provider);
             } catch (error) {
-                console.error('Google 로그인 오류:', error);
+                console.error('Google sign-in error:', error);
                 errorDiv.classList.remove('hidden');
-                errorDiv.textContent = 'Google 로그인에 실패했습니다: ' + error.message;
+                errorDiv.textContent = 'Google sign-in failed: ' + error.message;
             }
         });
 
-        // 로그인/회원가입 토글
+        // Login/Sign up toggle
         document.getElementById('authToggle').addEventListener('click', () => {
             isLoginMode = !isLoginMode;
             const title = document.getElementById('authTitle');
@@ -1942,48 +1959,57 @@
             errorDiv.classList.add('hidden');
 
             if (isLoginMode) {
-                title.textContent = '로그인';
-                submitBtn.textContent = '로그인';
-                toggleText.innerHTML = '계정이 없으신가요? <span style="color: #22c55e;">회원가입</span>';
+                title.textContent = 'Login';
+                submitBtn.textContent = 'Login';
+                toggleText.innerHTML = "Don't have an account? <span style=\"color: #22c55e;\">Sign Up</span>";
             } else {
-                title.textContent = '회원가입';
-                submitBtn.textContent = '회원가입';
-                toggleText.innerHTML = '이미 계정이 있으신가요? <span style="color: #22c55e;">로그인</span>';
+                title.textContent = 'Sign Up';
+                submitBtn.textContent = 'Sign Up';
+                toggleText.innerHTML = "Already have an account? <span style=\"color: #22c55e;\">Login</span>";
             }
         });
 
-        // 로그아웃
+        // Logout (or, in guest mode, return to the login screen)
         document.getElementById('logoutBtn').addEventListener('click', async () => {
+            if (isGuest) {
+                isGuest = false;
+                document.getElementById('userProfile').classList.add('hidden');
+                document.getElementById('editProfileBtn').classList.remove('hidden');
+                document.getElementById('logoutBtn').textContent = 'Logout';
+                document.getElementById('authModal').classList.remove('hidden');
+                return;
+            }
+
             try {
                 await auth.signOut();
                 if (myUserRef) {
                     myUserRef.remove();
                 }
             } catch (error) {
-                console.error('로그아웃 오류:', error);
-                alert('로그아웃에 실패했습니다.');
+                console.error('Logout error:', error);
+                alert('Failed to log out.');
             }
         });
 
         // ==========================================
-        // 프로필 기능
+        // Profile features
         // ==========================================
 
-        // 프로필 모달 열기
+        // Open profile modal
         document.getElementById('editProfileBtn').addEventListener('click', () => {
-            console.log('프로필 버튼 클릭됨');
+            console.log('Profile button clicked');
             const modal = document.getElementById('profileModal');
-            console.log('모달 요소:', modal);
+            console.log('Modal element:', modal);
             modal.classList.remove('hidden');
             loadProfileToModal();
         });
 
-        // 프로필 모달 닫기
+        // Close profile modal
         document.getElementById('profileCloseBtn').addEventListener('click', () => {
             document.getElementById('profileModal').classList.add('hidden');
         });
 
-        // ESC 키로 모달 닫기
+        // Close modal with ESC key
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 const profileModal = document.getElementById('profileModal');
@@ -1993,20 +2019,20 @@
             }
         });
 
-        // 모달 배경 클릭 시 닫기
+        // Close modal when clicking the background
         document.getElementById('profileModal').addEventListener('click', (e) => {
             if (e.target.id === 'profileModal') {
                 document.getElementById('profileModal').classList.add('hidden');
             }
         });
 
-        // 닉네임 입력 시 미리보기 업데이트
+        // Update preview as nickname is typed
         document.getElementById('profileNickname').addEventListener('input', (e) => {
-            const nickname = e.target.value || '닉네임';
+            const nickname = e.target.value || 'Nickname';
             document.getElementById('previewNickname').textContent = nickname;
         });
 
-        // 색상 선택
+        // Color selection
         document.querySelectorAll('.color-option').forEach(option => {
             option.addEventListener('click', function() {
                 document.querySelectorAll('.color-option').forEach(opt => opt.classList.remove('selected'));
@@ -2016,13 +2042,13 @@
             });
         });
 
-        // 프로필 저장
+        // Save profile
         document.getElementById('profileSaveBtn').addEventListener('click', async () => {
             if (!currentUser) return;
 
             const nickname = document.getElementById('profileNickname').value.trim();
             if (!nickname) {
-                alert('닉네임을 입력해주세요!');
+                alert('Please enter a nickname!');
                 return;
             }
 
@@ -2032,17 +2058,17 @@
             userProfile = { nickname, color };
 
             try {
-                // Firebase에 프로필 저장
+                // Save profile to Firebase
                 await database.ref('profiles/' + currentUser.uid).set({
                     nickname: nickname,
                     color: color,
                     updatedAt: Date.now()
                 });
 
-                // UI 업데이트
+                // Update UI
                 updateProfileUI();
 
-                // 온라인 사용자 목록에도 업데이트
+                // Also update the online users list
                 if (myUserRef) {
                     myUserRef.update({
                         username: nickname,
@@ -2051,17 +2077,17 @@
                     });
                 }
 
-                // 모달 닫기
+                // Close modal
                 document.getElementById('profileModal').classList.add('hidden');
 
-                console.log('프로필 저장 완료:', userProfile);
+                console.log('Profile saved:', userProfile);
             } catch (error) {
-                console.error('프로필 저장 오류:', error);
-                alert('프로필 저장에 실패했습니다.');
+                console.error('Profile save error:', error);
+                alert('Failed to save profile.');
             }
         });
 
-        // Firebase에서 프로필 불러오기
+        // Load profile from Firebase
         async function loadUserProfile() {
             if (!currentUser) return;
 
@@ -2075,7 +2101,7 @@
                         color: data.color || '#22c55e'
                     };
                 } else {
-                    // 기본값 설정
+                    // Set default values
                     userProfile = {
                         nickname: currentUser.email.split('@')[0],
                         color: '#22c55e'
@@ -2084,24 +2110,24 @@
 
                 updateProfileUI();
             } catch (error) {
-                console.error('프로필 불러오기 오류:', error);
+                console.error('Profile load error:', error);
             }
         }
 
-        // 프로필 UI 업데이트
+        // Update profile UI
         function updateProfileUI() {
             const userEmailElement = document.getElementById('userEmail');
             userEmailElement.textContent = userProfile.nickname;
             userEmailElement.style.color = userProfile.color;
         }
 
-        // 모달에 프로필 로드
+        // Load profile into modal
         function loadProfileToModal() {
             document.getElementById('profileNickname').value = userProfile.nickname;
             document.getElementById('previewNickname').textContent = userProfile.nickname;
             document.getElementById('previewNickname').style.color = userProfile.color;
 
-            // 색상 선택 표시
+            // Show selected color
             document.querySelectorAll('.color-option').forEach(opt => {
                 opt.classList.remove('selected');
                 if (opt.getAttribute('data-color') === userProfile.color) {
@@ -2111,7 +2137,7 @@
         }
 
         // ==========================================
-        // 채팅 기능
+        // Chat features
         // ==========================================
 
         function toggleChat() {
@@ -2145,14 +2171,14 @@
         }
 
         // ==========================================
-        // 순위표 기능
+        // Leaderboard features
         // ==========================================
 
         let currentLeaderboardType = 'daily'; // daily, weekly, monthly
         let leaderboardRef = null;
-        let topRankers = { daily: [], weekly: [], monthly: [] }; // 1-3등 정보 저장
+        let topRankers = { daily: [], weekly: [], monthly: [] }; // store rank 1-3 info
 
-        // 순위표 토글
+        // Leaderboard toggle
         function toggleLeaderboard() {
             const leaderboardContainer = document.getElementById('leaderboardContainer');
             const toggleBtn = leaderboardContainer.querySelector('.leaderboard-toggle-btn');
@@ -2168,17 +2194,17 @@
             if (!isMuted) playBeep();
         }
 
-        // 순위표 탭 전환
+        // Switch leaderboard tab
         function switchLeaderboard(type) {
             currentLeaderboardType = type;
 
-            // 탭 활성화 상태 변경
+            // Change active tab state
             document.querySelectorAll('.leaderboard-tab').forEach(tab => {
                 tab.classList.remove('active');
             });
             event.target.classList.add('active');
 
-            // 새로고침 버튼 애니메이션
+            // Refresh button animation
             const refreshBtn = document.querySelector('.leaderboard-refresh-btn');
             if (refreshBtn) {
                 refreshBtn.classList.add('refreshing');
@@ -2187,13 +2213,13 @@
                 }, 500);
             }
 
-            // 순위표 업데이트
+            // Update leaderboard
             updateLeaderboard();
 
             if (!isMuted) playBeep();
         }
 
-        // 타이머 시간 기록
+        // Record timer session time
         function recordTimerSession(seconds) {
             if (!currentUser || !database || seconds < 1) return;
 
@@ -2204,7 +2230,7 @@
 
             const userStatsRef = database.ref(`timerStats/${currentUser.uid}`);
 
-            // 일간, 주간, 월간 통계 업데이트
+            // Update daily, weekly, monthly stats
             userStatsRef.transaction(function(stats) {
                 if (!stats) {
                     stats = {
@@ -2216,19 +2242,19 @@
                     };
                 }
 
-                // 일간 통계
+                // Daily stats
                 if (!stats.daily) stats.daily = {};
                 stats.daily[dateKey] = (stats.daily[dateKey] || 0) + seconds;
 
-                // 주간 통계
+                // Weekly stats
                 if (!stats.weekly) stats.weekly = {};
                 stats.weekly[weekKey] = (stats.weekly[weekKey] || 0) + seconds;
 
-                // 월간 통계
+                // Monthly stats
                 if (!stats.monthly) stats.monthly = {};
                 stats.monthly[monthKey] = (stats.monthly[monthKey] || 0) + seconds;
 
-                // 프로필 정보 업데이트
+                // Update profile info
                 stats.nickname = userProfile.nickname;
                 stats.color = userProfile.color;
                 stats.lastActive = Date.now();
@@ -2236,10 +2262,10 @@
                 return stats;
             });
 
-            console.log(`타이머 기록: ${seconds}초 (${Math.floor(seconds / 60)}분)`);
+            console.log(`Recorded session: ${seconds}s (${Math.floor(seconds / 60)}m)`);
         }
 
-        // 주차 키 생성 (ISO 8601 week)
+        // Generate week key (ISO 8601 week)
         function getWeekKey(date) {
             const d = new Date(date);
             d.setHours(0, 0, 0, 0);
@@ -2249,7 +2275,7 @@
             return `${d.getFullYear()}-W${String(weekNo).padStart(2, '0')}`;
         }
 
-        // 순위표 업데이트
+        // Update leaderboard
         async function updateLeaderboard() {
             if (!database) return;
 
@@ -2269,11 +2295,11 @@
                 const allStats = snapshot.val();
 
                 if (!allStats) {
-                    document.getElementById('leaderboardList').innerHTML = '<div style="text-align: center; color: #78350f; font-size: 9px; padding: 20px;">아직 기록이 없습니다</div>';
+                    document.getElementById('leaderboardList').innerHTML = '<div style="text-align: center; color: #78350f; font-size: 9px; padding: 20px;">No records yet</div>';
                     return;
                 }
 
-                // 사용자별 시간 집계
+                // Aggregate time per user
                 const rankings = [];
                 Object.keys(allStats).forEach(userId => {
                     const userStats = allStats[userId];
@@ -2297,52 +2323,52 @@
                     }
                 });
 
-                // 시간 순으로 정렬
+                // Sort by time
                 rankings.sort((a, b) => b.totalSeconds - a.totalSeconds);
 
-                // 상위 10명만 표시
+                // Show only top 10
                 const top10 = rankings.slice(0, 10);
 
-                // 1-3등 저장 (모든 탭에서 상위 3명 저장)
+                // Save rank 1-3 (store top 3 for every tab)
                 topRankers[currentLeaderboardType] = top10.slice(0, 3);
 
-                // 순위표 UI 업데이트
+                // Update leaderboard UI
                 displayLeaderboard(top10);
 
-                // 채팅 메시지에 왕관 업데이트
+                // Update crowns in chat messages
                 updateCrownInMessages();
 
             } catch (error) {
-                console.error('순위표 업데이트 오류:', error);
+                console.error('Leaderboard update error:', error);
             }
         }
 
-        // 순위표 새로고침
+        // Refresh leaderboard
         async function refreshLeaderboard() {
             const refreshBtn = document.querySelector('.leaderboard-refresh-btn');
             if (!refreshBtn) return;
 
-            // 애니메이션 추가
+            // Add animation
             refreshBtn.classList.add('refreshing');
 
-            // 비프음 재생
+            // Play beep sound
             if (!isMuted) playBeep();
 
-            // 순위표 업데이트
+            // Update leaderboard
             await updateLeaderboard();
 
-            // 애니메이션 제거
+            // Remove animation
             setTimeout(() => {
                 refreshBtn.classList.remove('refreshing');
             }, 500);
         }
 
-        // 순위표 표시
+        // Display leaderboard
         function displayLeaderboard(rankings) {
             const listContainer = document.getElementById('leaderboardList');
 
             if (rankings.length === 0) {
-                listContainer.innerHTML = '<div style="text-align: center; color: #78350f; font-size: 9px; padding: 20px;">아직 기록이 없습니다</div>';
+                listContainer.innerHTML = '<div style="text-align: center; color: #78350f; font-size: 9px; padding: 20px;">No records yet</div>';
                 return;
             }
 
@@ -2352,18 +2378,18 @@
                 const rank = index + 1;
                 const hours = Math.floor(user.totalSeconds / 3600);
                 const minutes = Math.floor((user.totalSeconds % 3600) / 60);
-                const timeText = hours > 0 ? `${hours}시간 ${minutes}분` : `${minutes}분`;
+                const timeText = hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
 
                 const itemDiv = document.createElement('div');
                 itemDiv.className = `leaderboard-item rank-${rank <= 3 ? rank : 'other'}`;
 
                 let crownHtml = '';
                 if (rank === 1) {
-                    crownHtml = '<img src="gold.png" class="leaderboard-crown" alt="1등">';
+                    crownHtml = '<img src="gold.png" class="leaderboard-crown" alt="1st">';
                 } else if (rank === 2) {
-                    crownHtml = '<img src="silver.png" class="leaderboard-crown" alt="2등">';
+                    crownHtml = '<img src="silver.png" class="leaderboard-crown" alt="2nd">';
                 } else if (rank === 3) {
-                    crownHtml = '<img src="brown.png" class="leaderboard-crown" alt="3등">';
+                    crownHtml = '<img src="brown.png" class="leaderboard-crown" alt="3rd">';
                 }
 
                 itemDiv.innerHTML = `
@@ -2381,7 +2407,7 @@
             });
         }
 
-        // 사용자의 랭크 가져오기 (채팅에 왕관 표시용)
+        // Get user's rank (for showing crown in chat)
         function getUserRank(userId) {
             for (const [type, rankers] of Object.entries(topRankers)) {
                 const index = rankers.findIndex(r => r.userId === userId);
@@ -2392,15 +2418,15 @@
             return null;
         }
 
-        // 왕관 이미지 HTML 생성
+        // Generate crown image HTML
         function getCrownHtml(rank) {
-            if (rank === 1) return '<img src="gold.png" class="chat-crown" alt="1등">';
-            if (rank === 2) return '<img src="silver.png" class="chat-crown" alt="2등">';
-            if (rank === 3) return '<img src="brown.png" class="chat-crown" alt="3등">';
+            if (rank === 1) return '<img src="gold.png" class="chat-crown" alt="1st">';
+            if (rank === 2) return '<img src="silver.png" class="chat-crown" alt="2nd">';
+            if (rank === 3) return '<img src="brown.png" class="chat-crown" alt="3rd">';
             return '';
         }
 
-        // 채팅 메시지에 왕관 업데이트 (리더보드 갱신 후 호출)
+        // Update crowns in chat messages (called after leaderboard refresh)
         function updateCrownInMessages() {
             const messagesContainer = document.getElementById('chatMessages');
             if (!messagesContainer) return;
@@ -2410,37 +2436,37 @@
                 const userDiv = msgDiv.querySelector('.chat-message-user');
                 if (!userDiv) return;
 
-                // 사용자 ID를 data attribute에서 가져오기
+                // Get user ID from data attribute
                 const userId = msgDiv.dataset.userId;
                 if (!userId) return;
 
                 const userRank = getUserRank(userId);
                 const crownHtml = userRank ? getCrownHtml(userRank) : '';
 
-                // 기존 왕관 제거
+                // Remove existing crown
                 const existingCrown = userDiv.querySelector('.chat-crown');
                 if (existingCrown) existingCrown.remove();
 
-                // 새 왕관 추가
+                // Add new crown
                 if (crownHtml) {
                     userDiv.insertAdjacentHTML('beforeend', crownHtml);
                 }
             });
         }
 
-        // 순위표 초기화 및 주기적 업데이트
+        // Initialize leaderboard and update periodically
         if (database) {
             updateLeaderboard();
-            setInterval(updateLeaderboard, 5 * 60 * 1000); // 5분마다 업데이트
+            setInterval(updateLeaderboard, 5 * 60 * 1000); // update every 5 minutes
         }
 
-        // 오래된 채팅 메시지 정리 함수
+        // Function to clean up old chat messages
         function cleanOldMessages() {
             if (!chatRef) return;
 
-            const weekAgo = Date.now() - (7 * 24 * 60 * 60 * 1000); // 7일 전
+            const weekAgo = Date.now() - (7 * 24 * 60 * 60 * 1000); // 7 days ago
 
-            // 7일 이상 된 메시지 찾아서 삭제
+            // Find and delete messages older than 7 days
             chatRef.orderByChild('timestamp')
                 .endAt(weekAgo)
                 .once('value', function(snapshot) {
@@ -2450,13 +2476,13 @@
                     });
 
                     Promise.all(deletePromises).then(() => {
-                        console.log('오래된 메시지 정리 완료');
+                        console.log('Old messages cleaned up');
                     }).catch(error => {
-                        console.error('메시지 정리 오류:', error);
+                        console.error('Message cleanup error:', error);
                     });
                 });
 
-            // 메시지 개수가 100개 초과하면 오래된 것부터 삭제
+            // If message count exceeds 100, delete the oldest first
             chatRef.once('value', function(snapshot) {
                 const messageCount = snapshot.numChildren();
                 if (messageCount > 100) {
@@ -2470,16 +2496,16 @@
                             });
 
                             Promise.all(deletePromises).then(() => {
-                                console.log(`${deleteCount}개의 오래된 메시지 삭제됨`);
+                                console.log(`${deleteCount} old messages deleted`);
                             }).catch(error => {
-                                console.error('메시지 제한 정리 오류:', error);
+                                console.error('Message limit cleanup error:', error);
                             });
                         });
                 }
             });
         }
 
-        // 주기적으로 오래된 메시지 정리 (매 시간마다)
+        // Periodically clean up old messages (every hour)
         setInterval(cleanOldMessages, 60 * 60 * 1000);
 
         function sendMessage() {
@@ -2488,9 +2514,9 @@
         return;
     }
 
-    // 로그인 체크
+    // Login check
     if (!currentUser) {
-        alert('로그인이 필요합니다!');
+        alert('Login required!');
         return;
     }
 
@@ -2501,13 +2527,13 @@
         return;
     }
 
-    // [v3 변경점] 메시지 전송 전에 리캡차 토큰을 먼저 받아옵니다.
+    // [v3 change] Get the reCAPTCHA token before sending the message.
     grecaptcha.ready(function() {
         grecaptcha.execute(siteKey, {action: 'submit'}).then(function(token) {
             
-            // 1. 여기서 token과 함께 서버로 보내 점수를 확인하는 것이 정석입니다.
-            // 2. 현재는 서버(백엔드)가 없으므로, 토큰을 받는 과정이 성공하면 메시지를 보냅니다.
-            // (주의: 이 방식은 봇을 완벽하게 막지는 못하고, 최소한의 방어막 역할만 합니다)
+            // 1. Ideally, send the token to a server to verify the score.
+            // 2. Since there's no backend yet, the message is sent once the token is obtained.
+            // (Note: this doesn't fully block bots, it only provides a minimal defense)
 
             const message = {
                 username: userProfile.nickname,
@@ -2515,7 +2541,7 @@
                 text: messageText,
                 timestamp: Date.now(),
                 userId: currentUser.uid,
-                // 필요하다면 나중에 검증을 위해 토큰도 함께 저장할 수 있습니다.
+                // The token could also be stored later for verification if needed.
                 // recaptchaToken: token
             };
 
@@ -2535,10 +2561,10 @@
         function displayMessage(message, skipScroll = false) {
             const messagesContainer = document.getElementById('chatMessages');
 
-            // 시스템 메시지 제거 (첫 메시지가 들어올 때)
+            // Remove system message (when the first message arrives)
             const systemMsg = messagesContainer.querySelector('.chat-message');
             if (systemMsg && systemMsg.querySelector('.chat-message-user').textContent === 'System') {
-                // 실제 메시지가 있는지 확인
+                // Check whether a real message exists
                 if (messagesContainer.children.length === 1 && message.username !== 'System') {
                     systemMsg.remove();
                 }
@@ -2547,7 +2573,7 @@
             const messageDiv = document.createElement('div');
             messageDiv.className = 'chat-message';
 
-            // userId를 data attribute에 저장 (왕관 업데이트용)
+            // Store userId in a data attribute (for crown updates)
             if (message.userId) {
                 messageDiv.dataset.userId = message.userId;
             }
@@ -2558,7 +2584,7 @@
 
             const usernameColor = message.color || '#22c55e';
 
-            // 왕관 표시 (사용자 ID로 랭크 확인)
+            // Show crown (check rank by user ID)
             const userRank = message.userId ? getUserRank(message.userId) : null;
             const crownHtml = userRank ? getCrownHtml(userRank) : '';
 
@@ -2572,12 +2598,12 @@
 
             messagesContainer.appendChild(messageDiv);
 
-            // 메시지 개수 제한 (최대 100개 UI 표시)
+            // Limit message count (max 100 shown in UI)
             while (messagesContainer.children.length > 100) {
                 messagesContainer.removeChild(messagesContainer.firstChild);
             }
 
-            // 스크롤을 맨 아래로
+            // Scroll to the bottom
             if (!skipScroll) {
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
             }
@@ -2597,11 +2623,11 @@
 
 
         // ==========================================
-        // 온라인 사용자 관리
+        // Online user management
         // ==========================================
 
 
-        // 내 타이머 상태 업데이트
+        // Update my timer status
         function updateMyUserStatus() {
             console.log('updateMyUserStatus called, myUserRef:', myUserRef);
             if (!myUserRef || !currentUser) {
@@ -2633,7 +2659,7 @@
             });
         }
 
-        // 온라인 사용자 목록 업데이트
+        // Update online users list
         function updateOnlineUsers(users) {
             console.log('updateOnlineUsers called with:', users);
             const usersList = document.getElementById('onlineUsersList');
@@ -2649,7 +2675,7 @@
             const now = Date.now();
             const activeUsers = [];
 
-            // 30초 이내에 업데이트된 사용자만 표시
+            // Only show users updated within the last 30 seconds
             Object.keys(users).forEach(userId => {
                 const user = users[userId];
                 if (user && user.lastUpdate && (now - user.lastUpdate) < 30000) {
@@ -2689,7 +2715,7 @@
         }
 
         // ==========================================
-        // 기존 코드
+        // Existing code
         // ==========================================
 
         const scene = document.getElementById('scene-container');
@@ -2698,19 +2724,19 @@
             const tree = document.createElement('div');
             tree.className = 'christmas-tree';
             
-            // 별
+            // Star
             const star = document.createElement('div');
             star.className = 'tree-star';
             tree.appendChild(star);
 
-            // 트리 레이어들 (위에서 아래로 점점 커지게)
+            // Tree layers (growing larger from top to bottom)
             const layers = [
-                { width: 40, height: 50 },   // 맨 위
+                { width: 40, height: 50 },   // top
                 { width: 60, height: 60 },
                 { width: 80, height: 70 },
                 { width: 100, height: 80 },
                 { width: 120, height: 90 },
-                { width: 140, height: 100 }  // 맨 아래
+                { width: 140, height: 100 }  // bottom
             ];
             
             const colors = ['#ef4444', '#f59e0b', '#22c55e', '#3b82f6', '#a855f7', '#ec4899'];
@@ -2722,17 +2748,17 @@
                 layer.style.borderRightWidth = layerSize.width + 'px';
                 layer.style.borderBottomWidth = layerSize.height + 'px';
                 
-                // 각 레이어에 전구 추가
+                // Add lights to each layer
                 const numLights = 3 + index;
                 for (let i = 0; i < numLights; i++) {
                     const light = document.createElement('div');
                     light.className = 'tree-light';
                     
-                    // 전구를 삼각형 안에 랜덤하게 배치
+                    // Randomly place lights inside the triangle
                     const xPos = (Math.random() * layerSize.width * 1.6) - (layerSize.width * 0.8);
                     const yPos = Math.random() * (layerSize.height * 0.7) + 10;
                     
-                    // 삼각형 경계 안에 있는지 확인
+                    // Check whether it's inside the triangle boundary
                     if (Math.abs(xPos) < (layerSize.height - yPos) * (layerSize.width / layerSize.height)) {
                         light.style.left = `calc(50% + ${xPos}px)`;
                         light.style.top = `${yPos}px`;
@@ -2745,7 +2771,7 @@
                 tree.appendChild(layer);
             });
             
-            // 나무 줄기
+            // Tree trunk
             const trunk = document.createElement('div');
             trunk.className = 'tree-trunk';
             tree.appendChild(trunk);
@@ -2807,8 +2833,8 @@
         let isRunning = false;
         let isPomodoroMode = false;
         let isWorkSession = true;
-        let startTime = null; // 타이머 시작 시간 저장
-        let pausedTime = 0; // 일시정지된 시간 저장 
+        let startTime = null; // stores timer start time
+        let pausedTime = 0; // stores paused time
         
         const display = document.getElementById('timerDisplay');
         const progressBar = document.getElementById('progressBar');
@@ -2849,19 +2875,19 @@
         // Share feature
         let autoStartTimeout = null;
 
-        // YouTube API가 로드되면 호출됩니다
+        // Called when the YouTube API is loaded
         window.onYouTubeIframeAPIReady = function() {
             console.log('YouTube API Ready');
             isYouTubeAPIReady = true;
         }
         
-        // 페이지 로드 시 초기화
+        // Initialize on page load
         window.addEventListener('DOMContentLoaded', function() {
             loadCustomPresets();
             loadMuteState();
             handleUrlParams();
 
-            // 사용자 등록 (username이 있으면) - Firebase 초기화 후 실행
+            // Register user (if username exists) - runs after Firebase init
             setTimeout(() => {
                 const username = document.getElementById('chatUsername').value.trim();
                 if (username && database) {
@@ -2870,11 +2896,11 @@
             }, 1500);
         });
         
-        // URL 파라미터 처리
+        // Handle URL parameters
         function handleUrlParams() {
             const urlParams = new URLSearchParams(window.location.search);
             
-            // 뽀모도로 설정 (예: ?pomo=25/5)
+            // Pomodoro settings (e.g. ?pomo=25/5)
             const pomoParam = urlParams.get('pomo');
             if (pomoParam) {
                 const [work, breakTime] = pomoParam.split('/').map(Number);
@@ -2882,29 +2908,29 @@
                     currentWorkTime = work;
                     currentBreakTime = breakTime;
                     
-                    // URL 파라미터 있으면 자동 알림
+                    // Auto-prompt if URL parameter is present
                     setTimeout(() => {
-                        if (confirm(`친구가 ${work}분/${breakTime}분 뽀모도로로 초대했어요! 시작할까요?`)) {
+                        if (confirm(`A friend invited you to a ${work}/${breakTime} min Pomodoro! Start now?`)) {
                             startPomodoroSequence(work, breakTime);
                         }
                     }, 500);
                 }
             }
             
-            // 일반 타이머 (예: ?timer=25)
+            // Regular timer (e.g. ?timer=25)
             const timerParam = urlParams.get('timer');
             if (timerParam && !pomoParam) {
                 const minutes = Number(timerParam);
                 if (minutes > 0) {
                     setTimeout(() => {
-                        if (confirm(`친구가 ${minutes}분 타이머로 초대했어요! 설정할까요?`)) {
+                        if (confirm(`A friend invited you to a ${minutes}-minute timer! Set it now?`)) {
                             setPreset(minutes);
                         }
                     }, 500);
                 }
             }
             
-            // 자동 시작 (예: ?startin=300 -> 5분 후)
+            // Auto start (e.g. ?startin=300 -> after 5 minutes)
             const startInParam = urlParams.get('startin');
             if (startInParam) {
                 const seconds = Number(startInParam);
@@ -2938,7 +2964,7 @@
             }
         }
         
-        // LocalStorage 관련 함수들
+        // LocalStorage related functions
 
         function saveCustomPresets() {
             localStorage.setItem('digipen_presets', JSON.stringify(customPresets));
@@ -2990,7 +3016,7 @@
             updateMuteButton();
             saveMuteState();
             
-            // 토글 시 피드백 사운드 (뮤트 해제할 때만)
+            // Feedback sound on toggle (only when unmuting)
             if (!isMuted) {
                 playBeep();
             }
@@ -3032,14 +3058,14 @@
             const breakMin = parseInt(document.getElementById('presetBreak').value);
             
             if (!workMin || workMin <= 0 || !breakMin || breakMin <= 0) {
-                alert('공부시간과 휴식시간을 모두 입력해주세요!');
+                alert('Please enter both work time and break time!');
                 return;
             }
             
-            // 중복 체크
+            // Check for duplicates
             const isDuplicate = customPresets.some(p => p.work === workMin && p.break === breakMin);
             if (isDuplicate) {
-                alert('이미 저장된 프리셋입니다!');
+                alert('This preset is already saved!');
                 return;
             }
             
@@ -3078,7 +3104,7 @@
                 youtubePanel.classList.add('hidden');
                 youtubePanel.classList.remove('block');
                 
-                // YouTube 정지
+                // Stop YouTube
                 try {
                     if (ytPlayer && ytPlayer.pauseVideo) {
                         ytPlayer.pauseVideo();
@@ -3090,7 +3116,7 @@
                         clearInterval(ytUpdateInterval);
                     }
                     
-                    // 비디오 숨기기
+                    // Hide video
                     if (isVideoVisible) {
                         const videoContainer = document.getElementById('ytVideoContainer');
                         const toggleBtn = document.getElementById('ytVideoToggleBtn');
@@ -3108,7 +3134,7 @@
                 youtubePanel.classList.remove('hidden');
                 youtubePanel.classList.add('block');
                 
-                // MP3 정지
+                // Stop MP3
                 bgmPlayer.pause();
                 musicPlayBtn.innerHTML = '▶';
             }
@@ -3126,7 +3152,7 @@
 
         function togglePlayMusic() {
             if (!bgmPlayer.src) {
-                alert("MP3 파일을 먼저 로드해주세요.");
+                alert("Please load an MP3 file first.");
                 return;
             }
             if (bgmPlayer.paused) {
@@ -3149,14 +3175,14 @@
             }
             
             if (!videoId) {
-                alert('올바른 YouTube URL을 입력해주세요.');
+                alert('Please enter a valid YouTube URL.');
                 return;
             }
             
-            // YouTube API가 로드될 때까지 기다리기
+            // Wait until the YouTube API is loaded
             if (typeof YT === 'undefined' || !YT.Player) {
-                alert('YouTube API를 로드하는 중입니다. 잠시 후 다시 시도해주세요.');
-                // 3초 후 자동 재시도
+                alert('YouTube API is still loading. Please try again shortly.');
+                // Auto-retry after 3 seconds
                 setTimeout(() => {
                     if (typeof YT !== 'undefined' && YT.Player) {
                         loadYoutubePlayer(videoId);
@@ -3171,7 +3197,7 @@
         function loadYoutubePlayer(videoId) {
             currentVideoId = videoId;
 
-            // 기존 플레이어 제거
+            // Remove existing player
             if (ytPlayer) {
                 try {
                     ytPlayer.destroy();
@@ -3183,7 +3209,7 @@
                 } catch(e) {}
             }
 
-            // 메인 플레이어 (항상 재생됨)
+            // Main player (always plays)
             ytPlayer = new YT.Player('ytPlayer', {
                 height: '1',
                 width: '1',
@@ -3202,7 +3228,7 @@
                 }
             });
 
-            // 비디오 표시용 플레이어 (동기화)
+            // Player for video display (synced)
             ytPlayerVisible = new YT.Player('ytPlayerVisible', {
                 height: '360',
                 width: '640',
@@ -3215,7 +3241,7 @@
                 },
                 events: {
                     'onReady': function(event) {
-                        // 준비되면 숨김 상태로 시작
+                        // Starts hidden once ready
                         console.log('Video player ready');
                     },
                     'onStateChange': onVisiblePlayerStateChange
@@ -3234,7 +3260,7 @@
                 toggleBtn.classList.add('active');
                 toggleBtn.innerHTML = '📺 VIDEO ON';
 
-                // 비디오 플레이어를 메인 플레이어와 동기화
+                // Sync the video player with the main player
                 if (ytPlayer && ytPlayerVisible) {
                     try {
                         const currentTime = ytPlayer.getCurrentTime();
@@ -3256,7 +3282,7 @@
                 toggleBtn.classList.remove('active');
                 toggleBtn.innerHTML = '📺 VIDEO OFF';
 
-                // 비디오 플레이어만 일시정지 (메인은 계속 재생)
+                // Pause only the video player (main keeps playing)
                 if (ytPlayerVisible) {
                     try {
                         ytPlayerVisible.pauseVideo();
@@ -3270,7 +3296,7 @@
         function onYoutubePlayerReady(event) {
             document.getElementById('ytAudioControls').classList.remove('hidden');
             
-            // 비디오 제목 가져오기 시도
+            // Try to get the video title
             try {
                 const videoData = event.target.getVideoData();
                 if (videoData && videoData.title) {
@@ -3293,7 +3319,7 @@
                     ytPlayBtn.innerHTML = '❚❚';
                     startYoutubeProgressUpdate();
 
-                    // 비디오 플레이어 동기화
+                    // Sync video player
                     if (isVideoVisible && ytPlayerVisible && ytPlayerVisible.getPlayerState) {
                         const currentTime = ytPlayer.getCurrentTime();
                         ytPlayerVisible.seekTo(currentTime, true);
@@ -3303,18 +3329,18 @@
                     ytPlayBtn.innerHTML = '▶';
                     stopYoutubeProgressUpdate();
 
-                    // 비디오 플레이어 동기화
+                    // Sync video player
                     if (isVideoVisible && ytPlayerVisible && ytPlayerVisible.pauseVideo) {
                         ytPlayerVisible.pauseVideo();
                     }
                 } else if (event.data === YT.PlayerState.ENDED) {
                     ytPlayBtn.innerHTML = '▶';
                     stopYoutubeProgressUpdate();
-                    // 반복 재생
+                    // Loop playback
                     ytPlayer.seekTo(0);
                     ytPlayer.playVideo();
 
-                    // 비디오 플레이어도 반복
+                    // Loop the video player too
                     if (isVideoVisible && ytPlayerVisible) {
                         ytPlayerVisible.seekTo(0);
                         ytPlayerVisible.playVideo();
@@ -3325,12 +3351,12 @@
             }
         }
 
-        // 비디오 플레이어 상태 변경 핸들러 (사용자가 비디오 컨트롤을 직접 조작할 때)
+        // Video player state change handler (when the user controls the video directly)
         function onVisiblePlayerStateChange(event) {
             if (!isVideoVisible) return;
 
             try {
-                // 비디오 플레이어에서 재생/일시정지하면 메인 플레이어도 동기화
+                // Sync the main player when play/pause happens on the video player
                 if (event.data === YT.PlayerState.PLAYING) {
                     if (ytPlayer && ytPlayer.getPlayerState() !== YT.PlayerState.PLAYING) {
                         const currentTime = ytPlayerVisible.getCurrentTime();
@@ -3349,7 +3375,7 @@
 
         function toggleYoutubePlay() {
             if (!ytPlayer || !ytPlayer.getPlayerState) {
-                alert('YouTube 영상을 먼저 로드해주세요.');
+                alert('Please load a YouTube video first.');
                 return;
             }
             
@@ -3362,7 +3388,7 @@
                 }
             } catch(e) {
                 console.error('YouTube player error:', e);
-                alert('플레이어 오류가 발생했습니다. 페이지를 새로고침해주세요.');
+                alert('A player error occurred. Please refresh the page.');
             }
         }
 
@@ -3372,11 +3398,11 @@
             }
             ytUpdateInterval = setInterval(() => {
                 updateYoutubeProgress();
-                syncVideoPlayers(); // 주기적 동기화
+                syncVideoPlayers(); // periodic sync
             }, 500);
         }
 
-        // 두 플레이어 동기화 체크 (시간 차이가 1초 이상 나면 동기화)
+        // Check sync between the two players (sync if the gap exceeds 1 second)
         function syncVideoPlayers() {
             if (!isVideoVisible || !ytPlayer || !ytPlayerVisible) return;
 
@@ -3385,12 +3411,12 @@
                 const visibleTime = ytPlayerVisible.getCurrentTime();
                 const timeDiff = Math.abs(mainTime - visibleTime);
 
-                // 1초 이상 차이나면 동기화
+                // Sync if the gap is more than 1 second
                 if (timeDiff > 1) {
                     ytPlayerVisible.seekTo(mainTime, true);
                 }
             } catch(e) {
-                // 무시
+                // Ignore
             }
         }
 
@@ -3437,7 +3463,7 @@
 
                 ytPlayer.seekTo(seekTime, true);
 
-                // 비디오 플레이어도 동기화
+                // Sync the video player too
                 if (isVideoVisible && ytPlayerVisible && ytPlayerVisible.seekTo) {
                     ytPlayerVisible.seekTo(seekTime, true);
                 }
@@ -3488,7 +3514,7 @@
             
             display.textContent = timeText;
             
-            // 집중 모드 화면도 업데이트
+            // Also update the focus mode screen
             const focusTimer = document.getElementById('focusTimer');
             if (focusTimer) {
                 focusTimer.textContent = timeText;
@@ -3522,7 +3548,7 @@
             updateDisplay();
             statusText.textContent = `SET: ${minutes}M`;
 
-            // 집중 모드 상태 업데이트
+            // Update focus mode status
             const focusStatus = document.getElementById('focusStatus');
             if (focusStatus) {
                 focusStatus.textContent = `SET: ${minutes}M`;
@@ -3533,7 +3559,7 @@
             recDot.classList.add('bg-red-500');
             if (!isMuted) playBeep();
 
-            // Firebase 상태 업데이트
+            // Update Firebase status
             updateMyUserStatus();
         }
 
@@ -3631,15 +3657,15 @@
             stopBtn.classList.remove('hidden');
             if (!isMuted) playBeep();
 
-            // 타이머 시작 시간 기록 (백그라운드에서도 정확한 시간 추적)
+            // Record timer start time (accurate tracking even in background)
             startTime = Date.now();
             pausedTime = remainingSeconds;
 
-            // Firebase 상태 업데이트
+            // Update Firebase status
             updateMyUserStatus();
 
             timerInterval = setInterval(() => {
-                // 실제 경과 시간 계산 (백그라운드에서도 정확함)
+                // Calculate actual elapsed time (accurate even in background)
                 const elapsed = Math.floor((Date.now() - startTime) / 1000);
                 remainingSeconds = pausedTime - elapsed;
 
@@ -3647,7 +3673,7 @@
 
                 updateDisplay();
 
-                // 매초마다 Firebase 업데이트 (너무 자주 업데이트되지 않도록 3초마다 업데이트)
+                // Update Firebase periodically (every 3 seconds to avoid too-frequent updates)
                 if (remainingSeconds % 3 === 0) {
                     updateMyUserStatus();
                 }
@@ -3656,10 +3682,10 @@
                     clearInterval(timerInterval);
                     isRunning = false;
 
-                    // 타이머 완료 시 시간 기록
+                    // Record session time when the timer finishes
                     if (totalSeconds > 0) {
                         recordTimerSession(totalSeconds);
-                        // 순위표 업데이트
+                        // Update leaderboard
                         setTimeout(updateLeaderboard, 1000);
                     }
 
@@ -3679,7 +3705,7 @@
                         if (!isMuted) playAlarm();
                         progressBar.style.width = '100%';
 
-                        // Firebase 상태 업데이트
+                        // Update Firebase status
                         updateMyUserStatus();
                     }
                 }
@@ -3700,10 +3726,10 @@
             startBtn.classList.remove('hidden');
             stopBtn.classList.add('hidden');
 
-            // stop 시 실행한 시간만큼 기록
+            // Record the elapsed time when stopped
             if (startTime && totalSeconds > 0) {
                 const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
-                console.log('Stop 시 기록:', {
+                console.log('Recorded on stop:', {
                     startTime,
                     totalSeconds,
                     elapsedSeconds,
@@ -3712,18 +3738,18 @@
                 });
                 if (elapsedSeconds > 0) {
                     recordTimerSession(elapsedSeconds);
-                    // 순위표 업데이트
+                    // Update leaderboard
                     setTimeout(updateLeaderboard, 1000);
                 }
             } else {
-                console.log('Stop 기록 실패:', {
+                console.log('Failed to record on stop:', {
                     startTime,
                     totalSeconds,
                     currentUser: currentUser?.uid
                 });
             }
 
-            // Firebase 상태 업데이트
+            // Update Firebase status
             updateMyUserStatus();
         }
 
@@ -3743,8 +3769,8 @@
             }
 
             remainingSeconds = totalSeconds;
-            startTime = null; // 시작 시간 초기화
-            pausedTime = 0; // 일시정지 시간 초기화
+            startTime = null; // reset start time
+            pausedTime = 0; // reset paused time
             updateDisplay();
             statusText.textContent = 'RESET';
 
@@ -3755,7 +3781,7 @@
 
             if (!isMuted) playBeep();
 
-            // Firebase 상태 업데이트
+            // Update Firebase status
             updateMyUserStatus();
         }
     </script>
