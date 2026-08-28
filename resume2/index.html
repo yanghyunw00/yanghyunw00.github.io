@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Hyunwoo Yang — Gameplay Engineer</title>
+<title>Hyunwoo Yang — Gameplay Programmer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -30,7 +30,7 @@ const { useState, useEffect } = React;
 const PROFILE = {
   firstName: "HYUNWOO",
   lastName: "YANG",
-  role: "Gameplay Engineer",
+  role: "Gameplay Programmer",
   location: "Daegu, South Korea",
   welcomeHeading: "Hello!",
   welcomeBody: [
@@ -303,7 +303,7 @@ function Nav({ currentPage }) {
         <div className="brand-mark">H</div>
         <div className="brand-name">
           Hyunwoo Yang
-          <span className="brand-role">Gameplay Engineer</span>
+          <span className="brand-role">Gameplay Programmer</span>
         </div>
       </a>
       <div className="nav-links">
@@ -339,10 +339,12 @@ function Home() {
         <div className="home-grid">
           <div className="home-left">
             <div className="home-tag">{PROFILE.role}</div>
-            <h1 className="home-name">
-              {PROFILE.firstName}
-              <span className="second-line">{PROFILE.lastName}</span>
-            </h1>
+            <h2 className="home-welcome-heading">{PROFILE.welcomeHeading}</h2>
+            <div className="home-welcome-body">
+              {PROFILE.welcomeBody.map((p, i) => <p key={i}>{p}</p>)}
+            </div>
+          </div>
+          <div className="home-right">
             <div className="home-cta-row">
               <a href="#work" className="btn-primary">
                 View Projects <Icon.arrow />
@@ -350,12 +352,6 @@ function Home() {
               <a href="#contact" className="btn-secondary">
                 Get in Touch
               </a>
-            </div>
-          </div>
-          <div className="home-right">
-            <h2 className="home-welcome-heading">{PROFILE.welcomeHeading}</h2>
-            <div className="home-welcome-body">
-              {PROFILE.welcomeBody.map((p, i) => <p key={i}>{p}</p>)}
             </div>
           </div>
         </div>
@@ -665,7 +661,7 @@ function About() {
 
       <div className="about-grid">
         <h2 className="bio-large">
-          Gameplay engineer
+          Gameplay programmer
         </h2>
         <div className="bio-body">
           {PROFILE.longBio.map((p, i) => <p key={i}>{p}</p>)}
