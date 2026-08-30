@@ -333,10 +333,10 @@
   }
   .home-grid {
     display: flex;
-    align-items: flex-end;
+    align-items: flex-start;
     justify-content: space-between;
     flex-wrap: wrap;
-    gap: 32px;
+    gap: 32px 48px;
     padding-top: 16px;
   }
   .home-left { position: relative; z-index: 2; max-width: 560px; }
@@ -366,16 +366,66 @@
     color: transparent;
     -webkit-text-stroke: 2.5px var(--ink);
   }
-  .home-cta-row {
-    display: flex; gap: 14px; flex-wrap: wrap;
-    justify-content: flex-end;
-  }
-
   .home-right {
-    padding-top: 12px;
+    padding-top: 0;
     display: flex;
-    justify-content: flex-end;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 22px;
   }
+  .home-portrait { position: relative; }
+  .home-portrait-slot {
+    position: relative;
+    width: clamp(240px, 24vw, 300px);
+    z-index: 2;
+    border: 2px solid var(--ink);
+    overflow: hidden;
+    line-height: 0;
+  }
+  .home-portrait-img { display: block; width: 100%; height: auto; }
+  .home-portrait-deco {
+    position: absolute;
+    inset: 18px -18px -18px 18px;
+    border: 2px solid var(--ink);
+    z-index: 1;
+    background: var(--accent);
+  }
+  .home-now {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    width: clamp(240px, 24vw, 300px);
+    border: 2px solid var(--ink);
+    background: var(--card);
+    padding: 18px 20px;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .home-now:hover { transform: translate(-3px, -3px); box-shadow: 6px 6px 0 var(--accent); }
+  .home-now-label {
+    font-family: var(--ff-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink3);
+  }
+  .home-now-name {
+    font-family: var(--ff-display);
+    font-size: 22px;
+    line-height: 1.1;
+    color: var(--ink);
+  }
+  .home-now-cta {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--ff-mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-top: 4px;
+  }
+  .home-now-cta svg { width: 14px; height: 14px; }
   .home-welcome-heading {
     font-family: var(--ff-display);
     font-size: clamp(40px, 4.5vw, 60px);
@@ -1306,7 +1356,8 @@
     .home-hero, .work, .work-list, .project, .about, .contact { padding-left: 20px; padding-right: 20px; }
     .home-grid { flex-direction: column; align-items: flex-start; gap: 28px; }
     .home-left { max-width: none; }
-    .home-right { padding-top: 0; justify-content: flex-start; }
+    .home-right { padding-top: 0; align-items: flex-start; width: 100%; }
+    .home-portrait-slot, .home-now { width: min(300px, 100%); }
     .home-meta-row { grid-template-columns: repeat(2, 1fr); gap: 24px; }
     .meta-cell { border-right: none; padding: 0; }
     .home-scroll-cue { display: none; }

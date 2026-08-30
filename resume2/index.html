@@ -34,19 +34,22 @@ const PROFILE = {
   location: "Daegu, South Korea",
   welcomeHeading: "Hello!",
   welcomeBody: [
-    "Welcome to my website! My name is Hyunwoo. I'm currently a student, exploring and experimenting with all kinds of things like game engines and game graphics to grow my interests further. I love solving problems in ways I once only imagined.",
-    "I'm always keeping an eye out for new projects. If you come across anything on this site that catches your interest or raises a question feel free to reach out. Take your time looking around and enjoy your stay!"
+    "I'm a Computer Science student at DigiPen who loves building games. My recent focus has been gameplay programming, and I've been getting hands-on with different engines to build familiarity across the board. I've also been diving into low-level graphics through Vulkan, which has only grown my interest further.",
+    "I really enjoy working as part of a team, and right now I'm looking to grow my network and connect with more people in the industry. Feel free to reach out for any reason — I'd love to connect!"
   ],
   longBio: [
-    "I major in RTIS at DigiPen Institute of Technology in Redmond, WA! I really enjoy to make fun games and other side projects!",
+    "My name is Hyunwoo, and I major in RTIS at DigiPen Institute of Technology in Redmond, WA. I'm currently a student, exploring and experimenting with all kinds of things like game engines and game graphics to grow my interests further.",
+    "I love solving problems in ways I once only imagined, and I really enjoy making fun games and other side projects.",
     "I'm originally from Daegu, South Korea. I have a strong foundation in creativity and a strategic approach to problem-solving.",
-    "I'm always on the lookout for new clients with interesting projects to work on, so if you think that's you, send me an email!"
+    "I'm always keeping an eye out for new projects. If you come across anything on this site that catches your interest or raises a question, feel free to reach out — take your time looking around and enjoy your stay!"
   ],
   email: "jtpgns2015@gmail.com",
   github: "https://github.com/yanghyunw00",
   linkedin: "https://www.linkedin.com/in/hyunw00",
   resume: "docs/Resume.pdf",
 };
+
+const HOME_PICS = ["img/mypic_1.jpg", "img/mypic_2.jpg", "img/mypic_3.jpg"];
 
 const SLOT_SRC = (typeof window !== 'undefined' && window.SLOT_SRC) ? window.SLOT_SRC : {
   "card-legacy-of-dragons": "images/card-legacy-of-dragons.webp",
@@ -239,7 +242,7 @@ const SKILLS = [
   { label: "Languages", items: ["C", "C++", "C#"] },
   { label: "Engines", items: ["Unity", "Custom Engine"] },
   { label: "Graphics", items: ["OpenGL", "Vulkan", "GLSL", "Rendering Pipeline"] },
-  { label: "Soft Skills", items: ["Solution-Oriented", "Adaptable", "Quality-Focused", "Team Building"] },
+  { label: "Soft Skills", items: ["Problem-Solving", "Teamwork and Collaboration", "Communication", "Creativity", "Leadership"] },
 ];
 
 const LEADERSHIP = [
@@ -329,6 +332,7 @@ function Nav({ currentPage }) {
    ===================================================== */
 
 function Home() {
+  const [pic] = useState(() => HOME_PICS[Math.floor(Math.random() * HOME_PICS.length)]);
   const scrollToGallery = (e) => {
     e.preventDefault();
     document.getElementById('home-gallery')?.scrollIntoView({ behavior: 'smooth' });
@@ -345,14 +349,17 @@ function Home() {
             </div>
           </div>
           <div className="home-right">
-            <div className="home-cta-row">
-              <a href="#work" className="btn-primary">
-                View Projects <Icon.arrow />
-              </a>
-              <a href="#contact" className="btn-secondary">
-                Get in Touch
-              </a>
+            <div className="home-portrait">
+              <div className="home-portrait-deco" />
+              <div className="home-portrait-slot">
+                <img src={pic} alt="Hyunwoo Yang" className="home-portrait-img" />
+              </div>
             </div>
+            <a href="#project/igy" className="home-now">
+              <span className="home-now-label">Currently building</span>
+              <span className="home-now-name">I.G.Y — Isometric City-Builder</span>
+              <span className="home-now-cta">See what I've built <Icon.arrow /></span>
+            </a>
           </div>
         </div>
 
