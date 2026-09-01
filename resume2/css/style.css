@@ -846,6 +846,18 @@
     font-weight: 700;
     font-size: 22px;
   }
+  .role-group + .role-group { margin-top: 34px; }
+  .role-group-label {
+    font-family: var(--ff-mono);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin-bottom: 18px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--ink);
+  }
 
   /* Media gallery */
   .gallery-label {

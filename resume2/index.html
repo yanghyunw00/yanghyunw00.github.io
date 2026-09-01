@@ -97,13 +97,32 @@ const PROJECTS = [
     duration: "Sep 2025 — Jun 2026",
     tech: ["C++", "OpenGL", "Custom Engine"],
     blurb: "Isometric quarter-view city-builder simulation game inspired by Caesar 3. Built on a custom engine from the ground up.",
-    overview: "I.G.Y is a quarter-view city-builder where players design and run an ancient settlement. Citizens, economy, and infrastructure interact through a simulation core I architected from scratch alongside a team of five.",
-    contributions: [
-      "Led technical architecture across simulation, rendering, and AI subsystems",
-      "Developed core engine modules: scene graph, resource manager, and event bus",
-      "Grew my Graphics-course engine into Dokev, my own engine, wrapping raw OpenGL calls into single-function shape drawing, coloring, and texturing so first-time OpenGL teammates could focus on gameplay and AI instead of the graphics API",
-      "Designed citizen AI behaviour using utility-based decision making",
-      "Coordinated 5 developers and integrated their work into the engine pipeline",
+    overview: "Quarter-view city-builder simulation inspired by Caesar 3 and SimCity 2000, built from the ground up on a custom C++/OpenGL engine. As Tech Lead I owned the engine and technical architecture across rendering, simulation, and AI.",
+    roleGroups: [
+      {
+        label: "Architecture & Leadership",
+        items: [
+          "Owned the overall technical architecture, defining module boundaries and the main update/render loop so simulation, rendering, and AI could evolve independently",
+          "Set technical direction for a team of 5: made the core engine and tooling decisions, ran code reviews, and coordinated integration of each member's systems into a single build",
+          "Onboarded teammates with little graphics or engine experience, writing usage examples and lightweight docs so they could contribute gameplay and AI features without touching low-level code",
+        ],
+      },
+      {
+        label: "Engine — Dokev",
+        items: [
+          "Grew my Computer Graphics course renderer into a reusable engine, Dokev, wrapping raw OpenGL state and draw calls into single-function shape drawing, coloring, and texturing",
+          "Built core engine modules: a scene graph for hierarchical transforms, a resource manager for textures and shared assets, and an event bus for decoupled communication between systems",
+          "Added a pan/zoom camera, texture atlasing, and sprite batching so the renderer could push a full tile map plus hundreds of agents without stalling",
+        ],
+      },
+      {
+        label: "Citizen AI & Pathfinding",
+        items: [
+          "Designed citizen AI using utility-based decision making: needs (work, food, leisure, rest) decay over time and score competing actions, with a state machine executing the chosen behavior",
+          "Implemented A* pathfinding on the tile grid so citizens route around buildings and terrain, with a request queue and path caching to spread cost across frames and re-path when the map changes",
+          "Used a spatial grid and dirty-flag updates for neighbor queries and to skip idle tiles, sustaining hundreds of active agents at a stable frame rate",
+        ],
+      },
     ],
     video: "https://www.youtube.com/embed/YwT3yQiEUAY",
     gallery: [null, null, null],
@@ -124,6 +143,9 @@ const PROJECTS = [
       "Ensured gameplay quality through systematic playtesting across all stages and bosses",
       "Identified and documented bugs in enemy behaviour, weapon interactions, and level progression",
       "Worked closely with engineers to validate fixes and regression tests",
+      "Implemented boss attack mechanics — multi-phase patterns with distinct telegraphed moves, timed attack sequences, and phase transitions tied to boss health",
+      "Built enemy attack mechanics for regular encounters, including projectile spreads, charge attacks, and spawn/wave behavior",
+      "Implemented the player's 5 weapons, each with its own damage, fire rate, and projectile behavior",
       "Won Microdegree Expo Best Award, 2023",
     ],
     video: false,
@@ -143,8 +165,9 @@ const PROJECTS = [
     overview: "A top-down action-survival shooter set in a dragon-vs-dragon world. The player carves through enemy waves across multiple stages, capped by two boss fights.",
     contributions: [
       "Led development of core gameplay systems including enemy wave mechanics and stage progression",
-      "Directed technical architecture as TechLead, coordinating system integration across the team",
-      "Worked with a team of 4 to ship a complete vertical slice",
+      "Directed technical architecture as TechLead, coordinating system integration across a team of 4",
+      "Designed and implemented 6 distinct enemy attack patterns, tuning telegraphs, timing, and projectile behavior for each",
+      "Built the player's arsenal of 5 weapons, each with its own fire rate, damage, and projectile pattern",
     ],
     video: false,
     gallery: [null, null, null],
@@ -599,9 +622,20 @@ function ProjectDetail({ id }) {
       <div className="project-body">
         <div className="project-section-label">— My Role</div>
         <div className="project-section-content">
-          <ul>
-            {project.contributions.map((c, i) => <li key={i}>{c}</li>)}
-          </ul>
+          {project.roleGroups ? (
+            project.roleGroups.map((g, gi) => (
+              <div key={gi} className="role-group">
+                <div className="role-group-label">{g.label}</div>
+                <ul>
+                  {g.items.map((c, i) => <li key={i}>{c}</li>)}
+                </ul>
+              </div>
+            ))
+          ) : (
+            <ul>
+              {project.contributions.map((c, i) => <li key={i}>{c}</li>)}
+            </ul>
+          )}
         </div>
       </div>
 
