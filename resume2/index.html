@@ -29,7 +29,8 @@
     background: var(--bg);
     color: var(--ink);
     font-family: 'Space Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
-    line-height: 1.8;
+    line-height: 1.6;
+    letter-spacing: -0.02em;
     -webkit-font-smoothing: antialiased;
   }
 
@@ -45,12 +46,12 @@
   /* ---------- shell ---------- */
 
   .wrap {
-    max-width: 1060px;
+    max-width: 1080px;
     margin: 0 auto;
     padding: 60px 28px 140px;
     display: grid;
-    grid-template-columns: 190px minmax(0, 1fr);
-    gap: 60px;
+    grid-template-columns: 170px minmax(0, 1fr);
+    gap: 44px;
   }
 
   /* ---------- table of contents ---------- */
@@ -88,7 +89,7 @@
 
   /* ---------- document ---------- */
 
-  main { max-width: 74ch; min-width: 0; }
+  main { max-width: 82ch; min-width: 0; }
 
   .crumb { color: var(--ink3); font-size: 12px; }
   .readtime { color: var(--ink3); font-size: 12px; margin-top: 2px; }
@@ -142,7 +143,7 @@
   }
   .mk { color: var(--mark); font-weight: 400; }
 
-  p { margin: 12px 0; }
+  p { margin: 10px 0; }
   p.lead { color: var(--ink2); }
 
   .group-label {
@@ -165,11 +166,11 @@
   .meta i { color: var(--ink3); font-style: normal; }
   .meta i::after { content: ":"; }
 
-  ul { list-style: none; margin: 14px 0; }
+  ul { list-style: none; margin: 12px 0; }
   li {
     position: relative;
     padding-left: 20px;
-    margin: 7px 0;
+    margin: 5px 0;
   }
   li::before {
     content: "\2013";
@@ -186,13 +187,23 @@
   .kv dt { color: var(--ink3); min-width: 90px; }
   .kv dd a { border-bottom: 1px solid currentColor; }
 
+  /* education / leadership entries — title leads, body is secondary */
+  .entry { margin: 18px 0; }
+  .entry + .entry { margin-top: 22px; }
+  .entry-title { font-weight: 700; color: var(--ink); }
+  .entry-sub { color: var(--ink3); font-size: 12px; margin-top: 1px; }
+  .entry p { color: var(--ink2); margin: 6px 0 0; }
+
   /* screenshots — plain figure strip, not a gallery */
-  figure { margin: 18px 0 6px; }
-  .shots { display: flex; flex-wrap: wrap; gap: 8px; }
+  figure { margin: 22px 0 8px; }
+  .shots {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 10px;
+  }
   .shots a {
     display: block;
-    width: 172px;
-    height: 108px;
+    aspect-ratio: 16 / 10;
     border: 1px solid var(--border);
     overflow: hidden;
     background: var(--sel);
@@ -203,8 +214,8 @@
     display: block;
     transition: transform 0.25s ease;
   }
-  .shots a:hover img { transform: scale(1.05); }
-  figcaption { font-size: 11px; color: var(--ink3); margin-top: 6px; }
+  .shots a:hover img { transform: scale(1.04); }
+  figcaption { font-size: 11px; color: var(--ink3); margin-top: 8px; }
 
   .foot {
     margin-top: 80px;
@@ -287,7 +298,7 @@
       <div class="meta">
         <span><i>status</i> Open to Work</span>
         <span><i>school</i> DigiPen Institute of Technology, WA</span>
-        <span><i>now</i> <a href="#p-igy">I.G.Y — Isometric City-Builder</a></span>
+        <span><i>now</i> In school — 2026 Fall</span>
       </div>
     </section>
 
@@ -295,7 +306,7 @@
     <section id="work">
       <h2><span class="mk">#</span> Work</h2>
       <hr class="rule tight" />
-      <p class="lead">6 projects, 2022 — 2026. Team-led builds at DigiPen, then solo builds shipped end to end.</p>
+      <p class="lead">7 projects, 2022 — 2026. Team-led builds at DigiPen, then solo builds shipped end to end.</p>
 
       <div class="group-label">— Team projects</div>
 
@@ -431,8 +442,16 @@
         <li>Built the calculus engine — derivatives, integrals, limits, Taylor series — on top of math.js with live LaTeX preview</li>
         <li>Wrote real-time Three.js viewers for the MVP pipeline, lighting/shadow mapping, and vector dot/cross products</li>
         <li>Added a runtime i18n layer (ko/en) and a responsive layout that re-fits the 3D viewport to any window ratio</li>
+        <li>Took the project from first prototype to production build and deployment on Netlify entirely on my own</li>
       </ul>
-      <p><a class="ext" href="https://yanghyunw00.github.io/project/calc/" target="_blank" rel="noreferrer">open live demo</a></p>
+      <p><a class="ext" href="https://yanghyunw00.github.io/project/calc/" target="_blank" rel="noreferrer">open live app</a> &middot; <a class="ext" href="https://youtu.be/-McA1GMFBq0" target="_blank" rel="noreferrer">watch demo video</a></p>
+      <figure>
+        <div class="shots">
+          <a href="img/math_main.jpeg" target="_blank" rel="noreferrer"><img src="img/math_main.jpeg" alt="MathCalc — main calculator view" loading="lazy"></a>
+          <a href="img/math_3d.jpeg" target="_blank" rel="noreferrer"><img src="img/math_3d.jpeg" alt="MathCalc — 3D visualization" loading="lazy"></a>
+        </div>
+        <figcaption>fig. mathcalc — main view &amp; 3D visualization (click to open)</figcaption>
+      </figure>
 
       <hr class="rule dash" />
 
@@ -450,6 +469,7 @@
         <li>Implemented host/client connection flow and synchronized game state across peers</li>
         <li>Used the project to deepen hands-on understanding of real-time multiplayer architecture</li>
       </ul>
+      <p><a class="ext" href="https://drive.google.com/file/d/1uJpaqtvoPaB3jTcir9bDRTiLNIbhusbw/view?usp=drive_link" target="_blank" rel="noreferrer">download the build &amp; play (Google Drive)</a></p>
       <figure>
         <div class="shots">
           <a href="img/gallery-lostguns-0.jpeg" target="_blank" rel="noreferrer"><img src="img/gallery-lostguns-0.jpeg" alt="LostGuns screenshot 1" loading="lazy"></a>
@@ -485,8 +505,8 @@
           <a href="img/game-minigames-02-b.webp" target="_blank" rel="noreferrer"><img src="img/game-minigames-02-b.webp" alt="Sudoku screenshot 2" loading="lazy"></a>
         </div>
       </figure>
-      <h4><span class="mk">###</span> 03 &nbsp;Futsal Manager &nbsp;<span class="mk">// Gameplay Simulation</span></h4>
-      <p>A prototype 4-vs-4 futsal simulation game. Models player movement, possession, and match flow as a real-time gameplay simulation sandbox.</p>
+      <h4><span class="mk">###</span> 03 &nbsp;Futsal Manager &nbsp;<span class="mk">// Finite State Machine</span></h4>
+      <p>A prototype 4-vs-4 futsal simulation built around a hand-rolled finite state machine in C++ and Raylib. Every player runs its own FSM — idle, chase, dribble, pass, shoot, mark, recover — with a central state manager stepping each agent every frame and driving transitions from ball position, possession, and role. That one system produces the movement, possession changes, and overall match flow.</p>
       <figure>
         <div class="shots">
           <a href="img/game-minigames-03-a.webp" target="_blank" rel="noreferrer"><img src="img/game-minigames-03-a.webp" alt="Futsal Manager screenshot 1" loading="lazy"></a>
@@ -505,43 +525,42 @@
       <p>I'm always keeping an eye out for new projects. If you come across anything on this site that catches your interest or raises a question, feel free to reach out — take your time looking around and enjoy your stay!</p>
 
       <h3 id="education"><span class="mk">##</span> Education</h3>
-      <div class="meta">
-        <span><i>2022 — Spring 2026</i> Keimyung University</span>
+      <div class="entry">
+        <div class="entry-title">DigiPen Institute of Technology</div>
+        <div class="entry-sub">2026 — 2028 &middot; Redmond, Washington</div>
+        <p>B.S. in Computer Science, Real-Time Interactive Simulation (RTIS). GPA 3.913. Dual-degree program with Keimyung University.</p>
+        <p>Relevant courses: Computer Graphics &middot; Advanced C/C++ &middot; Game Projects &middot; Data Structures &amp; Algorithms</p>
       </div>
-      <ul>
-        <li>B.S. in Computer Science &middot; Daegu, South Korea</li>
-        <li>Dual-degree program with DigiPen Institute of Technology</li>
-      </ul>
-      <div class="meta">
-        <span><i>2026 — 2028</i> DigiPen Institute of Technology</span>
+      <div class="entry">
+        <div class="entry-title">Keimyung University</div>
+        <div class="entry-sub">2022 — Spring 2026 &middot; Daegu, South Korea</div>
+        <p>B.S. in Computer Science. Dual-degree program with DigiPen Institute of Technology.</p>
       </div>
-      <ul>
-        <li>B.S. in Computer Science, Real-Time Interactive Simulation (RTIS) &middot; Redmond, Washington</li>
-        <li>Dual-degree program with Keimyung University</li>
-        <li>Relevant courses: Computer Graphics &middot; Advanced C/C++ &middot; Game Projects &middot; Data Structures</li>
-      </ul>
 
       <h3 id="skills"><span class="mk">##</span> Skills</h3>
       <dl class="kv">
-        <div><dt>Languages</dt><dd>C, C++, C#</dd></div>
-        <div><dt>Engines</dt><dd>Unity, Custom Engine</dd></div>
-        <div><dt>Graphics</dt><dd>OpenGL, Vulkan, GLSL, Rendering Pipeline</dd></div>
-        <div><dt>Soft skills</dt><dd>Problem-Solving, Teamwork and Collaboration, Communication, Creativity, Leadership</dd></div>
+        <div><dt>Languages</dt><dd>C / C++, C#, JavaScript, GLSL, Rust</dd></div>
+        <div><dt>Tools</dt><dd>Unity, Unreal, Vulkan, OpenGL, Linux, GitHub, Perforce</dd></div>
+        <div><dt>Concepts</dt><dd>Data Structures &amp; Algorithms, OOP, Rendering Pipeline</dd></div>
+        <div><dt>Soft skills</dt><dd>Teamwork &amp; Collaboration, Problem-Solving, Creativity, Communication, Growth Mindset</dd></div>
       </dl>
 
       <h3 id="leadership"><span class="mk">##</span> Leadership</h3>
-      <div class="meta">
-        <span><i>Aug 2023 — Feb 2025</i> Military Service — Leader &middot; Daegu, KR</span>
+      <div class="entry">
+        <div class="entry-title">Military Service — Leader</div>
+        <div class="entry-sub">Aug 2023 — Feb 2025 &middot; Daegu, KR</div>
+        <p>Completed mandatory military service with an honorable discharge at the rank of Sergeant. Served as squad leader of a mortar unit, responsible for training and coordinating a team of soldiers during operations.</p>
       </div>
-      <p>Completed mandatory military service with an honorable discharge at the rank of Sergeant. Served as squad leader of a mortar unit, responsible for training and coordinating a team of soldiers during operations.</p>
-      <div class="meta">
-        <span><i>Feb 2025 — Aug 2025</i> Linkers — Fundraising Volunteer &middot; Daegu, KR</span>
+      <div class="entry">
+        <div class="entry-title">Linkers — Fundraising Volunteer</div>
+        <div class="entry-sub">Feb 2025 — Aug 2025 &middot; Daegu, KR</div>
+        <p>Collaborated with World Vision to provide aid to vulnerable populations. Fostered community engagement to support fundraising initiatives.</p>
       </div>
-      <p>Collaborated with World Vision to provide aid to vulnerable populations.</p>
-      <div class="meta">
-        <span><i>Mar 2025 — Jul 2026</i> Daegu Futsal Team — Captain &middot; Daegu, KR</span>
+      <div class="entry">
+        <div class="entry-title">Daegu Futsal Team — Captain</div>
+        <div class="entry-sub">Mar 2025 — Jul 2026 &middot; Daegu, KR</div>
+        <p>Captain of a futsal team based in Daegu, South Korea.</p>
       </div>
-      <p>Captain of a futsal team based in Daegu, South Korea.</p>
     </section>
 
     <!-- ============================================ -->
