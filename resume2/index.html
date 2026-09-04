@@ -3,872 +3,569 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Hyunwoo Yang — Gameplay Programmer</title>
+<title>Hyunwoo Yang — portfolio.txt</title>
+<meta name="description" content="Hyunwoo Yang — Gameplay Programmer. Portfolio, read as a plain document." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="css/style.css" />
-<script src="js/image-slot.js"></script>
-<script src="js/slot-src.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:      #F4F2ED;
+    --ink:     #14120E;
+    --ink2:    #45423B;
+    --ink3:    #837D71;
+    --accent:  #C8451A;
+    --border:  rgba(20,18,14,0.16);
+    --rule:    rgba(20,18,14,0.30);
+    --mark:    #A79A82;
+    --sel:     #E3DDCE;
+  }
+
+  html { font-size: 15px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Space Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+    line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection { background: var(--sel); }
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: rgba(20,18,14,0.28); }
+
+  a { color: var(--accent); text-decoration: none; }
+
+  [id] { scroll-margin-top: 32px; }
+
+  /* ---------- shell ---------- */
+
+  .wrap {
+    max-width: 1060px;
+    margin: 0 auto;
+    padding: 60px 28px 140px;
+    display: grid;
+    grid-template-columns: 190px minmax(0, 1fr);
+    gap: 60px;
+  }
+
+  /* ---------- table of contents ---------- */
+
+  .toc {
+    position: sticky;
+    top: 44px;
+    align-self: start;
+    font-size: 12px;
+    line-height: 1.65;
+  }
+  .toc-h {
+    color: var(--ink3);
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .toc a {
+    display: block;
+    color: var(--ink3);
+    padding: 2px 0 2px 12px;
+    border-left: 2px solid transparent;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .toc a.sub { padding-left: 26px; font-size: 11.5px; }
+  .toc a:hover { color: var(--ink); }
+  .toc a.active {
+    color: var(--accent);
+    border-left-color: var(--accent);
+  }
+  .toc a.active::before { content: "› "; margin-left: -12px; }
+
+  /* ---------- document ---------- */
+
+  main { max-width: 74ch; min-width: 0; }
+
+  .crumb { color: var(--ink3); font-size: 12px; }
+  .readtime { color: var(--ink3); font-size: 12px; margin-top: 2px; }
+
+  .rule {
+    border: 0;
+    border-top: 1px solid var(--rule);
+    margin: 22px 0 34px;
+  }
+  .rule.dash { border-top-style: dashed; margin: 34px 0; }
+  .rule.tight { margin: 18px 0 26px; }
+
+  h1.name {
+    font-size: 27px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+    margin-top: 6px;
+  }
+  .tagline { color: var(--ink2); margin-top: 4px; font-size: 13.5px; }
+
+  .links {
+    margin-top: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 20px;
+    font-size: 12.5px;
+  }
+  .links a { border-bottom: 1px solid currentColor; padding-bottom: 1px; }
+  .links a.ext::after { content: " \2197"; }
+
+  section { margin-top: 52px; }
+
+  h2 {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 4px;
+  }
+  h3 {
+    font-size: 15px;
+    font-weight: 700;
+    margin-top: 38px;
+    line-height: 1.4;
+  }
+  h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink2);
+    margin-top: 22px;
+  }
+  .mk { color: var(--mark); font-weight: 400; }
+
+  p { margin: 12px 0; }
+  p.lead { color: var(--ink2); }
+
+  .group-label {
+    margin-top: 44px;
+    color: var(--ink3);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px 26px;
+    font-size: 12px;
+    color: var(--ink2);
+    margin: 10px 0 6px;
+  }
+  .meta span { display: inline-flex; gap: 8px; }
+  .meta i { color: var(--ink3); font-style: normal; }
+  .meta i::after { content: ":"; }
+
+  ul { list-style: none; margin: 14px 0; }
+  li {
+    position: relative;
+    padding-left: 20px;
+    margin: 7px 0;
+  }
+  li::before {
+    content: "\2013";
+    position: absolute;
+    left: 0;
+    color: var(--mark);
+  }
+
+  .kv {
+    font-size: 13px;
+    margin: 14px 0;
+  }
+  .kv div { display: flex; gap: 14px; margin: 5px 0; }
+  .kv dt { color: var(--ink3); min-width: 90px; }
+  .kv dd a { border-bottom: 1px solid currentColor; }
+
+  /* screenshots — plain figure strip, not a gallery */
+  figure { margin: 18px 0 6px; }
+  .shots { display: flex; flex-wrap: wrap; gap: 8px; }
+  .shots a {
+    display: block;
+    width: 172px;
+    height: 108px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    background: var(--sel);
+  }
+  .shots img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.25s ease;
+  }
+  .shots a:hover img { transform: scale(1.05); }
+  figcaption { font-size: 11px; color: var(--ink3); margin-top: 6px; }
+
+  .foot {
+    margin-top: 80px;
+    padding-top: 20px;
+    border-top: 1px solid var(--rule);
+    font-size: 11.5px;
+    color: var(--ink3);
+    line-height: 1.9;
+  }
+
+  .totop {
+    display: inline-block;
+    margin-top: 10px;
+    color: var(--ink3);
+    border-bottom: 1px solid currentColor;
+  }
+
+  /* ---------- responsive ---------- */
+
+  @media (max-width: 880px) {
+    .wrap {
+      grid-template-columns: 1fr;
+      gap: 0;
+      padding: 40px 22px 100px;
+    }
+    .toc {
+      position: static;
+      margin-bottom: 40px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--rule);
+      column-count: 2;
+      font-size: 11.5px;
+    }
+    .toc-h { column-span: all; }
+    main { max-width: none; }
+  }
+</style>
 </head>
 <body>
-<template id="__bundler_thumbnail">
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#0D0C0A"/><text x="50" y="62" font-family="Helvetica, Arial, sans-serif" font-size="40" font-weight="700" fill="#F4F2ED" text-anchor="middle">HY</text></svg>
-</template>
-<div id="root"></div>
+<div class="wrap">
 
-<script type="text/babel" data-presets="env,react">
-const { useState, useEffect } = React;
+  <nav class="toc" aria-label="Table of contents">
+    <div class="toc-h">portfolio.txt</div>
+    <a href="#hello">00 &nbsp;Hello</a>
+    <a href="#work">01 &nbsp;Work</a>
+    <a href="#p-igy" class="sub">I.G.Y</a>
+    <a href="#p-doctor-water" class="sub">Doctor Water</a>
+    <a href="#p-legacy-of-dragons" class="sub">Legacy of Dragons</a>
+    <a href="#p-hangout-timer" class="sub">Hangout Timer</a>
+    <a href="#p-lostguns" class="sub">LostGuns</a>
+    <a href="#p-minigames" class="sub">Minigame Collection</a>
+    <a href="#about">02 &nbsp;About</a>
+    <a href="#education" class="sub">Education</a>
+    <a href="#skills" class="sub">Skills</a>
+    <a href="#leadership" class="sub">Leadership</a>
+    <a href="#contact">03 &nbsp;Contact</a>
+  </nav>
 
-/* =====================================================
-   CONFIG — EDIT THESE TO UPDATE YOUR PORTFOLIO
-   ===================================================== */
+  <main>
+    <div class="crumb">yanghyunw00.github.io / portfolio.txt</div>
+    <div class="readtime">~2 min read &middot; updated 2026</div>
+    <hr class="rule" />
 
-const PROFILE = {
-  firstName: "HYUNWOO",
-  lastName: "YANG",
-  role: "Gameplay Programmer",
-  location: "Daegu, South Korea",
-  welcomeHeading: "Hello!",
-  welcomeBody: [
-    "I'm a Computer Science student at DigiPen who loves building games. My recent focus has been gameplay programming, and I've been getting hands-on with different engines to build familiarity across the board. I've also been diving into low-level graphics through Vulkan, which has only grown my interest further.",
-    "I really enjoy working as part of a team, and right now I'm looking to grow my network and connect with more people in the industry. Feel free to reach out for any reason — I'd love to connect!"
-  ],
-  longBio: [
-    "My name is Hyunwoo, and I major in RTIS at DigiPen Institute of Technology in Redmond, WA. I'm currently a student, exploring and experimenting with all kinds of things like game engines and game graphics to grow my interests further.",
-    "I love solving problems in ways I once only imagined, and I really enjoy making fun games and other side projects.",
-    "I'm originally from Daegu, South Korea. I have a strong foundation in creativity and a strategic approach to problem-solving.",
-    "I'm always keeping an eye out for new projects. If you come across anything on this site that catches your interest or raises a question, feel free to reach out — take your time looking around and enjoy your stay!"
-  ],
-  email: "jtpgns2015@gmail.com",
-  github: "https://github.com/yanghyunw00",
-  linkedin: "https://www.linkedin.com/in/hyunw00",
-  resume: "docs/Resume.pdf",
-};
+    <h1 class="name">Hyunwoo Yang</h1>
+    <div class="tagline">Gameplay Programmer &middot; Daegu, South Korea</div>
+    <div class="links">
+      <a class="ext" href="https://github.com/yanghyunw00" target="_blank" rel="noreferrer">github.com/yanghyunw00</a>
+      <a class="ext" href="https://www.linkedin.com/in/hyunw00" target="_blank" rel="noreferrer">linkedin.com/in/hyunw00</a>
+      <a href="mailto:hyunwoo.yang@digipen.edu">hyunwoo.yang@digipen.edu</a>
+      <a class="ext" href="docs/Resume.pdf" target="_blank" rel="noreferrer">Resume.pdf</a>
+    </div>
 
-const HOME_PICS = ["img/mypic_1.jpg", "img/mypic_2.jpg", "img/mypic_3.jpg"];
-
-const SLOT_SRC = (typeof window !== 'undefined' && window.SLOT_SRC) ? window.SLOT_SRC : {
-  "card-legacy-of-dragons": "images/card-legacy-of-dragons.webp",
-  "hero-legacy-of-dragons": "images/hero-legacy-of-dragons.webp",
-  "gallery-legacy-of-dragons-0": "images/gallery-legacy-of-dragons-0.webp",
-  "gallery-legacy-of-dragons-1": "images/gallery-legacy-of-dragons-1.webp",
-  "gallery-legacy-of-dragons-2": "images/gallery-legacy-of-dragons-2.webp",
-  "card-doctor-water": "images/card-doctor-water.webp",
-  "hero-doctor-water": "images/hero-doctor-water.webp",
-  "gallery-doctor-water-0": "images/gallery-doctor-water-0.webp",
-  "gallery-doctor-water-1": "images/gallery-doctor-water-1.webp",
-  "gallery-doctor-water-2": "images/gallery-doctor-water-2.webp",
-  "card-hangout-timer": "images/card-hangout-timer.webp",
-  "hero-hangout-timer": "images/hero-hangout-timer.webp",
-  "gallery-hangout-timer-0": "images/gallery-hangout-timer-0.webp",
-  "gallery-hangout-timer-1": "images/gallery-hangout-timer-1.webp",
-  "gallery-hangout-timer-2": "images/gallery-hangout-timer-2.webp",
-  "card-igy": "images/card-igy.webp",
-  "hero-igy": "images/hero-igy.webp",
-  "gallery-igy-0": "images/gallery-igy-0.webp",
-  "gallery-igy-1": "images/gallery-igy-1.webp",
-  "gallery-igy-2": "images/gallery-igy-2.webp",
-  "card-lostguns": "images/card-lostguns.webp",
-  "gallery-lostguns-0": "images/gallery-lostguns-0.webp",
-  "gallery-lostguns-1": "images/gallery-lostguns-1.webp",
-  "gallery-lostguns-2": "images/gallery-lostguns-2.webp",
-  "card-minigames": "images/card-minigames.webp",
-  "game-minigames-01-a": "images/game-minigames-01-a.webp",
-  "game-minigames-01-b": "images/game-minigames-01-b.webp",
-  "game-minigames-02-a": "images/game-minigames-02-a.webp",
-  "game-minigames-02-b": "images/game-minigames-02-b.webp",
-  "game-minigames-03-a": "images/game-minigames-03-a.webp",
-  "game-minigames-03-b": "images/game-minigames-03-b.webp",
-};
-
-const PROJECTS = [
-  {
-    id: "igy",
-    type: "team",
-    name: "I.G.Y",
-    subtitle: "Isometric City-Builder",
-    year: "09/2025 — 06/2026",
-    role: "TechLead",
-    team: "5 members",
-    duration: "Sep 2025 — Jun 2026",
-    tech: ["C++", "OpenGL", "Custom Engine"],
-    blurb: "Isometric quarter-view city-builder simulation game inspired by Caesar 3. Built on a custom engine from the ground up.",
-    overview: "Quarter-view city-builder simulation inspired by Caesar 3 and SimCity 2000, built from the ground up on a custom C++/OpenGL engine. As Tech Lead I owned the engine and technical architecture across rendering, simulation, and AI.",
-    roleGroups: [
-      {
-        label: "Architecture & Leadership",
-        items: [
-          "Owned the overall technical architecture, defining module boundaries and the main update/render loop so simulation, rendering, and AI could evolve independently",
-          "Set technical direction for a team of 5: made the core engine and tooling decisions, ran code reviews, and coordinated integration of each member's systems into a single build",
-          "Onboarded teammates with little graphics or engine experience, writing usage examples and lightweight docs so they could contribute gameplay and AI features without touching low-level code",
-        ],
-      },
-      {
-        label: "Engine — Dokev",
-        items: [
-          "Grew my Computer Graphics course renderer into a reusable engine, Dokev, wrapping raw OpenGL state and draw calls into single-function shape drawing, coloring, and texturing",
-          "Built core engine modules: a scene graph for hierarchical transforms, a resource manager for textures and shared assets, and an event bus for decoupled communication between systems",
-          "Added a pan/zoom camera, texture atlasing, and sprite batching so the renderer could push a full tile map plus hundreds of agents without stalling",
-        ],
-      },
-      {
-        label: "Citizen AI & Pathfinding",
-        items: [
-          "Designed citizen AI using utility-based decision making: needs (work, food, leisure, rest) decay over time and score competing actions, with a state machine executing the chosen behavior",
-          "Implemented A* pathfinding on the tile grid so citizens route around buildings and terrain, with a request queue and path caching to spread cost across frames and re-path when the map changes",
-          "Used a spatial grid and dirty-flag updates for neighbor queries and to skip idle tiles, sustaining hundreds of active agents at a stable frame rate",
-        ],
-      },
-    ],
-    video: "https://www.youtube.com/embed/YwT3yQiEUAY",
-    gallery: [null, null, null],
-  },
-  {
-    id: "doctor-water",
-    type: "team",
-    name: "HELP ME! DOCTOR WATER",
-    subtitle: "2D Vertical-Scroll Action",
-    year: "03/2023 — 06/2023",
-    role: "QA",
-    team: "4 members",
-    duration: "Mar 2023 — Jun 2023",
-    tech: ["C++", "Custom Engine"],
-    blurb: "2D vertical-scrolling escape-action game. Dr. Water ascends an erupting volcano. Microdegree Expo Best Award winner.",
-    overview: "Dr. Water climbs a volcano on the verge of eruption, fighting through enemies and boss encounters with an arsenal of weapons. Awarded Microdegree Expo Best Award 2023.",
-    contributions: [
-      "Ensured gameplay quality through systematic playtesting across all stages and bosses",
-      "Identified and documented bugs in enemy behaviour, weapon interactions, and level progression",
-      "Worked closely with engineers to validate fixes and regression tests",
-      "Implemented boss attack mechanics — multi-phase patterns with distinct telegraphed moves, timed attack sequences, and phase transitions tied to boss health",
-      "Built enemy attack mechanics for regular encounters, including projectile spreads, charge attacks, and spawn/wave behavior",
-      "Implemented the player's 5 weapons, each with its own damage, fire rate, and projectile behavior",
-      "Won Microdegree Expo Best Award, 2023",
-    ],
-    video: false,
-    gallery: [null, null, null],
-  },
-  {
-    id: "legacy-of-dragons",
-    type: "team",
-    name: "LEGACY OF DRAGONS",
-    subtitle: "2D Action-Survival",
-    year: "09/2022 — 12/2022",
-    role: "TechLead",
-    team: "4 members",
-    duration: "Sep 2022 — Dec 2022",
-    tech: ["C++", "Custom Engine"],
-    blurb: "2D top-down shooter where a dragon hero battles waves across multiple stages and 2 boss encounters.",
-    overview: "A top-down action-survival shooter set in a dragon-vs-dragon world. The player carves through enemy waves across multiple stages, capped by two boss fights.",
-    contributions: [
-      "Led development of core gameplay systems including enemy wave mechanics and stage progression",
-      "Directed technical architecture as TechLead, coordinating system integration across a team of 4",
-      "Designed and implemented 6 distinct enemy attack patterns, tuning telegraphs, timing, and projectile behavior for each",
-      "Built the player's arsenal of 5 weapons, each with its own fire rate, damage, and projectile pattern",
-    ],
-    video: false,
-    gallery: [null, null, null],
-  },
-  {
-    id: "hangout-timer",
-    type: "solo",
-    name: "HANGOUT TIMER",
-    subtitle: "Collaborative Pomodoro",
-    year: "2025",
-    role: "Full-Stack Developer",
-    team: "Solo",
-    duration: "September 2025",
-    tech: ["Web"],
-    blurb: "Online collaborative Pomodoro timer. Friends join shared study sessions in real time.",
-    intro: "At DigiPen Korea, we held a weekly \"Hangout\" every Tuesday or Wednesday — professors and students stayed late at school, working on our own projects or sharing a meal together. It became some of the most focused, productive time I've ever had, and that memory still means a lot to me. I built this timer to hold onto that feeling, and I still use it today to study while looking back on those hangouts.",
-    overview: "A web app that turns the Pomodoro technique into a shared activity. Built end-to-end as a full-stack developer, with AI-assisted iteration on UX flows and backend logic.",
-    contributions: [
-      "Designed and built the full stack — frontend, real-time sync, and persistence",
-      "Implemented shared room logic so friends can join and run a timer together",
-      "Used Claude and Gemini Pro for rapid prototyping and code review",
-      "Shipped as a deployable web application used by DigiPen peers",
-    ],
-    video: "https://yanghyunw00.github.io/project/timer/",
-    gallery: [null, null, null],
-  },
-  {
-    id: "lostguns",
-    type: "solo",
-    name: "LOSTGUNS",
-    subtitle: "Mobile Game Copy Study",
-    year: "2026",
-    role: "Solo Developer",
-    team: "Solo",
-    duration: "Jan 2026 — Mar 2026",
-    tech: ["Unity", "C#", "Unity Relay"],
-    blurb: "A copy-study recreation of the mobile game LostGuns, built in Unity up to working friend-to-friend multiplayer.",
-    overview: "LostGuns is a self-driven copy-study project where I recreated the core mechanics of the mobile game LostGuns in Unity. I pushed it all the way to functional online multiplayer using Unity Relay, letting friends connect and play together. The game features two modes, six different maps, 2 playable characters, and 9 weapons.",
-    contributions: [
-      "Recreated core gameplay of the mobile game LostGuns from scratch in Unity",
-      "Built networked multiplayer using Unity Relay for friend-to-friend sessions",
-      "Implemented host/client connection flow and synchronized game state across peers",
-      "Used the project to deepen hands-on understanding of real-time multiplayer architecture",
-    ],
-    video: null,
-    gallery: [null, null, null],
-  },
-  {
-    id: "minigames",
-    type: "solo",
-    name: "MINIGAME COLLECTION",
-    subtitle: "Three Games in Raylib",
-    year: "2025",
-    role: "Solo Developer",
-    team: "Solo",
-    duration: "July 2025",
-    tech: ["C++", "Raylib"],
-    blurb: "A trio of small games built from scratch in Raylib — each one a focused study of a different algorithm or system.",
-    overview: "A minigame collection built in C++ with Raylib. Rather than one big game, I used it as a sandbox to implement three self-contained games, each exploring a distinct technical problem — pathfinding, constraint solving, and gameplay simulation.",
-    games: [
-      {
-        no: "01",
-        name: "Maze Escape",
-        tag: "A* Pathfinding",
-        desc: "A 2D maze-escape game. The player must reach the exit while avoiding roaming enemies that hunt the player using A* pathfinding on the maze grid.",
-      },
-      {
-        no: "02",
-        name: "Sudoku",
-        tag: "Backtracking",
-        desc: "A playable Sudoku game with puzzle generation and solving driven by a recursive backtracking algorithm that fills and validates the board.",
-      },
-      {
-        no: "03",
-        name: "Futsal Manager",
-        tag: "Gameplay Simulation",
-        desc: "A prototype 4-vs-4 futsal simulation game. Models player movement, possession, and match flow as a real-time gameplay simulation sandbox.",
-      },
-    ],
-    contributions: [
-      "Built three independent games from scratch in C++ with Raylib",
-      "Implemented A* pathfinding for enemy hunting behavior in the maze game",
-      "Wrote a recursive backtracking solver to generate and validate Sudoku boards",
-      "Prototyped a real-time 4v4 futsal simulation with player movement and match flow",
-    ],
-    video: null,
-    gallery: [null, null, null],
-  },
-];
-
-const TEAM_PROJECTS = PROJECTS.filter(p => p.type === "team");
-const SOLO_PROJECTS = PROJECTS.filter(p => p.type === "solo");
-
-const SKILLS = [
-  { label: "Languages", items: ["C", "C++", "C#"] },
-  { label: "Engines", items: ["Unity", "Custom Engine"] },
-  { label: "Graphics", items: ["OpenGL", "Vulkan", "GLSL", "Rendering Pipeline"] },
-  { label: "Soft Skills", items: ["Problem-Solving", "Teamwork and Collaboration", "Communication", "Creativity", "Leadership"] },
-];
-
-const LEADERSHIP = [
-  { name: "Military Service", role: "Leader", location: "Daegu, KR", date: "Aug 2023 — Feb 2025", desc: "Completed mandatory military service with an honorable discharge at the rank of Sergeant. Served as squad leader of a mortar unit, responsible for training and coordinating a team of soldiers during operations." },
-  { name: "Linkers", role: "Fundraising Volunteer", location: "Daegu, KR", date: "Feb 2025 — Aug 2025", desc: "Collaborated with World Vision to provide aid to vulnerable populations." },
-  { name: "Daegu Futsal Team", role: "Captain", location: "Daegu, KR", date: "Mar 2025 — Jul 2026", desc: "Captain of a futsal team based in Daegu, South Korea." },
-];
-
-/* =====================================================
-   ICONS
-   ===================================================== */
-
-const Icon = {
-  github: () => <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.6.5.5 5.6.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.2.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.7.4-1.3.7-1.5-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.4-2.3 1.2-3.1-.1-.3-.5-1.5.1-3 0 0 1-.3 3.2 1.2.9-.3 1.9-.4 2.9-.4s2 .1 2.9.4c2.2-1.5 3.2-1.2 3.2-1.2.6 1.5.2 2.7.1 3 .7.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.2c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.6 18.4.5 12 .5z"/></svg>,
-  linkedin: () => <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3A2 2 0 0 1 21 5v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14M8.3 18.3V10H5.7v8.3h2.6M7 8.8a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3M18.3 18.3v-4.5c0-2.4-1.3-3.5-3-3.5-1.4 0-2 .8-2.4 1.3V10h-2.6v8.3h2.6V14a1.7 1.7 0 0 1 1.7-1.8c1 0 1.4.8 1.4 1.9v4.2h2.3"/></svg>,
-  mail: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="m3 7 9 6 9-6"/></svg>,
-  phone: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.7a2 2 0 0 1-.5 2.1L8 9.7a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5 12.8 12.8 0 0 0 2.7.6 2 2 0 0 1 1.7 2z"/></svg>,
-  download: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>,
-  arrow: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>,
-  back: () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>,
-};
-
-/* =====================================================
-   ROUTING
-   ===================================================== */
-
-function useHashRoute() {
-  const [hash, setHash] = useState(window.location.hash || '#home');
-  useEffect(() => {
-    const onChange = () => {
-      setHash(window.location.hash || '#home');
-      window.scrollTo(0, 0);
-    };
-    window.addEventListener('hashchange', onChange);
-    return () => window.removeEventListener('hashchange', onChange);
-  }, []);
-  return hash;
-}
-
-function parseRoute(hash) {
-  const cleaned = hash.replace(/^#\/?/, '') || 'home';
-  const [page, ...rest] = cleaned.split('/');
-  return { page, params: rest };
-}
-
-/* =====================================================
-   NAV
-   ===================================================== */
-
-function Nav({ currentPage }) {
-  const links = [
-    { page: 'home', label: 'Home', num: '00' },
-    { page: 'work', label: 'Work', num: '01' },
-    { page: 'about', label: 'About', num: '02' },
-    { page: 'contact', label: 'Contact', num: '03' },
-  ];
-  const isWorkActive = currentPage === 'work' || currentPage === 'project';
-  return (
-    <nav className="topbar">
-      <a href="#home" className="nav-brand">
-        <div className="brand-mark">H</div>
-        <div className="brand-name">
-          Hyunwoo Yang
-          <span className="brand-role">Gameplay Programmer</span>
-        </div>
-      </a>
-      <div className="nav-links">
-        {links.map(l => (
-          <a key={l.page} href={`#${l.page}`}
-            className={`nav-link ${currentPage === l.page || (l.page === 'work' && isWorkActive) ? 'active' : ''}`}>
-            <span className="num">{l.num}</span>
-            <span>{l.label}</span>
-          </a>
-        ))}
+    <!-- ============================================ -->
+    <section id="hello">
+      <h2><span class="mk">#</span> Hello</h2>
+      <hr class="rule tight" />
+      <p>I'm a Computer Science student at DigiPen who loves building games. My recent focus has been gameplay programming, and I've been getting hands-on with different engines to build familiarity across the board. I've also been diving into low-level graphics through Vulkan, which has only grown my interest further.</p>
+      <p>I really enjoy working as part of a team, and right now I'm looking to grow my network and connect with more people in the industry. Feel free to reach out for any reason — I'd love to connect!</p>
+      <div class="meta">
+        <span><i>status</i> Open to Work</span>
+        <span><i>school</i> DigiPen Institute of Technology, WA</span>
+        <span><i>now</i> <a href="#p-igy">I.G.Y — Isometric City-Builder</a></span>
       </div>
-      <div className="nav-right">
-        <a className="nav-icon-btn" href={PROFILE.github} target="_blank" rel="noreferrer" aria-label="GitHub"><Icon.github /></a>
-        <a className="nav-icon-btn" href={PROFILE.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn"><Icon.linkedin /></a>
-        <a className="nav-icon-btn" href={`mailto:${PROFILE.email}`} aria-label="Email"><Icon.mail /></a>
+    </section>
+
+    <!-- ============================================ -->
+    <section id="work">
+      <h2><span class="mk">#</span> Work</h2>
+      <hr class="rule tight" />
+      <p class="lead">6 projects, 2022 — 2026. Team-led builds at DigiPen, then solo builds shipped end to end.</p>
+
+      <div class="group-label">— Team projects</div>
+
+      <h3 id="p-igy"><span class="mk">##</span> I.G.Y — Isometric City-Builder</h3>
+      <div class="meta">
+        <span><i>role</i> Tech Lead</span>
+        <span><i>team</i> 5 members</span>
+        <span><i>year</i> 09/2025 — 06/2026</span>
+        <span><i>stack</i> C++ &middot; OpenGL &middot; Custom Engine</span>
       </div>
-    </nav>
-  );
-}
-
-/* =====================================================
-   HOME
-   ===================================================== */
-
-function Home() {
-  const [pic] = useState(() => HOME_PICS[Math.floor(Math.random() * HOME_PICS.length)]);
-  const scrollToGallery = (e) => {
-    e.preventDefault();
-    document.getElementById('home-gallery')?.scrollIntoView({ behavior: 'smooth' });
-  };
-  return (
-    <main className="view home" data-screen-label="Home">
-      <section className="home-hero">
-        <div className="home-grid">
-          <div className="home-left">
-            <div className="home-tag">{PROFILE.role}</div>
-            <h2 className="home-welcome-heading">{PROFILE.welcomeHeading}</h2>
-            <div className="home-welcome-body">
-              {PROFILE.welcomeBody.map((p, i) => <p key={i}>{p}</p>)}
-            </div>
-          </div>
-          <div className="home-right">
-            <div className="home-portrait">
-              <div className="home-portrait-deco" />
-              <div className="home-portrait-slot">
-                <img src={pic} alt="Hyunwoo Yang" className="home-portrait-img" />
-              </div>
-            </div>
-            <a href="#project/igy" className="home-now">
-              <span className="home-now-label">Currently building</span>
-              <span className="home-now-name">I.G.Y — Isometric City-Builder</span>
-              <span className="home-now-cta">See what I've built <Icon.arrow /></span>
-            </a>
-          </div>
+      <p>Quarter-view city-builder simulation inspired by Caesar 3 and SimCity 2000, built from the ground up on a custom C++/OpenGL engine. As Tech Lead I owned the engine and technical architecture across rendering, simulation, and AI.</p>
+      <h4><span class="mk">###</span> Architecture &amp; Leadership</h4>
+      <ul>
+        <li>Owned the overall technical architecture, defining module boundaries and the main update/render loop so simulation, rendering, and AI could evolve independently</li>
+        <li>Set technical direction for a team of 5: made the core engine and tooling decisions, ran code reviews, and coordinated integration of each member's systems into a single build</li>
+        <li>Onboarded teammates with little graphics or engine experience, writing usage examples and lightweight docs so they could contribute gameplay and AI features without touching low-level code</li>
+      </ul>
+      <h4><span class="mk">###</span> Engine — Dokev</h4>
+      <ul>
+        <li>Grew my Computer Graphics course renderer into a reusable engine, Dokev, wrapping raw OpenGL state and draw calls into single-function shape drawing, coloring, and texturing</li>
+        <li>Built core engine modules: a scene graph for hierarchical transforms, a resource manager for textures and shared assets, and an event bus for decoupled communication between systems</li>
+        <li>Added a pan/zoom camera, texture atlasing, and sprite batching so the renderer could push a full tile map plus hundreds of agents without stalling</li>
+      </ul>
+      <h4><span class="mk">###</span> Citizen AI &amp; Pathfinding</h4>
+      <ul>
+        <li>Designed citizen AI using utility-based decision making: needs (work, food, leisure, rest) decay over time and score competing actions, with a state machine executing the chosen behavior</li>
+        <li>Implemented A* pathfinding on the tile grid so citizens route around buildings and terrain, with a request queue and path caching to spread cost across frames and re-path when the map changes</li>
+        <li>Used a spatial grid and dirty-flag updates for neighbor queries and to skip idle tiles, sustaining hundreds of active agents at a stable frame rate</li>
+      </ul>
+      <p><a class="ext" href="https://www.youtube.com/watch?v=YwT3yQiEUAY" target="_blank" rel="noreferrer">watch gameplay video</a></p>
+      <figure>
+        <div class="shots">
+          <a href="img/gallery-igy-0.webp" target="_blank" rel="noreferrer"><img src="img/gallery-igy-0.webp" alt="I.G.Y screenshot 1" loading="lazy"></a>
+          <a href="img/gallery-igy-1.webp" target="_blank" rel="noreferrer"><img src="img/gallery-igy-1.webp" alt="I.G.Y screenshot 2" loading="lazy"></a>
+          <a href="img/gallery-igy-2.webp" target="_blank" rel="noreferrer"><img src="img/gallery-igy-2.webp" alt="I.G.Y screenshot 3" loading="lazy"></a>
         </div>
+        <figcaption>fig. igy — screenshots (click to open)</figcaption>
+      </figure>
 
-        <div className="home-meta-row">
-          <div className="meta-cell">
-            <div className="meta-label">Status</div>
-            <div className="meta-value">Open to Work</div>
-          </div>
-          <div className="meta-cell">
-            <div className="meta-label">School</div>
-            <div className="meta-value">DigiPen, WA</div>
-          </div>
-        </div>
+      <hr class="rule dash" />
 
-        <a href="#" onClick={scrollToGallery} className="home-scroll-cue">
-          <span>Scroll for Gallery</span>
-          <span className="home-scroll-cue-line" />
-        </a>
-      </section>
-
-      <section className="home-gallery" id="home-gallery">
-        <div className="gallery-section-head">
-          <div>
-            <div className="gallery-eyebrow">— All Work, At a Glance</div>
-            <h2 className="gallery-title">GALLERY.</h2>
-          </div>
-          <div className="page-meta">
-            <div className="page-meta-num">{PROJECTS.length}</div>
-            <div className="page-meta-text">Projects</div>
-          </div>
-        </div>
-        <div className="home-gallery-grid">
-          {PROJECTS.map((p) => (
-            <a key={p.id} href={`#project/${p.id}`} className="home-gallery-item">
-              <div className={`home-gallery-badge ${p.type === 'team' ? 'team' : ''}`}>
-                {p.type === 'team' ? 'Team' : 'Solo'}
-              </div>
-              <div className="home-gallery-media">
-                <image-slot id={`card-${p.id}`} src={SLOT_SRC[`card-${p.id}`]} shape="rect" placeholder={`${p.name} cover`}></image-slot>
-              </div>
-              <div className="home-gallery-caption">
-                <span className="hg-name">{p.name}</span>
-                <span className="hg-year">{p.year}</span>
-              </div>
-            </a>
-          ))}
-        </div>
-      </section>
-    </main>
-  );
-}
-
-/* =====================================================
-   WORK LANDING — Team / Solo categories
-   ===================================================== */
-
-function Work() {
-  return (
-    <main className="view work" data-screen-label="Work">
-      <div className="page-header">
-        <h1 className="page-title">Selected<br/>Work.</h1>
-        <div className="page-meta">
-          <div className="page-meta-num">{PROJECTS.length}</div>
-          <div className="page-meta-text">Projects Shipped</div>
-          <div className="page-meta-text" style={{color: 'var(--ink3)'}}>2022 — 2025</div>
-        </div>
+      <h3 id="p-doctor-water"><span class="mk">##</span> HELP ME! DOCTOR WATER</h3>
+      <div class="meta">
+        <span><i>role</i> QA</span>
+        <span><i>team</i> 4 members</span>
+        <span><i>year</i> 03/2023 — 06/2023</span>
+        <span><i>stack</i> C++ &middot; Custom Engine</span>
       </div>
+      <p>2D vertical-scrolling escape-action game. Dr. Water climbs a volcano on the verge of eruption, fighting through enemies and boss encounters with an arsenal of weapons. Awarded Microdegree Expo Best Award 2023.</p>
+      <ul>
+        <li>Ensured gameplay quality through systematic playtesting across all stages and bosses</li>
+        <li>Identified and documented bugs in enemy behaviour, weapon interactions, and level progression</li>
+        <li>Worked closely with engineers to validate fixes and regression tests</li>
+        <li>Implemented boss attack mechanics — multi-phase patterns with distinct telegraphed moves, timed attack sequences, and phase transitions tied to boss health</li>
+        <li>Built enemy attack mechanics for regular encounters, including projectile spreads, charge attacks, and spawn/wave behavior</li>
+        <li>Implemented the player's 5 weapons, each with its own damage, fire rate, and projectile behavior</li>
+        <li>Won Microdegree Expo Best Award, 2023</li>
+      </ul>
+      <figure>
+        <div class="shots">
+          <a href="img/gallery-doctor-water-0.webp" target="_blank" rel="noreferrer"><img src="img/gallery-doctor-water-0.webp" alt="Doctor Water screenshot 1" loading="lazy"></a>
+          <a href="img/gallery-doctor-water-1.webp" target="_blank" rel="noreferrer"><img src="img/gallery-doctor-water-1.webp" alt="Doctor Water screenshot 2" loading="lazy"></a>
+          <a href="img/gallery-doctor-water-2.webp" target="_blank" rel="noreferrer"><img src="img/gallery-doctor-water-2.webp" alt="Doctor Water screenshot 3" loading="lazy"></a>
+        </div>
+        <figcaption>fig. doctor-water — screenshots (click to open)</figcaption>
+      </figure>
 
-      <div className="category-grid">
-        <a href="#work/team" className="category-card">
-          <div className="cat-count-bg">{TEAM_PROJECTS.length}</div>
-          <div className="cat-inner">
-            <div className="cat-num">— Category 01</div>
-            <h2 className="cat-title">TEAM<br/>PROJECTS</h2>
-            <p className="cat-desc">
-              Team projects built together with my teammates at DigiPen.
-            </p>
-            <div className="cat-foot">
-              <div className="cat-foot-meta">{TEAM_PROJECTS.length} Projects · Enter</div>
-              <div className="cat-arrow">→</div>
-            </div>
-          </div>
-        </a>
+      <hr class="rule dash" />
 
-        <a href="#work/solo" className="category-card">
-          <div className="cat-count-bg">{SOLO_PROJECTS.length}</div>
-          <div className="cat-inner">
-            <div className="cat-num">— Category 02</div>
-            <h2 className="cat-title">SOLO<br/>PROJECTS</h2>
-            <p className="cat-desc">
-              Personal builds shipped end-to-end. Full-stack, AI-assisted iteration, and small experiments that escaped the lab.
-            </p>
-            <div className="cat-foot">
-              <div className="cat-foot-meta">{SOLO_PROJECTS.length} Project · Enter</div>
-              <div className="cat-arrow">→</div>
-            </div>
-          </div>
-        </a>
+      <h3 id="p-legacy-of-dragons"><span class="mk">##</span> LEGACY OF DRAGONS</h3>
+      <div class="meta">
+        <span><i>role</i> Tech Lead</span>
+        <span><i>team</i> 4 members</span>
+        <span><i>year</i> 09/2022 — 12/2022</span>
+        <span><i>stack</i> C++ &middot; Custom Engine</span>
       </div>
-    </main>
-  );
-}
-
-/* =====================================================
-   WORK LIST — filtered (team or solo)
-   ===================================================== */
-
-function WorkList({ category }) {
-  const list = category === 'team' ? TEAM_PROJECTS : SOLO_PROJECTS;
-  const title = category === 'team' ? 'Team Projects' : 'Solo Projects';
-  return (
-    <main className="view work-list" data-screen-label={title}>
-      <a href="#work" className="work-back"><Icon.back /> Back to Categories</a>
-      <div className="page-header">
-        <h1 className="page-title">{title.split(' ')[0]}<br/>{title.split(' ')[1]}.</h1>
-        <div className="page-meta">
-          <div className="page-meta-num">{list.length}</div>
-          <div className="page-meta-text">{category === 'team' ? 'Team-led builds' : 'Solo builds'}</div>
+      <p>A top-down action-survival shooter set in a dragon-vs-dragon world. The player carves through enemy waves across multiple stages, capped by two boss fights.</p>
+      <ul>
+        <li>Led development of core gameplay systems including enemy wave mechanics and stage progression</li>
+        <li>Directed technical architecture as Tech Lead, coordinating system integration across a team of 4</li>
+        <li>Designed and implemented 6 distinct enemy attack patterns, tuning telegraphs, timing, and projectile behavior for each</li>
+        <li>Built the player's arsenal of 5 weapons, each with its own fire rate, damage, and projectile pattern</li>
+      </ul>
+      <figure>
+        <div class="shots">
+          <a href="img/gallery-legacy-of-dragons-0.webp" target="_blank" rel="noreferrer"><img src="img/gallery-legacy-of-dragons-0.webp" alt="Legacy of Dragons screenshot 1" loading="lazy"></a>
+          <a href="img/gallery-legacy-of-dragons-1.webp" target="_blank" rel="noreferrer"><img src="img/gallery-legacy-of-dragons-1.webp" alt="Legacy of Dragons screenshot 2" loading="lazy"></a>
+          <a href="img/gallery-legacy-of-dragons-2.webp" target="_blank" rel="noreferrer"><img src="img/gallery-legacy-of-dragons-2.webp" alt="Legacy of Dragons screenshot 3" loading="lazy"></a>
         </div>
+        <figcaption>fig. legacy-of-dragons — screenshots (click to open)</figcaption>
+      </figure>
+
+      <div class="group-label">— Solo projects</div>
+
+      <h3 id="p-hangout-timer"><span class="mk">##</span> HANGOUT TIMER</h3>
+      <div class="meta">
+        <span><i>role</i> Full-Stack Developer</span>
+        <span><i>team</i> Solo</span>
+        <span><i>year</i> Sep 2025</span>
+        <span><i>stack</i> Web</span>
       </div>
-      <div className="work-grid">
-        {list.map((p, i) => (
-          <a key={p.id} href={`#project/${p.id}`} className="work-card">
-            <div className="work-card-media">
-              <div className={`work-card-badge ${p.type === 'team' ? 'team' : ''}`}>
-                {p.type === 'team' ? `Team · ${p.team}` : 'Solo'}
-              </div>
-              <image-slot id={`card-${p.id}`} src={SLOT_SRC[`card-${p.id}`]} shape="rect" placeholder={`${p.name} cover`}></image-slot>
-            </div>
-            <div className="work-card-body">
-              <div className="work-card-top">
-                <div className="work-card-name">{p.name}</div>
-                <div className="work-card-year">{p.year}</div>
-              </div>
-              <div className="work-card-desc">{p.blurb}</div>
-              <div className="work-card-foot">
-                <div className="work-card-tags">
-                  {p.tech.slice(0, 3).map(t => <span key={t} className="work-card-tag">{t}</span>)}
-                </div>
-                <div className="work-card-arrow">→</div>
-              </div>
-            </div>
-          </a>
-        ))}
+      <p class="lead">At DigiPen Korea, we held a weekly "Hangout" every Tuesday or Wednesday — professors and students stayed late at school, working on our own projects or sharing a meal together. It became some of the most focused, productive time I've ever had, and that memory still means a lot to me. I built this timer to hold onto that feeling, and I still use it today to study while looking back on those hangouts.</p>
+      <p>A web app that turns the Pomodoro technique into a shared activity. Built end-to-end as a full-stack developer, with AI-assisted iteration on UX flows and backend logic.</p>
+      <ul>
+        <li>Designed and built the full stack — frontend, real-time sync, and persistence</li>
+        <li>Implemented shared room logic so friends can join and run a timer together</li>
+        <li>Used Claude and Gemini Pro for rapid prototyping and code review</li>
+        <li>Shipped as a deployable web application used by DigiPen peers</li>
+      </ul>
+      <p><a class="ext" href="https://yanghyunw00.github.io/project/timer/" target="_blank" rel="noreferrer">open live demo</a></p>
+      <figure>
+        <div class="shots">
+          <a href="img/gallery-hangout-timer-0.webp" target="_blank" rel="noreferrer"><img src="img/gallery-hangout-timer-0.webp" alt="Hangout Timer screenshot 1" loading="lazy"></a>
+          <a href="img/gallery-hangout-timer-1.webp" target="_blank" rel="noreferrer"><img src="img/gallery-hangout-timer-1.webp" alt="Hangout Timer screenshot 2" loading="lazy"></a>
+          <a href="img/gallery-hangout-timer-2.webp" target="_blank" rel="noreferrer"><img src="img/gallery-hangout-timer-2.webp" alt="Hangout Timer screenshot 3" loading="lazy"></a>
+        </div>
+        <figcaption>fig. hangout-timer — screenshots (click to open)</figcaption>
+      </figure>
+
+      <hr class="rule dash" />
+
+      <h3 id="p-lostguns"><span class="mk">##</span> LOSTGUNS</h3>
+      <div class="meta">
+        <span><i>role</i> Solo Developer</span>
+        <span><i>team</i> Solo</span>
+        <span><i>year</i> Jan 2026 — Mar 2026</span>
+        <span><i>stack</i> Unity &middot; C# &middot; Unity Relay</span>
       </div>
-    </main>
-  );
-}
-
-/* =====================================================
-   PROJECT DETAIL
-   ===================================================== */
-
-function ProjectDetail({ id }) {
-  const project = PROJECTS.find(p => p.id === id);
-  if (!project) {
-    return (
-      <main className="view project">
-        <a href="#work" className="back-link"><Icon.back /> Back to Work</a>
-        <h1 className="project-title">Not found.</h1>
-      </main>
-    );
-  }
-  const sameCategory = PROJECTS.filter(p => p.type === project.type);
-  const idx = sameCategory.findIndex(p => p.id === id);
-  const next = sameCategory[(idx + 1) % sameCategory.length];
-  const backHash = project.type === 'team' ? '#work/team' : '#work/solo';
-  return (
-    <main className="view project" data-screen-label={`Project: ${project.name}`}>
-      <a href={backHash} className="back-link"><Icon.back /> Back to {project.type === 'team' ? 'Team Projects' : 'Solo Projects'}</a>
-
-      <div className="project-header">
-        <div>
-          <div className="project-subtitle">{project.subtitle}</div>
-          <h1 className="project-title">{project.name}</h1>
+      <p>LostGuns is a self-driven copy-study project where I recreated the core mechanics of the mobile game LostGuns in Unity. I pushed it all the way to functional online multiplayer using Unity Relay, letting friends connect and play together. The game features two modes, six different maps, 2 playable characters, and 9 weapons.</p>
+      <ul>
+        <li>Recreated core gameplay of the mobile game LostGuns from scratch in Unity</li>
+        <li>Built networked multiplayer using Unity Relay for friend-to-friend sessions</li>
+        <li>Implemented host/client connection flow and synchronized game state across peers</li>
+        <li>Used the project to deepen hands-on understanding of real-time multiplayer architecture</li>
+      </ul>
+      <figure>
+        <div class="shots">
+          <a href="img/gallery-lostguns-0.jpeg" target="_blank" rel="noreferrer"><img src="img/gallery-lostguns-0.jpeg" alt="LostGuns screenshot 1" loading="lazy"></a>
+          <a href="img/gallery-lostguns-1.jpeg" target="_blank" rel="noreferrer"><img src="img/gallery-lostguns-1.jpeg" alt="LostGuns screenshot 2" loading="lazy"></a>
+          <a href="img/gallery-lostguns-2.jpeg" target="_blank" rel="noreferrer"><img src="img/gallery-lostguns-2.jpeg" alt="LostGuns screenshot 3" loading="lazy"></a>
         </div>
-        <div className="project-meta">
-          <div className="project-meta-cell">
-            <div className="label">Role</div>
-            <div className="value">{project.role}</div>
-          </div>
-          <div className="project-meta-cell">
-            <div className="label">Team</div>
-            <div className="value">{project.team}</div>
-          </div>
-          <div className="project-meta-cell">
-            <div className="label">Year</div>
-            <div className="value">{project.year}</div>
-          </div>
-          <div className="project-meta-cell">
-            <div className="label">Stack</div>
-            <div className="value" style={{fontFamily: 'var(--ff-mono)', fontSize: 14, lineHeight: 1.4}}>{project.tech.join(' · ')}</div>
-          </div>
-        </div>
+        <figcaption>fig. lostguns — screenshots (click to open)</figcaption>
+      </figure>
+
+      <hr class="rule dash" />
+
+      <h3 id="p-minigames"><span class="mk">##</span> MINIGAME COLLECTION</h3>
+      <div class="meta">
+        <span><i>role</i> Solo Developer</span>
+        <span><i>team</i> Solo</span>
+        <span><i>year</i> Jul 2025</span>
+        <span><i>stack</i> C++ &middot; Raylib</span>
       </div>
+      <p>A minigame collection built in C++ with Raylib. Rather than one big game, I used it as a sandbox to implement three self-contained games, each exploring a distinct technical problem — pathfinding, constraint solving, and gameplay simulation.</p>
+      <h4><span class="mk">###</span> 01 &nbsp;Maze Escape &nbsp;<span class="mk">// A* Pathfinding</span></h4>
+      <p>A 2D maze-escape game. The player must reach the exit while avoiding roaming enemies that hunt the player using A* pathfinding on the maze grid.</p>
+      <figure>
+        <div class="shots">
+          <a href="img/game-minigames-01-a.webp" target="_blank" rel="noreferrer"><img src="img/game-minigames-01-a.webp" alt="Maze Escape screenshot 1" loading="lazy"></a>
+          <a href="img/game-minigames-01-b.webp" target="_blank" rel="noreferrer"><img src="img/game-minigames-01-b.webp" alt="Maze Escape screenshot 2" loading="lazy"></a>
+        </div>
+      </figure>
+      <h4><span class="mk">###</span> 02 &nbsp;Sudoku &nbsp;<span class="mk">// Backtracking</span></h4>
+      <p>A playable Sudoku game with puzzle generation and solving driven by a recursive backtracking algorithm that fills and validates the board.</p>
+      <figure>
+        <div class="shots">
+          <a href="img/game-minigames-02-a.webp" target="_blank" rel="noreferrer"><img src="img/game-minigames-02-a.webp" alt="Sudoku screenshot 1" loading="lazy"></a>
+          <a href="img/game-minigames-02-b.webp" target="_blank" rel="noreferrer"><img src="img/game-minigames-02-b.webp" alt="Sudoku screenshot 2" loading="lazy"></a>
+        </div>
+      </figure>
+      <h4><span class="mk">###</span> 03 &nbsp;Futsal Manager &nbsp;<span class="mk">// Gameplay Simulation</span></h4>
+      <p>A prototype 4-vs-4 futsal simulation game. Models player movement, possession, and match flow as a real-time gameplay simulation sandbox.</p>
+      <figure>
+        <div class="shots">
+          <a href="img/game-minigames-03-a.webp" target="_blank" rel="noreferrer"><img src="img/game-minigames-03-a.webp" alt="Futsal Manager screenshot 1" loading="lazy"></a>
+          <a href="img/game-minigames-03-b.webp" target="_blank" rel="noreferrer"><img src="img/game-minigames-03-b.webp" alt="Futsal Manager screenshot 2" loading="lazy"></a>
+        </div>
+      </figure>
+    </section>
 
-      {!project.games && (
-      <div className="project-hero-media">
-        <image-slot id={`hero-${project.id}`} src={SLOT_SRC[`hero-${project.id}`]} shape="rect" placeholder={`Hero image — ${project.name}`}></image-slot>
+    <!-- ============================================ -->
+    <section id="about">
+      <h2><span class="mk">#</span> About</h2>
+      <hr class="rule tight" />
+      <p>My name is Hyunwoo, and I major in RTIS at DigiPen Institute of Technology in Redmond, WA. I'm currently a student, exploring and experimenting with all kinds of things like game engines and game graphics to grow my interests further.</p>
+      <p>I love solving problems in ways I once only imagined, and I really enjoy making fun games and other side projects.</p>
+      <p>I'm originally from Daegu, South Korea. I have a strong foundation in creativity and a strategic approach to problem-solving.</p>
+      <p>I'm always keeping an eye out for new projects. If you come across anything on this site that catches your interest or raises a question, feel free to reach out — take your time looking around and enjoy your stay!</p>
+
+      <h3 id="education"><span class="mk">##</span> Education</h3>
+      <div class="meta">
+        <span><i>2022 — Spring 2026</i> Keimyung University</span>
       </div>
-      )}
-
-      {project.intro && (
-      <div className="project-body">
-        <div className="project-section-label">— Introduction</div>
-        <div className="project-section-content">{project.intro}</div>
+      <ul>
+        <li>B.S. in Computer Science &middot; Daegu, South Korea</li>
+        <li>Dual-degree program with DigiPen Institute of Technology</li>
+      </ul>
+      <div class="meta">
+        <span><i>2026 — 2028</i> DigiPen Institute of Technology</span>
       </div>
-      )}
+      <ul>
+        <li>B.S. in Computer Science, Real-Time Interactive Simulation (RTIS) &middot; Redmond, Washington</li>
+        <li>Dual-degree program with Keimyung University</li>
+        <li>Relevant courses: Computer Graphics &middot; Advanced C/C++ &middot; Game Projects &middot; Data Structures</li>
+      </ul>
 
-      <div className="project-body">
-        <div className="project-section-label">— Overview</div>
-        <div className="project-section-content">{project.overview}</div>
+      <h3 id="skills"><span class="mk">##</span> Skills</h3>
+      <dl class="kv">
+        <div><dt>Languages</dt><dd>C, C++, C#</dd></div>
+        <div><dt>Engines</dt><dd>Unity, Custom Engine</dd></div>
+        <div><dt>Graphics</dt><dd>OpenGL, Vulkan, GLSL, Rendering Pipeline</dd></div>
+        <div><dt>Soft skills</dt><dd>Problem-Solving, Teamwork and Collaboration, Communication, Creativity, Leadership</dd></div>
+      </dl>
+
+      <h3 id="leadership"><span class="mk">##</span> Leadership</h3>
+      <div class="meta">
+        <span><i>Aug 2023 — Feb 2025</i> Military Service — Leader &middot; Daegu, KR</span>
       </div>
-
-      {project.games && (
-        <div className="games-block">
-          <div className="project-section-label">— The Games</div>
-          <div className="games-list">
-            {project.games.map((g) => (
-              <div key={g.no} className="game-row">
-                <div className="game-no">{g.no}</div>
-                <div className="game-main">
-                  <div className="game-name">{g.name}</div>
-                  <div className="game-tag">{g.tag}</div>
-                  <div className="game-desc">{g.desc}</div>
-                </div>
-                <div className="game-media">
-                  <image-slot id={`game-${project.id}-${g.no}-a`} src={SLOT_SRC[`game-${project.id}-${g.no}-a`]} shape="rect" placeholder={`${g.name} — screenshot 1`}></image-slot>
-                  <image-slot id={`game-${project.id}-${g.no}-b`} src={SLOT_SRC[`game-${project.id}-${g.no}-b`]} shape="rect" placeholder={`${g.name} — screenshot 2`}></image-slot>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      <div className="project-body">
-        <div className="project-section-label">— My Role</div>
-        <div className="project-section-content">
-          {project.roleGroups ? (
-            project.roleGroups.map((g, gi) => (
-              <div key={gi} className="role-group">
-                <div className="role-group-label">{g.label}</div>
-                <ul>
-                  {g.items.map((c, i) => <li key={i}>{c}</li>)}
-                </ul>
-              </div>
-            ))
-          ) : (
-            <ul>
-              {project.contributions.map((c, i) => <li key={i}>{c}</li>)}
-            </ul>
-          )}
-        </div>
+      <p>Completed mandatory military service with an honorable discharge at the rank of Sergeant. Served as squad leader of a mortar unit, responsible for training and coordinating a team of soldiers during operations.</p>
+      <div class="meta">
+        <span><i>Feb 2025 — Aug 2025</i> Linkers — Fundraising Volunteer &middot; Daegu, KR</span>
       </div>
-
-      {!project.games && project.video !== false && (
-      <div style={{marginBottom: 32}}>
-        <div className="gallery-label">— Gameplay / Demo Video</div>
-        <div className="video-slot">
-          {project.video ? (
-            project.video.includes('youtube') || project.video.includes('youtu.be')
-              ? <iframe src={project.video} allow="autoplay; encrypted-media" allowFullScreen></iframe>
-              : /\.(mp4|webm|ogg|mov)$/i.test(project.video)
-                ? <video src={project.video} controls></video>
-                : <iframe src={project.video} loading="lazy" title={`${project.name} live demo`}></iframe>
-          ) : (
-            <div className="video-placeholder">
-              <div className="play-icon"></div>
-              <div className="video-label">Drop a Video — set <code style={{background:'rgba(255,255,255,0.12)',padding:'4px 8px',fontSize:13}}>video</code> in PROJECTS</div>
-            </div>
-          )}
-        </div>
+      <p>Collaborated with World Vision to provide aid to vulnerable populations.</p>
+      <div class="meta">
+        <span><i>Mar 2025 — Jul 2026</i> Daegu Futsal Team — Captain &middot; Daegu, KR</span>
       </div>
-      )}
+      <p>Captain of a futsal team based in Daegu, South Korea.</p>
+    </section>
 
-      {!project.games && (
-      <div>
-        <div className="gallery-label">— Screenshots / Gallery</div>
-        <div className="gallery-grid">
-          {project.gallery.map((g, i) => (
-            <div key={i} className="gallery-slot">
-              <image-slot id={`gallery-${project.id}-${i}`} src={SLOT_SRC[`gallery-${project.id}-${i}`]} shape="rect" placeholder={`Screenshot ${i + 1}`}></image-slot>
-            </div>
-          ))}
-        </div>
-      </div>
-      )}
+    <!-- ============================================ -->
+    <section id="contact">
+      <h2><span class="mk">#</span> Contact</h2>
+      <hr class="rule tight" />
+      <p>Feel free to reach out for any reason — I'd love to connect.</p>
+      <dl class="kv">
+        <div><dt>email</dt><dd><a href="mailto:hyunwoo.yang@digipen.edu">hyunwoo.yang@digipen.edu</a></dd></div>
+        <div><dt>github</dt><dd><a class="ext" href="https://github.com/yanghyunw00" target="_blank" rel="noreferrer">github.com/yanghyunw00</a></dd></div>
+        <div><dt>linkedin</dt><dd><a class="ext" href="https://www.linkedin.com/in/hyunw00" target="_blank" rel="noreferrer">linkedin.com/in/hyunw00</a></dd></div>
+        <div><dt>resume</dt><dd><a class="ext" href="docs/Resume.pdf" target="_blank" rel="noreferrer">docs/Resume.pdf</a></dd></div>
+      </dl>
+    </section>
 
-      {next && next.id !== project.id && (
-        <a href={`#project/${next.id}`} className="next-project">
-          <div>
-            <div className="next-label">Next Project — {project.type === 'team' ? 'Team' : 'Solo'}</div>
-            <div className="next-project-name">{next.name}</div>
-          </div>
-          <div className="next-arrow">→</div>
-        </a>
-      )}
-    </main>
-  );
-}
+    <div class="foot">
+      EOF &middot; yanghyunw00.github.io<br />
+      Hyunwoo Yang — Gameplay Programmer, Daegu / Redmond<br />
+      <a class="totop" href="#hello">back to top ↑</a>
+    </div>
+  </main>
+</div>
 
-/* =====================================================
-   ABOUT
-   ===================================================== */
-
-function About() {
-  return (
-    <main className="view about" data-screen-label="About">
-      <div className="page-header">
-        <h1 className="page-title">About.</h1>
-        <div className="page-meta">
-          <div className="page-meta-num">02</div>
-          <div className="page-meta-text">The Maker</div>
-        </div>
-      </div>
-
-      <div className="about-grid">
-        <h2 className="bio-large">
-          Gameplay programmer
-        </h2>
-        <div className="bio-body">
-          {PROFILE.longBio.map((p, i) => <p key={i}>{p}</p>)}
-          <div className="resume-btn-wrap">
-            <a href={PROFILE.resume} target="_blank" rel="noreferrer" className="btn-primary">
-              <Icon.download /> Download Resume
-            </a>
-          </div>
-        </div>
-        <div className="about-portrait-wrap">
-          <div className="about-portrait-deco" />
-          <div className="about-portrait-slot">
-            <image-slot id="home-portrait" src="img/portrait.jpg" shape="rect" placeholder="Drop your portrait"></image-slot>
-          </div>
-        </div>
-      </div>
-
-      <section className="about-section">
-        <div>
-          <div className="about-section-num">— 01</div>
-          <h3 className="about-section-title">EDUCATION</h3>
-        </div>
-        <div>
-          <div className="edu-entry">
-            <div>
-              <div className="edu-school">Keimyung University</div>
-              <div className="edu-detail"><strong>B.S. in Computer Science</strong> · Daegu, South Korea</div>
-              <div className="edu-detail">Dual-degree program with DigiPen Institute of Technology</div>
-            </div>
-            <div className="edu-date">2022 — Spring 2026</div>
-          </div>
-          <div className="edu-entry">
-            <div>
-              <div className="edu-school">DigiPen Institute of Technology</div>
-              <div className="edu-detail"><strong>B.S. in Computer Science, Real-Time Interactive Simulation (RTIS)</strong> · Redmond, Washington</div>
-              <div className="edu-detail">Dual-degree program with Keimyung University</div>
-              <div className="edu-courses">Relevant Courses: Computer Graphics · Advanced C/C++ · Game Projects · Data Structures</div>
-            </div>
-            <div className="edu-date">2026 — 2028</div>
-          </div>
-        </div>
-      </section>
-
-      <section className="about-section">
-        <div>
-          <div className="about-section-num">— 02</div>
-          <h3 className="about-section-title">SKILLS</h3>
-        </div>
-        <div className="skill-cluster">
-          {SKILLS.map(group => (
-            <div key={group.label} className="skill-row">
-              <div className="skill-row-label">{group.label}</div>
-              <div className="skill-tags">
-                {group.items.map(s => <span key={s} className="skill-tag">{s}</span>)}
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="about-section">
-        <div>
-          <div className="about-section-num">— 03</div>
-          <h3 className="about-section-title">LEADERSHIP</h3>
-        </div>
-        <div>
-          {LEADERSHIP.map(l => (
-            <div key={l.name} className="lead-entry">
-              <div>
-                <div className="lead-name">{l.name}</div>
-                <div className="lead-desc">{l.desc}</div>
-                <span className="lead-location">{l.location}</span>
-              </div>
-              <div className="lead-right">
-                <div className="lead-role">{l.role}</div>
-                <div className="lead-date">{l.date}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-    </main>
-  );
-}
-
-/* =====================================================
-   CONTACT
-   ===================================================== */
-
-function Contact() {
-  const cards = [
-    { num: '01', label: 'Email', value: <span className="email-split">{PROFILE.email.split('@')[0]}<br/>@{PROFILE.email.split('@')[1]}</span>, cta: 'Send a message', href: `mailto:${PROFILE.email}`, icon: <Icon.mail />, target: null },
-    { num: '02', label: 'GitHub', value: 'yanghyunw00', cta: 'View repositories', href: PROFILE.github, icon: <Icon.github />, target: '_blank' },
-    { num: '03', label: 'LinkedIn', value: 'hyunw00', cta: 'Connect with me', href: PROFILE.linkedin, icon: <Icon.linkedin />, target: '_blank' },
-    { num: '04', label: 'Resume', value: 'Download PDF', cta: 'Latest version', href: PROFILE.resume, icon: <Icon.download />, target: '_blank' },
-  ];
-  return (
-    <main className="view contact" data-screen-label="Contact">
-      <section className="contact-hero">
-        <h1 className="contact-title">
-          <span className="out">CON</span>TACT.
-        </h1>
-      </section>
-      <section className="contact-grid">
-        {cards.map((c) => (
-          <a
-            key={c.num}
-            className="contact-card"
-            href={c.href}
-            {...(c.target ? { target: c.target, rel: 'noreferrer' } : {})}
-          >
-            <div className="contact-card-head">
-              <span className="contact-card-num">{c.num}</span>
-              <div className="contact-card-icon">{c.icon}</div>
-            </div>
-            <div className="contact-card-body">
-              <div className="contact-card-label">{c.label}</div>
-              <div className="contact-card-value">{c.value}</div>
-            </div>
-            <div className="contact-card-foot">
-              <span className="contact-card-cta">{c.cta}</span>
-              <span className="contact-card-arrow">↗</span>
-            </div>
-          </a>
-        ))}
-      </section>
-    </main>
-  );
-}
-
-/* =====================================================
-   APP
-   ===================================================== */
-
-function App() {
-  const hash = useHashRoute();
-  const route = parseRoute(hash);
-  let view;
-  switch (route.page) {
-    case 'home':
-      view = <Home />; break;
-    case 'work':
-      if (route.params[0] === 'team' || route.params[0] === 'solo') {
-        view = <WorkList category={route.params[0]} />;
-      } else {
-        view = <Work />;
-      }
-      break;
-    case 'project':
-      view = <ProjectDetail id={route.params[0]} />; break;
-    case 'about':
-      view = <About />; break;
-    case 'contact':
-      view = <Contact />; break;
-    default:
-      view = <Home />;
-  }
-  return (
-    <>
-      <Nav currentPage={route.page} />
-      {view}
-    </>
-  );
-}
-
-ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+<script>
+  (function () {
+    var links = {};
+    document.querySelectorAll('.toc a').forEach(function (a) {
+      links[a.getAttribute('href').slice(1)] = a;
+    });
+    var targets = document.querySelectorAll('main [id]');
+    var active = null;
+    function setActive(id) {
+      if (id === active || !links[id]) return;
+      if (active && links[active]) links[active].classList.remove('active');
+      links[id].classList.add('active');
+      active = id;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) setActive(e.target.id);
+      });
+    }, { rootMargin: '0px 0px -78% 0px', threshold: 0 });
+    targets.forEach(function (t) { io.observe(t); });
+  })();
 </script>
 </body>
 </html>
