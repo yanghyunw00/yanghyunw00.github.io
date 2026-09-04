@@ -254,6 +254,7 @@
     <a href="#p-doctor-water" class="sub">Doctor Water</a>
     <a href="#p-legacy-of-dragons" class="sub">Legacy of Dragons</a>
     <a href="#p-hangout-timer" class="sub">Hangout Timer</a>
+    <a href="#p-mathcalc" class="sub">MathCalc</a>
     <a href="#p-lostguns" class="sub">LostGuns</a>
     <a href="#p-minigames" class="sub">Minigame Collection</a>
     <a href="#about">02 &nbsp;About</a>
@@ -413,6 +414,25 @@
         </div>
         <figcaption>fig. hangout-timer — screenshots (click to open)</figcaption>
       </figure>
+
+      <hr class="rule dash" />
+
+      <h3 id="p-mathcalc"><span class="mk">##</span> MATHCALC</h3>
+      <div class="meta">
+        <span><i>role</i> Solo Developer</span>
+        <span><i>team</i> Solo</span>
+        <span><i>year</i> Sep 2026</span>
+        <span><i>stack</i> React &middot; Vite &middot; Three.js &middot; KaTeX</span>
+      </div>
+      <p class="lead">A single-page math toolkit that shows its work. It covers the linear-algebra and calculus operations I kept reaching for during coursework, and renders every intermediate step as a proper formula instead of a final answer.</p>
+      <p>Four calculators — matrix, calculus, vector, and 3D graphics — sharing one step-by-step solver and KaTeX rendering. Full Korean / English toggle across the UI, solution steps, and error messages.</p>
+      <ul>
+        <li>Implemented matrix routines (determinant, inverse, rank, LU, SVD, eigenvalues) with per-row-operation step output</li>
+        <li>Built the calculus engine — derivatives, integrals, limits, Taylor series — on top of math.js with live LaTeX preview</li>
+        <li>Wrote real-time Three.js viewers for the MVP pipeline, lighting/shadow mapping, and vector dot/cross products</li>
+        <li>Added a runtime i18n layer (ko/en) and a responsive layout that re-fits the 3D viewport to any window ratio</li>
+      </ul>
+      <p><a class="ext" href="https://yanghyunw00.github.io/project/calc/" target="_blank" rel="noreferrer">open live demo</a></p>
 
       <hr class="rule dash" />
 
