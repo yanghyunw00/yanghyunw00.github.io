@@ -313,28 +313,46 @@
       <h3 id="p-igy"><span class="mk">##</span> I.G.Y — Isometric City-Builder</h3>
       <div class="meta">
         <span><i>role</i> Tech Lead</span>
-        <span><i>team</i> 5 members</span>
+        <span><i>team</i> 7 members</span>
         <span><i>year</i> 09/2025 — 06/2026</span>
-        <span><i>stack</i> C++ &middot; OpenGL &middot; Custom Engine</span>
+        <span><i>stack</i> C++20 &middot; OpenGL 4 &middot; SDL2 &middot; Dear ImGui &middot; CMake</span>
       </div>
-      <p>Quarter-view city-builder simulation inspired by Caesar 3 and SimCity 2000, built from the ground up on a custom C++/OpenGL engine. As Tech Lead I owned the engine and technical architecture across rendering, simulation, and AI.</p>
+      <p>Quarter-view city-builder simulation inspired by Caesar 3 and SimCity 2000, built from the ground up on a custom C++/OpenGL engine over a 67&times;67 (4,489 tile) isometric world. As Tech Lead I owned the engine and technical architecture across rendering, simulation, and AI.</p>
+      <p class="note">130 of 187 commits (70%), +33,608 / &minus;7,300 source lines, 69 files authored (~14,800 LOC) in a ~32,400 LOC codebase.</p>
       <h4><span class="mk">###</span> Architecture &amp; Leadership</h4>
       <ul>
         <li>Owned the overall technical architecture, defining module boundaries and the main update/render loop so simulation, rendering, and AI could evolve independently</li>
-        <li>Set technical direction for a team of 5: made the core engine and tooling decisions, ran code reviews, and coordinated integration of each member's systems into a single build</li>
+        <li>Set technical direction for a team of 7: made the core engine and tooling decisions, ran code reviews, and coordinated integration of each member's systems into a single build</li>
         <li>Onboarded teammates with little graphics or engine experience, writing usage examples and lightweight docs so they could contribute gameplay and AI features without touching low-level code</li>
       </ul>
       <h4><span class="mk">###</span> Engine — Dokev</h4>
       <ul>
         <li>Grew my Computer Graphics course renderer into a reusable engine, Dokev, wrapping raw OpenGL state and draw calls into single-function shape drawing, coloring, and texturing</li>
         <li>Built core engine modules: a scene graph for hierarchical transforms, a resource manager for textures and shared assets, and an event bus for decoupled communication between systems</li>
-        <li>Added a pan/zoom camera, texture atlasing, and sprite batching so the renderer could push a full tile map plus hundreds of agents without stalling</li>
+        <li>Added a pan/zoom camera and texture atlasing so tile, building, and agent sprites could share a single bound texture</li>
       </ul>
-      <h4><span class="mk">###</span> Citizen AI &amp; Pathfinding</h4>
+      <h4><span class="mk">###</span> Rendering — GPU Instancing</h4>
       <ul>
-        <li>Designed citizen AI using utility-based decision making: needs (work, food, leisure, rest) decay over time and score competing actions, with a state machine executing the chosen behavior</li>
-        <li>Implemented A* pathfinding on the tile grid so citizens route around buildings and terrain, with a request queue and path caching to spread cost across frames and re-path when the map changes</li>
-        <li>Used a spatial grid and dirty-flag updates for neighbor queries and to skip idle tiles, sustaining hundreds of active agents at a stable frame rate</li>
+        <li>Replaced the immediate-mode 2D renderer with a GPU-instanced batch renderer across the 67&times;67 isometric tile world, cutting draw calls from 9,256 to 11 per frame at an identical ~9,300 quad workload and improving frame time from 58.6&nbsp;ms to 38.3&nbsp;ms (17 → 26 FPS)</li>
+        <li>Eliminated all 46,353 per-draw uniform uploads and cut redundant texture binds from 9,232 to 157 per frame by packing a 3&times;3 transform, four UV pairs, tint, and SDF parameters into a 96-byte instance record, batching up to 10,000 quads across 64 texture slots in a single DrawElementsInstanced call</li>
+        <li>Unified textured sprites and SDF primitives — circles, rectangles, lines — into one instance buffer so UI and debug geometry batch through the same path instead of falling back to per-shape draw calls</li>
+      </ul>
+      <h4><span class="mk">###</span> Pathfinding — A*</h4>
+      <ul>
+        <li>Profiled the pathfinder in-engine and found 91% of all node-reset work was wasted: 1,934,759 grid nodes cleared to expand only 160,603 over a nine-second window, because every query cleared the full 4,489-tile grid before knowing which region the search would visit — a two-tile walk reset 4,489 nodes to expand three</li>
+        <li>Rewrote the search with generation-stamped lazy initialization so reset cost scales with the visited region instead of the whole grid, and replaced the per-expansion heap-allocated neighbor vector with a stack array, removing all 160,172 allocations observed in that window</li>
+        <li>Cut cost per expanded node from 1.6&nbsp;µs to 0.84&nbsp;µs in-game, and 31.2&nbsp;µs to 18.7&nbsp;µs per query on NPC-range paths in a controlled 2,000-query benchmark, with node resets falling from 4,489 to 145 and heap allocations to zero — verified to return identical paths across all 2,000 queries</li>
+        <li>Isolated a 179&nbsp;ms frame spike where 184 simultaneous path requests consumed 83% of the frame, resetting 825,976 grid nodes and allocating 95,973 times in a single frame, and projected the rewrite to cut that spike to 111&nbsp;ms by reducing its pathfinding cost from 148&nbsp;ms to 80&nbsp;ms</li>
+      </ul>
+      <h4><span class="mk">###</span> Instrumentation</h4>
+      <ul>
+        <li>Built an in-engine profiling HUD with runtime A/B switches for the renderer and the pathfinder, tracking draw calls, batch flushes, uniform uploads, texture binds, and per-query search cost, with CSV capture for offline comparison</li>
+        <li>Used it to establish that rendering was no longer the bottleneck after instancing, redirecting optimization effort to the CPU-side simulation</li>
+      </ul>
+      <h4><span class="mk">###</span> Simulation &amp; Agent AI</h4>
+      <ul>
+        <li>Implemented a seven-state NPC agent FSM covering work, rest, gambling, and fire response, driven by A* over terrain with height-based climb costs</li>
+        <li>Built 22 simulation managers for population, happiness, taxation, immigration, weather, and disaster events</li>
       </ul>
       <p><a class="ext" href="https://www.youtube.com/watch?v=YwT3yQiEUAY" target="_blank" rel="noreferrer">watch gameplay video</a></p>
       <figure>
