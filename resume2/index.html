@@ -442,7 +442,8 @@
         <li>Built the calculus engine — derivatives, integrals, limits, Taylor series — on top of math.js with live LaTeX preview</li>
         <li>Wrote real-time Three.js viewers for the MVP pipeline, lighting/shadow mapping, and vector dot/cross products</li>
         <li>Added a runtime i18n layer (ko/en) and a responsive layout that re-fits the 3D viewport to any window ratio</li>
-        <li>Took the project from first prototype to production build and deployment on Netlify entirely on my own</li>
+        <li>Cut the initial JS payload 83% — 504&nbsp;KB to 85&nbsp;KB gzip — with route-level code splitting, deferring Three.js, math.js and KaTeX to the routes that actually need them</li>
+        <li>Took the project from first prototype to production build and static deployment on GitHub Pages entirely on my own</li>
       </ul>
       <p><a class="ext" href="https://yanghyunw00.github.io/project/calc/" target="_blank" rel="noreferrer">open live app</a> &middot; <a class="ext" href="https://youtu.be/-McA1GMFBq0" target="_blank" rel="noreferrer">watch demo video</a></p>
       <figure>
