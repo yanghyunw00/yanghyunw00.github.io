@@ -252,6 +252,102 @@
     .toc-h { column-span: all; }
     main { max-width: none; }
   }
+
+  /* ---------- portrait ---------- */
+
+  .head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 34px;
+  }
+  .head-text { min-width: 0; }
+
+  .portrait {
+    flex: 0 0 auto;
+    width: 138px;
+    margin: 4px 0 0;
+  }
+  .portrait img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border: 1px solid var(--border);
+    background: var(--sel);
+  }
+  .portrait figcaption { margin-top: 7px; text-align: right; }
+
+  /* ---------- collapsible project details ---------- */
+
+  .proj { margin-top: 14px; }
+
+  .proj > summary {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    width: auto;
+    cursor: pointer;
+    list-style: none;
+    padding: 2px 0;
+    font-size: 12px;
+    color: var(--ink3);
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  .proj > summary::-webkit-details-marker { display: none; }
+  .proj > summary::marker { content: ""; }
+  .proj > summary:hover { color: var(--ink); }
+  .proj > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+  .proj > summary .pbox {
+    color: var(--accent);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+  }
+  .proj > summary .pbox::before { content: "[+]"; }
+  .proj[open] > summary .pbox::before { content: "[\2013]"; }
+  .proj > summary .plabel::after { content: "show details"; }
+  .proj[open] > summary .plabel::after { content: "hide details"; }
+
+  .proj-body { border-left: 1px solid var(--border); padding-left: 18px; margin-top: 2px; }
+  .proj-body > *:first-child { margin-top: 0; }
+
+  /* expand all / collapse all */
+
+  .bulk {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-top: 14px;
+    font-size: 12px;
+    color: var(--ink3);
+  }
+  .bulk button {
+    font: inherit;
+    color: var(--ink3);
+    background: none;
+    border: 0;
+    border-bottom: 1px solid currentColor;
+    padding: 0;
+    cursor: pointer;
+  }
+  .bulk button:hover { color: var(--accent); }
+  .bulk button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+  @media (max-width: 880px) {
+    .head { gap: 20px; }
+    .portrait { width: 104px; }
+    .proj-body { padding-left: 14px; }
+  }
+
+  /* printing / save-as-PDF: always show every description */
+
+  @media print {
+    .proj > summary, .bulk { display: none; }
+    .proj-body { border-left: 0; padding-left: 0; }
+  }
 </style>
 </head>
 <body>
@@ -280,13 +376,21 @@
     <div class="readtime">~2 min read &middot; updated 2026</div>
     <hr class="rule" />
 
-    <h1 class="name">Hyunwoo Yang</h1>
-    <div class="tagline">Gameplay Programmer &middot; Daegu, South Korea</div>
-    <div class="links">
-      <a class="ext" href="https://github.com/yanghyunw00" target="_blank" rel="noreferrer">github.com/yanghyunw00</a>
-      <a class="ext" href="https://www.linkedin.com/in/hyunw00" target="_blank" rel="noreferrer">linkedin.com/in/hyunw00</a>
-      <a href="mailto:hyunwoo.yang@digipen.edu">hyunwoo.yang@digipen.edu</a>
-      <a class="ext" href="docs/Resume.pdf" target="_blank" rel="noreferrer">Resume.pdf</a>
+    <div class="head">
+      <div class="head-text">
+        <h1 class="name">Hyunwoo Yang</h1>
+        <div class="tagline">Gameplay Programmer &middot; Daegu, South Korea</div>
+        <div class="links">
+          <a class="ext" href="https://github.com/yanghyunw00" target="_blank" rel="noreferrer">github.com/yanghyunw00</a>
+          <a class="ext" href="https://www.linkedin.com/in/hyunw00" target="_blank" rel="noreferrer">linkedin.com/in/hyunw00</a>
+          <a href="mailto:hyunwoo.yang@digipen.edu">hyunwoo.yang@digipen.edu</a>
+          <a class="ext" href="docs/Resume.pdf" target="_blank" rel="noreferrer">Resume.pdf</a>
+        </div>
+      </div>
+      <figure class="portrait">
+        <img src="img/portrait.jpg" alt="Portrait of Hyunwoo Yang" width="600" height="600" />
+        <figcaption>fig. portrait</figcaption>
+      </figure>
     </div>
 
     <!-- ============================================ -->
@@ -307,36 +411,22 @@
       <h2><span class="mk">#</span> Work</h2>
       <hr class="rule tight" />
       <p class="lead">7 projects, 2022 — 2026. Team-led builds at DigiPen, then solo builds shipped end to end.</p>
+      <div class="bulk">
+        <span>details</span>
+        <button type="button" data-all="open">expand all</button>
+        <span aria-hidden="true">/</span>
+        <button type="button" data-all="close">collapse all</button>
+      </div>
 
       <div class="group-label">— Team projects</div>
 
       <h3 id="p-igy"><span class="mk">##</span> I.G.Y — Isometric City-Builder</h3>
       <div class="meta">
         <span><i>role</i> Tech Lead</span>
-        <span><i>team</i> 5 members</span>
+        <span><i>team</i> 7 members</span>
         <span><i>year</i> 09/2025 — 06/2026</span>
-        <span><i>stack</i> C++ &middot; OpenGL &middot; Custom Engine</span>
+        <span><i>stack</i> C++20 &middot; OpenGL 4 &middot; SDL2 &middot; Dear ImGui &middot; CMake</span>
       </div>
-      <p>Quarter-view city-builder simulation inspired by Caesar 3 and SimCity 2000, built from the ground up on a custom C++/OpenGL engine. As Tech Lead I owned the engine and technical architecture across rendering, simulation, and AI.</p>
-      <h4><span class="mk">###</span> Architecture &amp; Leadership</h4>
-      <ul>
-        <li>Owned the overall technical architecture, defining module boundaries and the main update/render loop so simulation, rendering, and AI could evolve independently</li>
-        <li>Set technical direction for a team of 5: made the core engine and tooling decisions, ran code reviews, and coordinated integration of each member's systems into a single build</li>
-        <li>Onboarded teammates with little graphics or engine experience, writing usage examples and lightweight docs so they could contribute gameplay and AI features without touching low-level code</li>
-      </ul>
-      <h4><span class="mk">###</span> Engine — Dokev</h4>
-      <ul>
-        <li>Grew my Computer Graphics course renderer into a reusable engine, Dokev, wrapping raw OpenGL state and draw calls into single-function shape drawing, coloring, and texturing</li>
-        <li>Built core engine modules: a scene graph for hierarchical transforms, a resource manager for textures and shared assets, and an event bus for decoupled communication between systems</li>
-        <li>Added a pan/zoom camera, texture atlasing, and sprite batching so the renderer could push a full tile map plus hundreds of agents without stalling</li>
-      </ul>
-      <h4><span class="mk">###</span> Citizen AI &amp; Pathfinding</h4>
-      <ul>
-        <li>Designed citizen AI using utility-based decision making: needs (work, food, leisure, rest) decay over time and score competing actions, with a state machine executing the chosen behavior</li>
-        <li>Implemented A* pathfinding on the tile grid so citizens route around buildings and terrain, with a request queue and path caching to spread cost across frames and re-path when the map changes</li>
-        <li>Used a spatial grid and dirty-flag updates for neighbor queries and to skip idle tiles, sustaining hundreds of active agents at a stable frame rate</li>
-      </ul>
-      <p><a class="ext" href="https://www.youtube.com/watch?v=YwT3yQiEUAY" target="_blank" rel="noreferrer">watch gameplay video</a></p>
       <figure>
         <div class="shots">
           <a href="img/gallery-igy-0.webp" target="_blank" rel="noreferrer"><img src="img/gallery-igy-0.webp" alt="I.G.Y screenshot 1" loading="lazy"></a>
@@ -345,6 +435,48 @@
         </div>
         <figcaption>fig. igy — screenshots (click to open)</figcaption>
       </figure>
+      <details class="proj" open>
+        <summary><span class="pbox" aria-hidden="true"></span><span class="plabel"></span></summary>
+        <div class="proj-body">
+          <p>Quarter-view city-builder simulation inspired by Caesar 3 and SimCity 2000, built from the ground up on a custom C++/OpenGL engine. As Tech Lead I owned the engine and technical architecture across rendering, simulation, and AI.</p>
+          <h4><span class="mk">###</span> Architecture &amp; Leadership</h4>
+          <ul>
+            <li>Owned the overall technical architecture, defining module boundaries and the main update/render loop so simulation, rendering, and AI could evolve independently</li>
+            <li>Set technical direction for a team of 7: made the core engine and tooling decisions, ran code reviews, and coordinated integration of each member's systems into a single build</li>
+            <li>Onboarded teammates with little graphics or engine experience, writing usage examples and lightweight docs so they could contribute gameplay and AI features without touching low-level code</li>
+          </ul>
+          <h4><span class="mk">###</span> Engine — Dokev</h4>
+          <ul>
+            <li>Grew my Computer Graphics course renderer into a reusable engine, Dokev, wrapping raw OpenGL state and draw calls into single-function shape drawing, coloring, and texturing</li>
+            <li>Built core engine modules: a scene graph for hierarchical transforms, a resource manager for textures and shared assets, and an event bus for decoupled communication between systems</li>
+            <li>Added a pan/zoom camera and texture atlasing so tile, building, and agent sprites could share a single bound texture</li>
+          </ul>
+          <h4><span class="mk">###</span> Rendering — GPU Instancing</h4>
+          <ul>
+            <li>Replaced the immediate-mode 2D renderer with a GPU-instanced batch renderer across the 67&times;67 isometric tile world, cutting draw calls from 9,256 to 11 per frame at an identical ~9,300 quad workload and improving frame time from 58.6&nbsp;ms to 38.3&nbsp;ms (17 → 26 FPS)</li>
+            <li>Eliminated all 46,353 per-draw uniform uploads and cut redundant texture binds from 9,232 to 157 per frame by packing a 3&times;3 transform, four UV pairs, tint, and SDF parameters into a 96-byte instance record, batching up to 10,000 quads across 64 texture slots in a single DrawElementsInstanced call</li>
+            <li>Unified textured sprites and SDF primitives — circles, rectangles, lines — into one instance buffer so UI and debug geometry batch through the same path instead of falling back to per-shape draw calls</li>
+          </ul>
+          <h4><span class="mk">###</span> Pathfinding — A*</h4>
+          <ul>
+            <li>Profiled the pathfinder in-engine and found 91% of all node-reset work was wasted: 1,934,759 grid nodes cleared to expand only 160,603 over a nine-second window, because every query cleared the full 4,489-tile grid before knowing which region the search would visit — a two-tile walk reset 4,489 nodes to expand three</li>
+            <li>Rewrote the search with generation-stamped lazy initialization so reset cost scales with the visited region instead of the whole grid, and replaced the per-expansion heap-allocated neighbor vector with a stack array, removing all 160,172 allocations observed in that window</li>
+            <li>Cut cost per expanded node from 1.6&nbsp;µs to 0.84&nbsp;µs in-game, and 31.2&nbsp;µs to 18.7&nbsp;µs per query on NPC-range paths in a controlled 2,000-query benchmark, with node resets falling from 4,489 to 145 and heap allocations to zero — verified to return identical paths across all 2,000 queries</li>
+            <li>Isolated a 179&nbsp;ms frame spike where 184 simultaneous path requests consumed 83% of the frame, resetting 825,976 grid nodes and allocating 95,973 times in a single frame, and projected the rewrite to cut that spike to 111&nbsp;ms by reducing its pathfinding cost from 148&nbsp;ms to 80&nbsp;ms</li>
+          </ul>
+          <h4><span class="mk">###</span> Instrumentation</h4>
+          <ul>
+            <li>Built an in-engine profiling HUD with runtime A/B switches for the renderer and the pathfinder, tracking draw calls, batch flushes, uniform uploads, texture binds, and per-query search cost, with CSV capture for offline comparison</li>
+            <li>Used it to establish that rendering was no longer the bottleneck after instancing, redirecting optimization effort to the CPU-side simulation</li>
+          </ul>
+          <h4><span class="mk">###</span> Simulation &amp; Agent AI</h4>
+          <ul>
+            <li>Implemented a seven-state NPC agent FSM covering work, rest, gambling, and fire response, driven by A* over terrain with height-based climb costs</li>
+            <li>Built 22 simulation managers for population, happiness, taxation, immigration, weather, and disaster events</li>
+          </ul>
+          <p><a class="ext" href="https://www.youtube.com/watch?v=YwT3yQiEUAY" target="_blank" rel="noreferrer">watch gameplay video</a></p>
+        </div>
+      </details>
 
       <hr class="rule dash" />
 
@@ -355,16 +487,6 @@
         <span><i>year</i> 03/2023 — 06/2023</span>
         <span><i>stack</i> C++ &middot; Custom Engine</span>
       </div>
-      <p>2D vertical-scrolling escape-action game. Dr. Water climbs a volcano on the verge of eruption, fighting through enemies and boss encounters with an arsenal of weapons. Awarded Microdegree Expo Best Award 2023.</p>
-      <ul>
-        <li>Ensured gameplay quality through systematic playtesting across all stages and bosses</li>
-        <li>Identified and documented bugs in enemy behaviour, weapon interactions, and level progression</li>
-        <li>Worked closely with engineers to validate fixes and regression tests</li>
-        <li>Implemented boss attack mechanics — multi-phase patterns with distinct telegraphed moves, timed attack sequences, and phase transitions tied to boss health</li>
-        <li>Built enemy attack mechanics for regular encounters, including projectile spreads, charge attacks, and spawn/wave behavior</li>
-        <li>Implemented the player's 5 weapons, each with its own damage, fire rate, and projectile behavior</li>
-        <li>Won Microdegree Expo Best Award, 2023</li>
-      </ul>
       <figure>
         <div class="shots">
           <a href="img/gallery-doctor-water-0.webp" target="_blank" rel="noreferrer"><img src="img/gallery-doctor-water-0.webp" alt="Doctor Water screenshot 1" loading="lazy"></a>
@@ -373,6 +495,21 @@
         </div>
         <figcaption>fig. doctor-water — screenshots (click to open)</figcaption>
       </figure>
+      <details class="proj" open>
+        <summary><span class="pbox" aria-hidden="true"></span><span class="plabel"></span></summary>
+        <div class="proj-body">
+          <p>2D vertical-scrolling escape-action game. Dr. Water climbs a volcano on the verge of eruption, fighting through enemies and boss encounters with an arsenal of weapons. Awarded Microdegree Expo Best Award 2023.</p>
+          <ul>
+            <li>Ensured gameplay quality through systematic playtesting across all stages and bosses</li>
+            <li>Identified and documented bugs in enemy behaviour, weapon interactions, and level progression</li>
+            <li>Worked closely with engineers to validate fixes and regression tests</li>
+            <li>Implemented boss attack mechanics — multi-phase patterns with distinct telegraphed moves, timed attack sequences, and phase transitions tied to boss health</li>
+            <li>Built enemy attack mechanics for regular encounters, including projectile spreads, charge attacks, and spawn/wave behavior</li>
+            <li>Implemented the player's 5 weapons, each with its own damage, fire rate, and projectile behavior</li>
+            <li>Won Microdegree Expo Best Award, 2023</li>
+          </ul>
+        </div>
+      </details>
 
       <hr class="rule dash" />
 
@@ -383,13 +520,6 @@
         <span><i>year</i> 09/2022 — 12/2022</span>
         <span><i>stack</i> C++ &middot; Custom Engine</span>
       </div>
-      <p>A top-down action-survival shooter set in a dragon-vs-dragon world. The player carves through enemy waves across multiple stages, capped by two boss fights.</p>
-      <ul>
-        <li>Led development of core gameplay systems including enemy wave mechanics and stage progression</li>
-        <li>Directed technical architecture as Tech Lead, coordinating system integration across a team of 4</li>
-        <li>Designed and implemented 6 distinct enemy attack patterns, tuning telegraphs, timing, and projectile behavior for each</li>
-        <li>Built the player's arsenal of 5 weapons, each with its own fire rate, damage, and projectile pattern</li>
-      </ul>
       <figure>
         <div class="shots">
           <a href="img/gallery-legacy-of-dragons-0.webp" target="_blank" rel="noreferrer"><img src="img/gallery-legacy-of-dragons-0.webp" alt="Legacy of Dragons screenshot 1" loading="lazy"></a>
@@ -398,6 +528,18 @@
         </div>
         <figcaption>fig. legacy-of-dragons — screenshots (click to open)</figcaption>
       </figure>
+      <details class="proj" open>
+        <summary><span class="pbox" aria-hidden="true"></span><span class="plabel"></span></summary>
+        <div class="proj-body">
+          <p>A top-down action-survival shooter set in a dragon-vs-dragon world. The player carves through enemy waves across multiple stages, capped by two boss fights.</p>
+          <ul>
+            <li>Led development of core gameplay systems including enemy wave mechanics and stage progression</li>
+            <li>Directed technical architecture as Tech Lead, coordinating system integration across a team of 4</li>
+            <li>Designed and implemented 6 distinct enemy attack patterns, tuning telegraphs, timing, and projectile behavior for each</li>
+            <li>Built the player's arsenal of 5 weapons, each with its own fire rate, damage, and projectile pattern</li>
+          </ul>
+        </div>
+      </details>
 
       <div class="group-label">— Solo projects</div>
 
@@ -408,15 +550,6 @@
         <span><i>year</i> Sep 2025</span>
         <span><i>stack</i> Web</span>
       </div>
-      <p class="lead">At DigiPen Korea, we held a weekly "Hangout" every Tuesday or Wednesday — professors and students stayed late at school, working on our own projects or sharing a meal together. It became some of the most focused, productive time I've ever had, and that memory still means a lot to me. I built this timer to hold onto that feeling, and I still use it today to study while looking back on those hangouts.</p>
-      <p>A web app that turns the Pomodoro technique into a shared activity. Built end-to-end as a full-stack developer, with AI-assisted iteration on UX flows and backend logic.</p>
-      <ul>
-        <li>Designed and built the full stack — frontend, real-time sync, and persistence</li>
-        <li>Implemented shared room logic so friends can join and run a timer together</li>
-        <li>Used Claude and Gemini Pro for rapid prototyping and code review</li>
-        <li>Shipped as a deployable web application used by DigiPen peers</li>
-      </ul>
-      <p><a class="ext" href="https://yanghyunw00.github.io/project/timer/" target="_blank" rel="noreferrer">open live demo</a></p>
       <figure>
         <div class="shots">
           <a href="img/gallery-hangout-timer-0.webp" target="_blank" rel="noreferrer"><img src="img/gallery-hangout-timer-0.webp" alt="Hangout Timer screenshot 1" loading="lazy"></a>
@@ -425,6 +558,20 @@
         </div>
         <figcaption>fig. hangout-timer — screenshots (click to open)</figcaption>
       </figure>
+      <details class="proj" open>
+        <summary><span class="pbox" aria-hidden="true"></span><span class="plabel"></span></summary>
+        <div class="proj-body">
+          <p class="lead">At DigiPen Korea, we held a weekly "Hangout" every Tuesday or Wednesday — professors and students stayed late at school, working on our own projects or sharing a meal together. It became some of the most focused, productive time I've ever had, and that memory still means a lot to me. I built this timer to hold onto that feeling, and I still use it today to study while looking back on those hangouts.</p>
+          <p>A web app that turns the Pomodoro technique into a shared activity. Built end-to-end as a full-stack developer, with AI-assisted iteration on UX flows and backend logic.</p>
+          <ul>
+            <li>Designed and built the full stack — frontend, real-time sync, and persistence</li>
+            <li>Implemented shared room logic so friends can join and run a timer together</li>
+            <li>Used Claude and Gemini Pro for rapid prototyping and code review</li>
+            <li>Shipped as a deployable web application used by DigiPen peers</li>
+          </ul>
+          <p><a class="ext" href="https://yanghyunw00.github.io/project/timer/" target="_blank" rel="noreferrer">open live demo</a></p>
+        </div>
+      </details>
 
       <hr class="rule dash" />
 
@@ -432,19 +579,9 @@
       <div class="meta">
         <span><i>role</i> Solo Developer</span>
         <span><i>team</i> Solo</span>
-        <span><i>year</i> Sep 2026</span>
-        <span><i>stack</i> React &middot; Vite &middot; Three.js &middot; KaTeX</span>
+        <span><i>year</i> Jun &ndash; Sep 2026</span>
+        <span><i>stack</i> React &middot; Vite &middot; Three.js &middot; math.js &middot; KaTeX</span>
       </div>
-      <p class="lead">A single-page math toolkit that shows its work. It covers the linear-algebra and calculus operations I kept reaching for during coursework, and renders every intermediate step as a proper formula instead of a final answer.</p>
-      <p>Four calculators — matrix, calculus, vector, and 3D graphics — sharing one step-by-step solver and KaTeX rendering. Full Korean / English toggle across the UI, solution steps, and error messages.</p>
-      <ul>
-        <li>Implemented matrix routines (determinant, inverse, rank, LU, SVD, eigenvalues) with per-row-operation step output</li>
-        <li>Built the calculus engine — derivatives, integrals, limits, Taylor series — on top of math.js with live LaTeX preview</li>
-        <li>Wrote real-time Three.js viewers for the MVP pipeline, lighting/shadow mapping, and vector dot/cross products</li>
-        <li>Added a runtime i18n layer (ko/en) and a responsive layout that re-fits the 3D viewport to any window ratio</li>
-        <li>Took the project from first prototype to production build and deployment on Netlify entirely on my own</li>
-      </ul>
-      <p><a class="ext" href="https://yanghyunw00.github.io/project/calc/" target="_blank" rel="noreferrer">open live app</a> &middot; <a class="ext" href="https://youtu.be/-McA1GMFBq0" target="_blank" rel="noreferrer">watch demo video</a></p>
       <figure>
         <div class="shots">
           <a href="img/math_main.jpeg" target="_blank" rel="noreferrer"><img src="img/math_main.jpeg" alt="MathCalc — main calculator view" loading="lazy"></a>
@@ -452,6 +589,22 @@
         </div>
         <figcaption>fig. mathcalc — main view &amp; 3D visualization (click to open)</figcaption>
       </figure>
+      <details class="proj" open>
+        <summary><span class="pbox" aria-hidden="true"></span><span class="plabel"></span></summary>
+        <div class="proj-body">
+          <p class="lead">A single-page math toolkit that shows its work. It covers the linear-algebra and calculus operations I kept reaching for during coursework, and renders every intermediate step as a proper formula instead of a final answer.</p>
+          <p>Four calculators — matrix, calculus, vector, and 3D graphics — sharing one step-by-step solver and KaTeX rendering. Full Korean / English toggle across the UI, solution steps, and error messages.</p>
+          <ul>
+            <li>Implemented matrix routines (determinant, inverse, rank, LU, SVD, eigenvalues) with per-row-operation step output</li>
+            <li>Built the calculus engine — derivatives, integrals, limits, Taylor series — on top of math.js with live LaTeX preview</li>
+            <li>Wrote real-time Three.js viewers for the MVP pipeline, lighting/shadow mapping, and vector dot/cross products</li>
+            <li>Added a runtime i18n layer (ko/en) and a responsive layout that re-fits the 3D viewport to any window ratio</li>
+            <li>Cut the initial JS payload 83% — 504&nbsp;KB to 85&nbsp;KB gzip — with route-level code splitting, deferring Three.js, math.js and KaTeX to the routes that actually need them</li>
+            <li>Took the project from first prototype to production build and static deployment on GitHub Pages entirely on my own</li>
+          </ul>
+          <p><a class="ext" href="https://yanghyunw00.github.io/project/calc/" target="_blank" rel="noreferrer">open live app</a> &middot; <a class="ext" href="https://youtu.be/-McA1GMFBq0" target="_blank" rel="noreferrer">watch demo video</a></p>
+        </div>
+      </details>
 
       <hr class="rule dash" />
 
@@ -462,14 +615,6 @@
         <span><i>year</i> Jan 2026 — Mar 2026</span>
         <span><i>stack</i> Unity &middot; C# &middot; Unity Relay</span>
       </div>
-      <p>LostGuns is a self-driven copy-study project where I recreated the core mechanics of the mobile game LostGuns in Unity. I pushed it all the way to functional online multiplayer using Unity Relay, letting friends connect and play together. The game features two modes, six different maps, 2 playable characters, and 9 weapons.</p>
-      <ul>
-        <li>Recreated core gameplay of the mobile game LostGuns from scratch in Unity</li>
-        <li>Built networked multiplayer using Unity Relay for friend-to-friend sessions</li>
-        <li>Implemented host/client connection flow and synchronized game state across peers</li>
-        <li>Used the project to deepen hands-on understanding of real-time multiplayer architecture</li>
-      </ul>
-      <p><a class="ext" href="https://drive.google.com/file/d/1uJpaqtvoPaB3jTcir9bDRTiLNIbhusbw/view?usp=drive_link" target="_blank" rel="noreferrer">download the build &amp; play (Google Drive)</a></p>
       <figure>
         <div class="shots">
           <a href="img/gallery-lostguns-0.jpeg" target="_blank" rel="noreferrer"><img src="img/gallery-lostguns-0.jpeg" alt="LostGuns screenshot 1" loading="lazy"></a>
@@ -478,6 +623,19 @@
         </div>
         <figcaption>fig. lostguns — screenshots (click to open)</figcaption>
       </figure>
+      <details class="proj" open>
+        <summary><span class="pbox" aria-hidden="true"></span><span class="plabel"></span></summary>
+        <div class="proj-body">
+          <p>LostGuns is a self-driven copy-study project where I recreated the core mechanics of the mobile game LostGuns in Unity. I pushed it all the way to functional online multiplayer using Unity Relay, letting friends connect and play together. The game features two modes, six different maps, 2 playable characters, and 9 weapons.</p>
+          <ul>
+            <li>Recreated core gameplay of the mobile game LostGuns from scratch in Unity</li>
+            <li>Built networked multiplayer using Unity Relay for friend-to-friend sessions</li>
+            <li>Implemented host/client connection flow and synchronized game state across peers</li>
+            <li>Used the project to deepen hands-on understanding of real-time multiplayer architecture</li>
+          </ul>
+          <p><a class="ext" href="https://drive.google.com/file/d/1uJpaqtvoPaB3jTcir9bDRTiLNIbhusbw/view?usp=drive_link" target="_blank" rel="noreferrer">download the build &amp; play (Google Drive)</a></p>
+        </div>
+      </details>
 
       <hr class="rule dash" />
 
@@ -488,31 +646,39 @@
         <span><i>year</i> Jul 2025</span>
         <span><i>stack</i> C++ &middot; Raylib</span>
       </div>
-      <p>A minigame collection built in C++ with Raylib. Rather than one big game, I used it as a sandbox to implement three self-contained games, each exploring a distinct technical problem — pathfinding, constraint solving, and gameplay simulation.</p>
-      <h4><span class="mk">###</span> 01 &nbsp;Maze Escape &nbsp;<span class="mk">// A* Pathfinding</span></h4>
-      <p>A 2D maze-escape game. The player must reach the exit while avoiding roaming enemies that hunt the player using A* pathfinding on the maze grid.</p>
       <figure>
         <div class="shots">
           <a href="img/game-minigames-01-a.webp" target="_blank" rel="noreferrer"><img src="img/game-minigames-01-a.webp" alt="Maze Escape screenshot 1" loading="lazy"></a>
           <a href="img/game-minigames-01-b.webp" target="_blank" rel="noreferrer"><img src="img/game-minigames-01-b.webp" alt="Maze Escape screenshot 2" loading="lazy"></a>
         </div>
+        <figcaption>fig. maze escape — A* pathfinding (click to open)</figcaption>
       </figure>
-      <h4><span class="mk">###</span> 02 &nbsp;Sudoku &nbsp;<span class="mk">// Backtracking</span></h4>
-      <p>A playable Sudoku game with puzzle generation and solving driven by a recursive backtracking algorithm that fills and validates the board.</p>
       <figure>
         <div class="shots">
           <a href="img/game-minigames-02-a.webp" target="_blank" rel="noreferrer"><img src="img/game-minigames-02-a.webp" alt="Sudoku screenshot 1" loading="lazy"></a>
           <a href="img/game-minigames-02-b.webp" target="_blank" rel="noreferrer"><img src="img/game-minigames-02-b.webp" alt="Sudoku screenshot 2" loading="lazy"></a>
         </div>
+        <figcaption>fig. sudoku — backtracking solver (click to open)</figcaption>
       </figure>
-      <h4><span class="mk">###</span> 03 &nbsp;Futsal Manager &nbsp;<span class="mk">// Finite State Machine</span></h4>
-      <p>A prototype 4-vs-4 futsal simulation built around a hand-rolled finite state machine in C++ and Raylib. Every player runs its own FSM — idle, chase, dribble, pass, shoot, mark, recover — with a central state manager stepping each agent every frame and driving transitions from ball position, possession, and role. That one system produces the movement, possession changes, and overall match flow.</p>
       <figure>
         <div class="shots">
           <a href="img/game-minigames-03-a.webp" target="_blank" rel="noreferrer"><img src="img/game-minigames-03-a.webp" alt="Futsal Manager screenshot 1" loading="lazy"></a>
           <a href="img/game-minigames-03-b.webp" target="_blank" rel="noreferrer"><img src="img/game-minigames-03-b.webp" alt="Futsal Manager screenshot 2" loading="lazy"></a>
         </div>
+        <figcaption>fig. futsal manager — finite state machine (click to open)</figcaption>
       </figure>
+      <details class="proj" open>
+        <summary><span class="pbox" aria-hidden="true"></span><span class="plabel"></span></summary>
+        <div class="proj-body">
+          <p>A minigame collection built in C++ with Raylib. Rather than one big game, I used it as a sandbox to implement three self-contained games, each exploring a distinct technical problem — pathfinding, constraint solving, and gameplay simulation.</p>
+          <h4><span class="mk">###</span> 01 &nbsp;Maze Escape &nbsp;<span class="mk">// A* Pathfinding</span></h4>
+          <p>A 2D maze-escape game. The player must reach the exit while avoiding roaming enemies that hunt the player using A* pathfinding on the maze grid.</p>
+          <h4><span class="mk">###</span> 02 &nbsp;Sudoku &nbsp;<span class="mk">// Backtracking</span></h4>
+          <p>A playable Sudoku game with puzzle generation and solving driven by a recursive backtracking algorithm that fills and validates the board.</p>
+          <h4><span class="mk">###</span> 03 &nbsp;Futsal Manager &nbsp;<span class="mk">// Finite State Machine</span></h4>
+          <p>A prototype 4-vs-4 futsal simulation built around a hand-rolled finite state machine in C++ and Raylib. Every player runs its own FSM — idle, chase, dribble, pass, shoot, mark, recover — with a central state manager stepping each agent every frame and driving transitions from ball position, possession, and role. That one system produces the movement, possession changes, and overall match flow.</p>
+        </div>
+      </details>
     </section>
 
     <!-- ============================================ -->
@@ -604,6 +770,39 @@
       });
     }, { rootMargin: '0px 0px -78% 0px', threshold: 0 });
     targets.forEach(function (t) { io.observe(t); });
+  })();
+
+  (function () {
+    var projects = document.querySelectorAll('details.proj');
+
+    document.querySelectorAll('.bulk button[data-all]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var open = btn.getAttribute('data-all') === 'open';
+        projects.forEach(function (d) { d.open = open; });
+      });
+    });
+
+    // printing / save-as-PDF: a closed <details> keeps its body out of the
+    // printed page, so expand everything first and put it back afterwards.
+    var saved = null;
+    function expandForPrint() {
+      if (saved) return;
+      saved = [];
+      projects.forEach(function (d) { saved.push(d.open); d.open = true; });
+    }
+    function restoreAfterPrint() {
+      if (!saved) return;
+      projects.forEach(function (d, i) { d.open = saved[i]; });
+      saved = null;
+    }
+    window.addEventListener('beforeprint', expandForPrint);
+    window.addEventListener('afterprint', restoreAfterPrint);
+    if (window.matchMedia) {
+      var mq = window.matchMedia('print');
+      var onChange = function (e) { e.matches ? expandForPrint() : restoreAfterPrint(); };
+      if (mq.addEventListener) mq.addEventListener('change', onChange);
+      else if (mq.addListener) mq.addListener(onChange);
+    }
   })();
 </script>
 </body>
