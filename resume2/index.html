@@ -143,6 +143,24 @@
   }
   .mk { color: var(--mark); font-weight: 400; }
 
+  .proj-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 2px 18px;
+    margin-top: 38px;
+  }
+  .proj-head h3 { margin-top: 0; }
+  .proj-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px 16px;
+    font-size: 12px;
+  }
+  .proj-links a { border-bottom: 1px solid currentColor; padding-bottom: 1px; }
+  .proj-links a.ext::after { content: " \2197"; }
+
   p { margin: 10px 0; }
   p.lead { color: var(--ink2); }
 
@@ -357,13 +375,13 @@
     <div class="toc-h">portfolio.txt</div>
     <a href="#hello">00 &nbsp;Hello</a>
     <a href="#work">01 &nbsp;Work</a>
-    <a href="#p-mathcalc" class="sub">MathCalc</a>
     <a href="#p-igy" class="sub">I.G.Y</a>
     <a href="#p-lostguns" class="sub">LostGuns</a>
-    <a href="#p-hangout-timer" class="sub">Hangout Timer</a>
     <a href="#p-minigames" class="sub">Minigame Collection</a>
     <a href="#p-doctor-water" class="sub">Doctor Water</a>
     <a href="#p-legacy-of-dragons" class="sub">Legacy of Dragons</a>
+    <a href="#p-mathcalc" class="sub">MathCalc</a>
+    <a href="#p-hangout-timer" class="sub">Hangout Timer</a>
     <a href="#about">02 &nbsp;About</a>
     <a href="#education" class="sub">Education</a>
     <a href="#skills" class="sub">Skills</a>
@@ -410,7 +428,7 @@
     <section id="work">
       <h2><span class="mk">#</span> Work</h2>
       <hr class="rule tight" />
-      <p class="lead">7 projects, 2022 — 2026, most recent first. Team-led builds at DigiPen alongside solo builds shipped end to end.</p>
+      <p class="lead">7 projects, 2022 — 2026, grouped by game vs. web work, most recent first within each group.</p>
       <div class="bulk">
         <span>details</span>
         <button type="button" data-all="open">expand all</button>
@@ -418,41 +436,14 @@
         <button type="button" data-all="close">collapse all</button>
       </div>
 
+      <div class="group-label">Game</div>
 
-      <h3 id="p-mathcalc"><span class="mk">##</span> MATHCALC</h3>
-      <div class="meta">
-        <span><i>role</i> Solo Developer</span>
-        <span><i>team</i> Solo</span>
-        <span><i>year</i> Jun &ndash; Sep 2026</span>
-        <span><i>stack</i> React &middot; Vite &middot; Three.js &middot; math.js &middot; KaTeX</span>
+      <div class="proj-head">
+        <h3 id="p-igy"><span class="mk">##</span> I.G.Y — Isometric City-Builder</h3>
+        <div class="proj-links">
+          <a class="ext" href="https://www.youtube.com/watch?v=YwT3yQiEUAY" target="_blank" rel="noreferrer">watch gameplay video</a>
+        </div>
       </div>
-      <figure>
-        <div class="shots">
-          <a href="img/math_main.jpeg" target="_blank" rel="noreferrer"><img src="img/math_main.jpeg" alt="MathCalc — main calculator view" loading="lazy"></a>
-          <a href="img/math_3d.jpeg" target="_blank" rel="noreferrer"><img src="img/math_3d.jpeg" alt="MathCalc — 3D visualization" loading="lazy"></a>
-        </div>
-        <figcaption>fig. mathcalc — main view &amp; 3D visualization (click to open)</figcaption>
-      </figure>
-      <details class="proj" open>
-        <summary><span class="pbox" aria-hidden="true"></span><span class="plabel"></span></summary>
-        <div class="proj-body">
-          <p class="lead">A single-page math toolkit that shows its work. It covers the linear-algebra and calculus operations I kept reaching for during coursework, and renders every intermediate step as a proper formula instead of a final answer.</p>
-          <p>Four calculators — matrix, calculus, vector, and 3D graphics — sharing one step-by-step solver and KaTeX rendering. Full Korean / English toggle across the UI, solution steps, and error messages.</p>
-          <ul>
-            <li>Implemented matrix routines (determinant, inverse, rank, LU, SVD, eigenvalues) with per-row-operation step output</li>
-            <li>Built the calculus engine — derivatives, integrals, limits, Taylor series — on top of math.js with live LaTeX preview</li>
-            <li>Wrote real-time Three.js viewers for the MVP pipeline, lighting/shadow mapping, and vector dot/cross products</li>
-            <li>Added a runtime i18n layer (ko/en) and a responsive layout that re-fits the 3D viewport to any window ratio</li>
-            <li>Cut the initial JS payload 83% — 504&nbsp;KB to 85&nbsp;KB gzip — with route-level code splitting, deferring Three.js, math.js and KaTeX to the routes that actually need them</li>
-            <li>Took the project from first prototype to production build and static deployment on GitHub Pages entirely on my own</li>
-          </ul>
-          <p><a class="ext" href="https://yanghyunw00.github.io/project/calc/" target="_blank" rel="noreferrer">open live app</a> &middot; <a class="ext" href="https://youtu.be/-McA1GMFBq0" target="_blank" rel="noreferrer">watch demo video</a></p>
-        </div>
-      </details>
-
-      <hr class="rule dash" />
-
-      <h3 id="p-igy"><span class="mk">##</span> I.G.Y — Isometric City-Builder</h3>
       <div class="meta">
         <span><i>role</i> Tech Lead</span>
         <span><i>team</i> 7 members</span>
@@ -506,13 +497,17 @@
             <li>Implemented a seven-state NPC agent FSM covering work, rest, gambling, and fire response, driven by A* over terrain with height-based climb costs</li>
             <li>Built 22 simulation managers for population, happiness, taxation, immigration, weather, and disaster events</li>
           </ul>
-          <p><a class="ext" href="https://www.youtube.com/watch?v=YwT3yQiEUAY" target="_blank" rel="noreferrer">watch gameplay video</a></p>
         </div>
       </details>
 
       <hr class="rule dash" />
 
-      <h3 id="p-lostguns"><span class="mk">##</span> LOSTGUNS</h3>
+      <div class="proj-head">
+        <h3 id="p-lostguns"><span class="mk">##</span> LOSTGUNS</h3>
+        <div class="proj-links">
+          <a class="ext" href="https://drive.google.com/file/d/1uJpaqtvoPaB3jTcir9bDRTiLNIbhusbw/view?usp=drive_link" target="_blank" rel="noreferrer">download the build &amp; play</a>
+        </div>
+      </div>
       <div class="meta">
         <span><i>role</i> Solo Developer</span>
         <span><i>team</i> Solo</span>
@@ -537,39 +532,6 @@
             <li>Implemented host/client connection flow and synchronized game state across peers</li>
             <li>Used the project to deepen hands-on understanding of real-time multiplayer architecture</li>
           </ul>
-          <p><a class="ext" href="https://drive.google.com/file/d/1uJpaqtvoPaB3jTcir9bDRTiLNIbhusbw/view?usp=drive_link" target="_blank" rel="noreferrer">download the build &amp; play (Google Drive)</a></p>
-        </div>
-      </details>
-
-      <hr class="rule dash" />
-
-      <h3 id="p-hangout-timer"><span class="mk">##</span> HANGOUT TIMER</h3>
-      <div class="meta">
-        <span><i>role</i> Full-Stack Developer</span>
-        <span><i>team</i> Solo</span>
-        <span><i>year</i> Sep 2025</span>
-        <span><i>stack</i> Web</span>
-      </div>
-      <figure>
-        <div class="shots">
-          <a href="img/gallery-hangout-timer-0.webp" target="_blank" rel="noreferrer"><img src="img/gallery-hangout-timer-0.webp" alt="Hangout Timer screenshot 1" loading="lazy"></a>
-          <a href="img/gallery-hangout-timer-1.webp" target="_blank" rel="noreferrer"><img src="img/gallery-hangout-timer-1.webp" alt="Hangout Timer screenshot 2" loading="lazy"></a>
-          <a href="img/gallery-hangout-timer-2.webp" target="_blank" rel="noreferrer"><img src="img/gallery-hangout-timer-2.webp" alt="Hangout Timer screenshot 3" loading="lazy"></a>
-        </div>
-        <figcaption>fig. hangout-timer — screenshots (click to open)</figcaption>
-      </figure>
-      <details class="proj" open>
-        <summary><span class="pbox" aria-hidden="true"></span><span class="plabel"></span></summary>
-        <div class="proj-body">
-          <p class="lead">At DigiPen Korea, we held a weekly "Hangout" every Tuesday or Wednesday — professors and students stayed late at school, working on our own projects or sharing a meal together. It became some of the most focused, productive time I've ever had, and that memory still means a lot to me. I built this timer to hold onto that feeling, and I still use it today to study while looking back on those hangouts.</p>
-          <p>A web app that turns the Pomodoro technique into a shared activity. Built end-to-end as a full-stack developer, with AI-assisted iteration on UX flows and backend logic.</p>
-          <ul>
-            <li>Designed and built the full stack — frontend, real-time sync, and persistence</li>
-            <li>Implemented shared room logic so friends can join and run a timer together</li>
-            <li>Used Claude and Gemini Pro for rapid prototyping and code review</li>
-            <li>Shipped as a deployable web application used by DigiPen peers</li>
-          </ul>
-          <p><a class="ext" href="https://yanghyunw00.github.io/project/timer/" target="_blank" rel="noreferrer">open live demo</a></p>
         </div>
       </details>
 
@@ -675,6 +637,80 @@
             <li>Directed technical architecture as Tech Lead, coordinating system integration across a team of 4</li>
             <li>Designed and implemented 6 distinct enemy attack patterns, tuning telegraphs, timing, and projectile behavior for each</li>
             <li>Built the player's arsenal of 5 weapons, each with its own fire rate, damage, and projectile pattern</li>
+          </ul>
+        </div>
+      </details>
+
+      <div class="group-label">Web</div>
+
+      <div class="proj-head">
+        <h3 id="p-mathcalc"><span class="mk">##</span> MATHCALC</h3>
+        <div class="proj-links">
+          <a class="ext" href="https://yanghyunw00.github.io/project/calc/" target="_blank" rel="noreferrer">open live app</a>
+          <a class="ext" href="https://youtu.be/-McA1GMFBq0" target="_blank" rel="noreferrer">watch demo video</a>
+        </div>
+      </div>
+      <div class="meta">
+        <span><i>role</i> Solo Developer</span>
+        <span><i>team</i> Solo</span>
+        <span><i>year</i> Jun &ndash; Sep 2026</span>
+        <span><i>stack</i> React &middot; Vite &middot; Three.js &middot; math.js &middot; KaTeX</span>
+      </div>
+      <figure>
+        <div class="shots">
+          <a href="img/math_main.jpeg" target="_blank" rel="noreferrer"><img src="img/math_main.jpeg" alt="MathCalc — main calculator view" loading="lazy"></a>
+          <a href="img/math_3d.jpeg" target="_blank" rel="noreferrer"><img src="img/math_3d.jpeg" alt="MathCalc — 3D visualization" loading="lazy"></a>
+        </div>
+        <figcaption>fig. mathcalc — main view &amp; 3D visualization (click to open)</figcaption>
+      </figure>
+      <details class="proj" open>
+        <summary><span class="pbox" aria-hidden="true"></span><span class="plabel"></span></summary>
+        <div class="proj-body">
+          <p class="lead">A single-page math toolkit that shows its work. It covers the linear-algebra and calculus operations I kept reaching for during coursework, and renders every intermediate step as a proper formula instead of a final answer.</p>
+          <p>Four calculators — matrix, calculus, vector, and 3D graphics — sharing one step-by-step solver and KaTeX rendering. Full Korean / English toggle across the UI, solution steps, and error messages.</p>
+          <ul>
+            <li>Implemented matrix routines (determinant, inverse, rank, LU, SVD, eigenvalues) with per-row-operation step output</li>
+            <li>Built the calculus engine — derivatives, integrals, limits, Taylor series — on top of math.js with live LaTeX preview</li>
+            <li>Wrote real-time Three.js viewers for the MVP pipeline, lighting/shadow mapping, and vector dot/cross products</li>
+            <li>Added a runtime i18n layer (ko/en) and a responsive layout that re-fits the 3D viewport to any window ratio</li>
+            <li>Cut the initial JS payload 83% — 504&nbsp;KB to 85&nbsp;KB gzip — with route-level code splitting, deferring Three.js, math.js and KaTeX to the routes that actually need them</li>
+            <li>Took the project from first prototype to production build and static deployment on GitHub Pages entirely on my own</li>
+          </ul>
+        </div>
+      </details>
+
+      <hr class="rule dash" />
+
+      <div class="proj-head">
+        <h3 id="p-hangout-timer"><span class="mk">##</span> HANGOUT TIMER</h3>
+        <div class="proj-links">
+          <a class="ext" href="https://yanghyunw00.github.io/project/timer/" target="_blank" rel="noreferrer">open live demo</a>
+        </div>
+      </div>
+      <div class="meta">
+        <span><i>role</i> Full-Stack Developer</span>
+        <span><i>team</i> Solo</span>
+        <span><i>year</i> Sep 2025</span>
+        <span><i>stack</i> Web</span>
+      </div>
+      <figure>
+        <div class="shots">
+          <a href="img/gallery-hangout-timer-0.webp" target="_blank" rel="noreferrer"><img src="img/gallery-hangout-timer-0.webp" alt="Hangout Timer screenshot 1" loading="lazy"></a>
+          <a href="img/gallery-hangout-timer-1.webp" target="_blank" rel="noreferrer"><img src="img/gallery-hangout-timer-1.webp" alt="Hangout Timer screenshot 2" loading="lazy"></a>
+          <a href="img/gallery-hangout-timer-2.webp" target="_blank" rel="noreferrer"><img src="img/gallery-hangout-timer-2.webp" alt="Hangout Timer screenshot 3" loading="lazy"></a>
+        </div>
+        <figcaption>fig. hangout-timer — screenshots (click to open)</figcaption>
+      </figure>
+      <details class="proj" open>
+        <summary><span class="pbox" aria-hidden="true"></span><span class="plabel"></span></summary>
+        <div class="proj-body">
+          <p class="lead">At DigiPen Korea, we held a weekly "Hangout" every Tuesday or Wednesday — professors and students stayed late at school, working on our own projects or sharing a meal together. It became some of the most focused, productive time I've ever had, and that memory still means a lot to me. I built this timer to hold onto that feeling, and I still use it today to study while looking back on those hangouts.</p>
+          <p>A web app that turns the Pomodoro technique into a shared activity. Built end-to-end as a full-stack developer, with AI-assisted iteration on UX flows and backend logic.</p>
+          <ul>
+            <li>Designed and built the full stack — frontend, real-time sync, and persistence</li>
+            <li>Implemented shared room logic so friends can join and run a timer together</li>
+            <li>Used Claude and Gemini Pro for rapid prototyping and code review</li>
+            <li>Shipped as a deployable web application used by DigiPen peers</li>
           </ul>
         </div>
       </details>
