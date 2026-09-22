@@ -1,0 +1,54 @@
+IGY - GAME PRESS KIT
+===================
+
+1. QUICK FACTS
+--------------
+* Game Name: IGY
+* Genre: City Builder / Simulation
+* Developer: Futsal Manager 2025/2026
+* Platforms: Windows, Linux, Web
+* Development Stage: Active Development (Milestone 7)
+* Target System Requirements:
+  - OS: Windows 10/11 (64-bit)
+  - CPU: Intel i5 or equivalent
+  - RAM: 8GB
+  - GPU: OpenGL 3.3 compatible
+
+2. DESCRIPTION & CORE GAMEPLAY EXPERIENCE
+-----------------------------------------
+Elevator Pitch: I.G.Y. is a city builder game where you take on the role of mayor, balancing your citizens' happiness against your city's finances.
+
+I.G.Y. is a city builder game where you take on the role of mayor, balancing your citizens' happiness against your city's finances. Far from a passive building sandbox, the game demands tactical planning of infrastructure, road networks, and zoning layouts. Your main objective is to balance industrial expansion with ecological stability and resident satisfaction.
+Gameplay centers around a delicate balancing act: industrial and commercial sectors generate critical revenue but emit debilitating noise pollution that erodes nearby residential happiness. To counter this, players must strategically incorporate green spaces, parks, and quiet zones, keeping commutes short and the city grid efficient.
+
+3. HOW TO PLAY
+--------------
+Players design the city grid by planning road networks, infrastructure, and zoning layouts. Balance industrial and commercial growth with residential zones, and build public gardens to offset noise pollution. Keep commutes short and the city grid efficient, while monitoring citizen needs (hunger, fatigue, happiness) and navigating terrain elevation.
+
+4. KEY FEATURES
+---------------
+* Simulated Citizen Behavior: Residents monitor real-time needs including hunger, fatigue, and happiness, establishing dynamic work-life-sleep cycles.
+* True Isometric Elevation: Build on complex terrain featuring multi-layered verticality and spatial height restrictions.
+* Environmental & Pollution Mechanics: Strategic optimization required to offset industrial noise pollution with public gardens.
+* High-Friction UX Tools: Seamless drag-and-place functionality for road construction alongside instant visual validation (Green/Red feedback cursor).
+
+5. TECHNICAL & ARCHITECTURAL HIGHLIGHTS
+----------------------------------------
+* GPU-Based Color Picking: To support pixel-perfect selection on multi-layered isometric tiles, coordinates are encoded into an off-screen RGB frame buffer, resolving selection checks in efficient O(1) time complexity.
+* Proprietary DokeV Engine: A custom OpenGL-based engine built on a strict, 5-layered decoupled architecture, completely isolating heavy simulation loops from rendering calls.
+* Real-Time GameWorldEditor: ImGui-integrated toolsets allow rapid data balancing and matrix adjustment without needing source code recompilation.
+
+6. TEAM & DEVELOPER PROFILE
+---------------------------
+IGY is developed by Futsal Manager 2025/2026, a team of dedicated engineering students at DigiPen Institute of Technology:
+* Dongyun Lee – Producer & Timeline Manager
+* Hyunseok Choi – QA Specialist
+* Junseok Lee – Design Lead & Map Architect
+* Youngwoo Lee – Art Lead & Pixel Artist
+* Hyunwoo Yang – Tech Lead
+
+7. CONTACT & CALL TO ACTION
+---------------------------
+* Media Contact: dongyun.lee@studiowantoo.com
+* Project Repository & Website: https://github.com/yanghyunw00/IGY
+* Call to Action: Discover the complexity of urban optimization. Download the IGY playable demo and access full media kits today by visiting our official repository.

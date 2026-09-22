@@ -375,6 +375,7 @@
     <div class="toc-h">portfolio.txt</div>
     <a href="#hello">00 &nbsp;Hello</a>
     <a href="#work">01 &nbsp;Work</a>
+    <a href="#p-futsal-manager" class="sub">Futsal Manager</a>
     <a href="#p-igy" class="sub">I.G.Y</a>
     <a href="#p-lostguns" class="sub">LostGuns</a>
     <a href="#p-minigames" class="sub">Minigame Collection</a>
@@ -428,7 +429,7 @@
     <section id="work">
       <h2><span class="mk">#</span> Work</h2>
       <hr class="rule tight" />
-      <p class="lead">7 projects, 2022 — 2026, grouped by game vs. web work, most recent first within each group.</p>
+      <p class="lead">8 projects, 2022 — 2026, grouped by game vs. web work, most recent first within each group.</p>
       <div class="bulk">
         <span>details</span>
         <button type="button" data-all="open">expand all</button>
@@ -439,9 +440,55 @@
       <div class="group-label">Game</div>
 
       <div class="proj-head">
+        <h3 id="p-futsal-manager"><span class="mk">##</span> FUTSAL MANAGER</h3>
+        <div class="proj-links">
+          <a class="ext" href="https://github.com/yanghyunw00/FutsalManager.git" target="_blank" rel="noreferrer">view source</a>
+        </div>
+      </div>
+      <div class="meta">
+        <span><i>role</i> Solo Developer</span>
+        <span><i>team</i> Solo</span>
+        <span><i>year</i> Sep 2026 &ndash; Present</span>
+        <span><i>stack</i> C++ &middot; Raylib</span>
+      </div>
+      <details class="proj" open>
+        <summary><span class="pbox" aria-hidden="true"></span><span class="plabel"></span></summary>
+        <div class="proj-body">
+          <p>A from-scratch futsal simulation, separate from the Minigame Collection, built around individual player decision-making rather than scripted movement. In active development, picked back up this month.</p>
+          <h4><span class="mk">###</span> Game Structure — State Machine</h4>
+          <ul>
+            <li>Built on a GameState-based state pattern (Title / Settings / Gameplay); Settings is fully wired up (volume, resolution, fullscreen), while GameOver/Win exist only as enum stubs so far</li>
+          </ul>
+          <h4><span class="mk">###</span> Field &amp; Ball</h4>
+          <ul>
+            <li>6&times;3 tile-based pitch with a Goal struct (left/right post, center point) at each end</li>
+            <li>Ball physics driven by velocity and friction with boundary reflection, plus kick/dribble/pass/shoot actions and owner/lastOwner possession tracking</li>
+          </ul>
+          <h4><span class="mk">###</span> Player AI</h4>
+          <ul>
+            <li>Each player runs its own finite state machine — Idle, ChaseBall, TouchBall, ChaseDribble, Pass, Shoot, Support, Wait, ReceiveBall, Reset — driven by a sense-then-act loop that reads ball distance and team possession every frame before choosing a transition</li>
+            <li>Shoot/pass decisions are scored instead of rule-of-thumb: goal distance, shot angle, and pass-lane quality are weighted into a shootScore vs. passScore comparison</li>
+            <li>Pass-lane blocking is computed with vector projection to test whether an opposing player sits in the lane, with debug visualization for it</li>
+          </ul>
+          <h4><span class="mk">###</span> Off-the-Ball Movement — Support Spot Scoring</h4>
+          <p>The part I put the most work into: a grid-based support-position calculator that scores candidate spots on tactical value (proximity to goal), shooting angle, pass-lane quality, space control, distance to the ball/teammates/opponents, and a boundary penalty, then marks spots as taken so players don't stack on the same point.</p>
+          <h4><span class="mk">###</span> Team &amp; Match</h4>
+          <ul>
+            <li>SoccerTeam holds each side's roster, a reference to the opponent, and score; Game checks for the ball crossing either goal line, updates the scoreboard, and resets the pitch after a goal</li>
+            <li>A GameTimeManager controls match time-scale for speeding up or slowing down play</li>
+          </ul>
+          <p>Currently 4-a-side (rosters are sized for 5 but only 4 are active), with the Defend and ReturnToHomeRegion states defined but not yet implemented — no defensive AI yet — and no win/game-over screen.</p>
+        </div>
+      </details>
+
+      <hr class="rule dash" />
+
+      <div class="proj-head">
         <h3 id="p-igy"><span class="mk">##</span> I.G.Y — Isometric City-Builder</h3>
         <div class="proj-links">
-          <a class="ext" href="https://www.youtube.com/watch?v=YwT3yQiEUAY" target="_blank" rel="noreferrer">watch gameplay video</a>
+          <a class="ext" href="https://www.youtube.com/watch?v=YwT3yQiEUAY" target="_blank" rel="noreferrer">watch trailer</a>
+          <a class="ext" href="https://yanghyunw00.github.io/project/IGY_presskit/presskit.html" target="_blank" rel="noreferrer">press kit</a>
+          <a class="ext" href="https://github.com/yanghyunw00/IGY.git" target="_blank" rel="noreferrer">view source</a>
         </div>
       </div>
       <div class="meta">
@@ -512,7 +559,7 @@
         <span><i>role</i> Solo Developer</span>
         <span><i>team</i> Solo</span>
         <span><i>year</i> Jan 2026 — Mar 2026</span>
-        <span><i>stack</i> Unity &middot; C# &middot; Unity Relay</span>
+        <span><i>stack</i> Unity &middot; C# &middot; Netcode for GameObjects &middot; Unity Relay</span>
       </div>
       <figure>
         <div class="shots">
@@ -525,19 +572,34 @@
       <details class="proj" open>
         <summary><span class="pbox" aria-hidden="true"></span><span class="plabel"></span></summary>
         <div class="proj-body">
-          <p>LostGuns is a self-driven copy-study project where I recreated the core mechanics of the mobile game LostGuns in Unity. I pushed it all the way to functional online multiplayer using Unity Relay, letting friends connect and play together. The game features two modes, six different maps, 2 playable characters, and 9 weapons.</p>
+          <p>LostGuns is a self-driven copy-study project where I recreated the core mechanics of the mobile game LostGuns in Unity, pushed all the way to functional online multiplayer over Unity Relay so friends could connect and play together. The game features a pre-match lobby, 4 combat maps, 2 characters sharing a 9-weapon roster, and a Gun Game mode that unlocks each weapon in sequence on kills.</p>
+          <h4><span class="mk">###</span> Networking — NGO + Unity Relay</h4>
           <ul>
-            <li>Recreated core gameplay of the mobile game LostGuns from scratch in Unity</li>
-            <li>Built networked multiplayer using Unity Relay for friend-to-friend sessions</li>
-            <li>Implemented host/client connection flow and synchronized game state across peers</li>
-            <li>Used the project to deepen hands-on understanding of real-time multiplayer architecture</li>
+            <li>Built netcode on Netcode for GameObjects 2.11.1 over Unity Relay, syncing position/rotation, animation state, HP, team, and match/bomb progress through NetworkVariables and [ServerRpc]/[ClientRpc] calls, with a low-level FastBufferWriter channel reserved for chat</li>
+            <li>Split authority by concern: movement is client-authoritative (ClientNetworkTransform, each owner writes its own transform) for responsive controls, while hit registration is fully server-authoritative — HP is a server-write-locked NetworkVariable, and all bullet and melee damage resolves only on the server</li>
+            <li>Cut redundant transform traffic by suppressing NetworkTransform updates below a 0.005 position / 0.01 scale threshold, while disabling interpolation on bullets specifically so hits register instantly instead of lagging behind their travel</li>
+          </ul>
+          <h4><span class="mk">###</span> Lag Compensation — Rewind-Based Hit Registration</h4>
+          <ul>
+            <li>Found that the original hit-scan mixed a fixed rewind offset with both the target's current and rewound positions, so shots could land on hits that looked dodged on the client's screen</li>
+            <li>Rewrote it around a per-shot view delay — RTT/2 plus a two-tick interpolation buffer, clamped to 0.4&nbsp;s — recomputed by the server every FixedUpdate, resolving player hitboxes only against the rewound position while static geometry like walls still raycasts against the current position, and extended the position-history buffer from 0.5&nbsp;s to 1&nbsp;s to support it</li>
+            <li>Unified melee attacks onto the same rewind path, and designed grenades — a delayed-area attack — to rewind against the victim's own screen state instead, separating aimed-attack and timed-attack fairness into two distinct resolution models</li>
+          </ul>
+          <h4><span class="mk">###</span> Session Flow</h4>
+          <ul>
+            <li>Built the join flow on UGS anonymous auth plus PlayFab, with the host creating a Relay allocation and join code and clients joining directly with it, then routing through a dedicated Plaza lobby scene where teams ready up before picking a map</li>
           </ul>
         </div>
       </details>
 
       <hr class="rule dash" />
 
-      <h3 id="p-minigames"><span class="mk">##</span> MINIGAME COLLECTION</h3>
+      <div class="proj-head">
+        <h3 id="p-minigames"><span class="mk">##</span> MINIGAME COLLECTION</h3>
+        <div class="proj-links">
+          <a class="ext" href="https://github.com/yanghyunw00/MiniGame.git" target="_blank" rel="noreferrer">view source</a>
+        </div>
+      </div>
       <div class="meta">
         <span><i>role</i> Solo Developer</span>
         <span><i>team</i> Solo</span>
@@ -546,10 +608,10 @@
       </div>
       <figure>
         <div class="shots">
-          <a href="img/game-minigames-01-a.webp" target="_blank" rel="noreferrer"><img src="img/game-minigames-01-a.webp" alt="Maze Escape screenshot 1" loading="lazy"></a>
-          <a href="img/game-minigames-01-b.webp" target="_blank" rel="noreferrer"><img src="img/game-minigames-01-b.webp" alt="Maze Escape screenshot 2" loading="lazy"></a>
+          <a href="img/game-minigames-01-a.webp" target="_blank" rel="noreferrer"><img src="img/game-minigames-01-a.webp" alt="Shooter screenshot 1" loading="lazy"></a>
+          <a href="img/game-minigames-01-b.webp" target="_blank" rel="noreferrer"><img src="img/game-minigames-01-b.webp" alt="Shooter screenshot 2" loading="lazy"></a>
         </div>
-        <figcaption>fig. maze escape — A* pathfinding (click to open)</figcaption>
+        <figcaption>fig. shooter — flow field pathfinding (click to open)</figcaption>
       </figure>
       <figure>
         <div class="shots">
@@ -558,31 +620,36 @@
         </div>
         <figcaption>fig. sudoku — backtracking solver (click to open)</figcaption>
       </figure>
-      <figure>
-        <div class="shots">
-          <a href="img/game-minigames-03-a.webp" target="_blank" rel="noreferrer"><img src="img/game-minigames-03-a.webp" alt="Futsal Manager screenshot 1" loading="lazy"></a>
-          <a href="img/game-minigames-03-b.webp" target="_blank" rel="noreferrer"><img src="img/game-minigames-03-b.webp" alt="Futsal Manager screenshot 2" loading="lazy"></a>
-        </div>
-        <figcaption>fig. futsal manager — finite state machine (click to open)</figcaption>
-      </figure>
       <details class="proj" open>
         <summary><span class="pbox" aria-hidden="true"></span><span class="plabel"></span></summary>
         <div class="proj-body">
-          <p>A minigame collection built in C++ with Raylib. Rather than one big game, I used it as a sandbox to implement three self-contained games, each exploring a distinct technical problem — pathfinding, constraint solving, and gameplay simulation.</p>
-          <h4><span class="mk">###</span> 01 &nbsp;Maze Escape &nbsp;<span class="mk">// A* Pathfinding</span></h4>
-          <p>A 2D maze-escape game. The player must reach the exit while avoiding roaming enemies that hunt the player using A* pathfinding on the maze grid.</p>
+          <p>A minigame collection built in C++ with Raylib. Rather than one big game, I used it as a sandbox to implement two self-contained games, each exploring a distinct technical problem — pathfinding at scale and constraint solving.</p>
+          <h4><span class="mk">###</span> 01 &nbsp;Shooter &nbsp;<span class="mk">// A* + Flow Field</span></h4>
+          <p>A top-down shooter on a procedurally generated 40&times;40 tile grid — tiles are randomized and the map is regenerated until an A* check confirms a path exists corner to corner. The player aims and fires at the cursor; hitting an enemy scores and removes it, touching one ends the run, and clearing every enemy or reaching the finish tile wins.</p>
+          <ul>
+            <li>Started with each enemy running its own A* search toward the player every time it needed a new tile, which duplicates the same search once per enemy — O(enemies &times; grid) in the worst case</li>
+            <li>Replaced it with a single flow field shared by every enemy: one BFS pass from the player's tile floods a cost value outward to every walkable tile, then each cell's direction is set toward its lowest-cost neighbor — a one-time gradient that turns "find a path" into "read a direction," cutting the per-frame cost to O(grid) regardless of enemy count</li>
+            <li>Enemies that spawn on or next to an obstacle snap to the nearest walkable tile via an 8-directional BFS fallback</li>
+          </ul>
           <h4><span class="mk">###</span> 02 &nbsp;Sudoku &nbsp;<span class="mk">// Backtracking</span></h4>
-          <p>A playable Sudoku game with puzzle generation and solving driven by a recursive backtracking algorithm that fills and validates the board.</p>
-          <h4><span class="mk">###</span> 03 &nbsp;Futsal Manager &nbsp;<span class="mk">// Finite State Machine</span></h4>
-          <p>A prototype 4-vs-4 futsal simulation built around a hand-rolled finite state machine in C++ and Raylib. Every player runs its own FSM — idle, chase, dribble, pass, shoot, mark, recover — with a central state manager stepping each agent every frame and driving transitions from ball position, possession, and role. That one system produces the movement, possession changes, and overall match flow.</p>
+          <p>A playable 9&times;9 Sudoku board with cell selection, same-number highlighting, and a run timer.</p>
+          <ul>
+            <li>Generates a fresh solved board every run with randomized backtracking — shuffling the candidate order at each cell before recursing — then clears 45 cells to produce the puzzle</li>
+            <li>Reuses the same row/column/3&times;3-box constraint check for both generation (rejecting placements that break Sudoku's rules) and win detection (validating the completed board), instead of duplicating that logic</li>
+          </ul>
         </div>
       </details>
 
       <hr class="rule dash" />
 
-      <h3 id="p-doctor-water"><span class="mk">##</span> HELP ME! DOCTOR WATER</h3>
+      <div class="proj-head">
+        <h3 id="p-doctor-water"><span class="mk">##</span> HELP ME! DOCTOR WATER</h3>
+        <div class="proj-links">
+          <a class="ext" href="https://youtu.be/DTHjWs3v4PU" target="_blank" rel="noreferrer">watch gameplay video</a>
+        </div>
+      </div>
       <div class="meta">
-        <span><i>role</i> QA</span>
+        <span><i>role</i> QA &amp; Gameplay Programmer</span>
         <span><i>team</i> 4 members</span>
         <span><i>year</i> 03/2023 — 06/2023</span>
         <span><i>stack</i> C++ &middot; Custom Engine</span>
@@ -599,21 +666,30 @@
         <summary><span class="pbox" aria-hidden="true"></span><span class="plabel"></span></summary>
         <div class="proj-body">
           <p>2D vertical-scrolling escape-action game. Dr. Water climbs a volcano on the verge of eruption, fighting through enemies and boss encounters with an arsenal of weapons. Awarded Microdegree Expo Best Award 2023.</p>
+          <h4><span class="mk">###</span> QA &amp; Playtesting</h4>
           <ul>
             <li>Ensured gameplay quality through systematic playtesting across all stages and bosses</li>
             <li>Identified and documented bugs in enemy behaviour, weapon interactions, and level progression</li>
             <li>Worked closely with engineers to validate fixes and regression tests</li>
+          </ul>
+          <h4><span class="mk">###</span> Gameplay Programming</h4>
+          <ul>
             <li>Implemented boss attack mechanics — multi-phase patterns with distinct telegraphed moves, timed attack sequences, and phase transitions tied to boss health</li>
             <li>Built enemy attack mechanics for regular encounters, including projectile spreads, charge attacks, and spawn/wave behavior</li>
             <li>Implemented the player's 5 weapons, each with its own damage, fire rate, and projectile behavior</li>
-            <li>Won Microdegree Expo Best Award, 2023</li>
           </ul>
+          <p>Won Microdegree Expo Best Award, 2023.</p>
         </div>
       </details>
 
       <hr class="rule dash" />
 
-      <h3 id="p-legacy-of-dragons"><span class="mk">##</span> LEGACY OF DRAGONS</h3>
+      <div class="proj-head">
+        <h3 id="p-legacy-of-dragons"><span class="mk">##</span> LEGACY OF DRAGONS</h3>
+        <div class="proj-links">
+          <a class="ext" href="https://github.com/CheonhoPark-dev/Lagacy_of_Dragon.git" target="_blank" rel="noreferrer">view source</a>
+        </div>
+      </div>
       <div class="meta">
         <span><i>role</i> Tech Lead</span>
         <span><i>team</i> 4 members</span>
@@ -741,8 +817,8 @@
       <h3 id="skills"><span class="mk">##</span> Skills</h3>
       <dl class="kv">
         <div><dt>Languages</dt><dd>C / C++, C#, JavaScript, GLSL, Rust</dd></div>
-        <div><dt>Tools</dt><dd>Unity, Unreal, Vulkan, OpenGL, Linux, GitHub, Perforce</dd></div>
-        <div><dt>Concepts</dt><dd>Data Structures &amp; Algorithms, OOP, Rendering Pipeline</dd></div>
+        <div><dt>Tools</dt><dd>Unity, Unreal, Vulkan, OpenGL, SDL2, Raylib, React, Three.js, Linux, GitHub, Perforce, CMake</dd></div>
+        <div><dt>Concepts</dt><dd>Data Structures &amp; Algorithms, OOP, Rendering Pipeline, GPU Instancing, Pathfinding &amp; AI (A*, FSM), Networking &amp; Multiplayer, Performance Profiling &amp; Optimization</dd></div>
         <div><dt>Soft skills</dt><dd>Teamwork &amp; Collaboration, Problem-Solving, Creativity, Communication, Growth Mindset</dd></div>
       </dl>
 
