@@ -235,6 +235,41 @@
   .shots a:hover img { transform: scale(1.04); }
   figcaption { font-size: 11px; color: var(--ink3); margin-top: 8px; }
 
+  /* featured work — two big tiles, shown right under Hello for immediate impact */
+  .featured {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+    margin-top: 18px;
+  }
+  .featured a { display: block; color: inherit; }
+  .featured-img {
+    aspect-ratio: 4 / 3;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    background: var(--sel);
+  }
+  .featured-img img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+  }
+  .featured a:hover .featured-img img { transform: scale(1.04); }
+  .featured-title {
+    margin-top: 12px;
+    font-weight: 700;
+    font-size: 15px;
+  }
+  .featured-sub {
+    color: var(--ink2);
+    font-size: 12.5px;
+    margin-top: 2px;
+  }
+  @media (max-width: 640px) {
+    .featured { grid-template-columns: 1fr; }
+  }
+
   .foot {
     margin-top: 80px;
     padding-top: 20px;
@@ -374,20 +409,20 @@
   <nav class="toc" aria-label="Table of contents">
     <div class="toc-h">portfolio.txt</div>
     <a href="#hello">00 &nbsp;Hello</a>
-    <a href="#work">01 &nbsp;Work</a>
-    <a href="#p-futsal-manager" class="sub">Futsal Manager</a>
+    <a href="#recent-work">01 &nbsp;Recent Work</a>
+    <a href="#work">02 &nbsp;Work</a>
     <a href="#p-igy" class="sub">I.G.Y</a>
     <a href="#p-lostguns" class="sub">LostGuns</a>
     <a href="#p-minigames" class="sub">Minigame Collection</a>
     <a href="#p-doctor-water" class="sub">Doctor Water</a>
     <a href="#p-legacy-of-dragons" class="sub">Legacy of Dragons</a>
-    <a href="#p-mathcalc" class="sub">MathCalc</a>
+    <a href="#p-mathcalc" class="sub">Graphics Calculator</a>
     <a href="#p-hangout-timer" class="sub">Hangout Timer</a>
-    <a href="#about">02 &nbsp;About</a>
+    <a href="#about">03 &nbsp;About</a>
     <a href="#education" class="sub">Education</a>
     <a href="#skills" class="sub">Skills</a>
     <a href="#leadership" class="sub">Leadership</a>
-    <a href="#contact">03 &nbsp;Contact</a>
+    <a href="#contact">04 &nbsp;Contact</a>
   </nav>
 
   <main>
@@ -426,10 +461,32 @@
     </section>
 
     <!-- ============================================ -->
+    <section id="recent-work">
+      <h2><span class="mk">#</span> Recent Work</h2>
+      <hr class="rule tight" />
+      <div class="featured">
+        <a href="#p-mathcalc">
+          <div class="featured-img">
+            <img src="img/math_main.jpeg" alt="Graphics Calculator — main calculator view" loading="lazy">
+          </div>
+          <div class="featured-title">Graphics Calculator</div>
+          <div class="featured-sub">Step-by-step matrix, calculus, vector &amp; 3D graphics toolkit, built to make Computer Graphics coursework easier</div>
+        </a>
+        <a href="#p-igy">
+          <div class="featured-img">
+            <img src="img/hero-igy.webp" alt="I.G.Y — isometric city-builder" loading="lazy">
+          </div>
+          <div class="featured-title">I.G.Y — Isometric City-Builder</div>
+          <div class="featured-sub">Tech Lead on a 7-person team's custom C++/OpenGL engine — GPU-instanced rendering, A* pathfinding, agent AI</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
     <section id="work">
       <h2><span class="mk">#</span> Work</h2>
       <hr class="rule tight" />
-      <p class="lead">8 projects, 2022 — 2026, grouped by game vs. web work, most recent first within each group.</p>
+      <p class="lead">7 projects, 2022 — 2026, grouped by game vs. web work, most recent first within each group.</p>
       <div class="bulk">
         <span>details</span>
         <button type="button" data-all="open">expand all</button>
@@ -438,50 +495,6 @@
       </div>
 
       <div class="group-label">Game</div>
-
-      <div class="proj-head">
-        <h3 id="p-futsal-manager"><span class="mk">##</span> FUTSAL MANAGER</h3>
-        <div class="proj-links">
-          <a class="ext" href="https://github.com/yanghyunw00/FutsalManager.git" target="_blank" rel="noreferrer">view source</a>
-        </div>
-      </div>
-      <div class="meta">
-        <span><i>role</i> Solo Developer</span>
-        <span><i>team</i> Solo</span>
-        <span><i>year</i> Sep 2026 &ndash; Present</span>
-        <span><i>stack</i> C++ &middot; Raylib</span>
-      </div>
-      <details class="proj" open>
-        <summary><span class="pbox" aria-hidden="true"></span><span class="plabel"></span></summary>
-        <div class="proj-body">
-          <p>A from-scratch futsal simulation, separate from the Minigame Collection, built around individual player decision-making rather than scripted movement. In active development, picked back up this month.</p>
-          <h4><span class="mk">###</span> Game Structure — State Machine</h4>
-          <ul>
-            <li>Built on a GameState-based state pattern (Title / Settings / Gameplay); Settings is fully wired up (volume, resolution, fullscreen), while GameOver/Win exist only as enum stubs so far</li>
-          </ul>
-          <h4><span class="mk">###</span> Field &amp; Ball</h4>
-          <ul>
-            <li>6&times;3 tile-based pitch with a Goal struct (left/right post, center point) at each end</li>
-            <li>Ball physics driven by velocity and friction with boundary reflection, plus kick/dribble/pass/shoot actions and owner/lastOwner possession tracking</li>
-          </ul>
-          <h4><span class="mk">###</span> Player AI</h4>
-          <ul>
-            <li>Each player runs its own finite state machine — Idle, ChaseBall, TouchBall, ChaseDribble, Pass, Shoot, Support, Wait, ReceiveBall, Reset — driven by a sense-then-act loop that reads ball distance and team possession every frame before choosing a transition</li>
-            <li>Shoot/pass decisions are scored instead of rule-of-thumb: goal distance, shot angle, and pass-lane quality are weighted into a shootScore vs. passScore comparison</li>
-            <li>Pass-lane blocking is computed with vector projection to test whether an opposing player sits in the lane, with debug visualization for it</li>
-          </ul>
-          <h4><span class="mk">###</span> Off-the-Ball Movement — Support Spot Scoring</h4>
-          <p>The part I put the most work into: a grid-based support-position calculator that scores candidate spots on tactical value (proximity to goal), shooting angle, pass-lane quality, space control, distance to the ball/teammates/opponents, and a boundary penalty, then marks spots as taken so players don't stack on the same point.</p>
-          <h4><span class="mk">###</span> Team &amp; Match</h4>
-          <ul>
-            <li>SoccerTeam holds each side's roster, a reference to the opponent, and score; Game checks for the ball crossing either goal line, updates the scoreboard, and resets the pitch after a goal</li>
-            <li>A GameTimeManager controls match time-scale for speeding up or slowing down play</li>
-          </ul>
-          <p>Currently 4-a-side (rosters are sized for 5 but only 4 are active), with the Defend and ReturnToHomeRegion states defined but not yet implemented — no defensive AI yet — and no win/game-over screen.</p>
-        </div>
-      </details>
-
-      <hr class="rule dash" />
 
       <div class="proj-head">
         <h3 id="p-igy"><span class="mk">##</span> I.G.Y — Isometric City-Builder</h3>
@@ -720,7 +733,7 @@
       <div class="group-label">Web</div>
 
       <div class="proj-head">
-        <h3 id="p-mathcalc"><span class="mk">##</span> MATHCALC</h3>
+        <h3 id="p-mathcalc"><span class="mk">##</span> GRAPHICS CALCULATOR</h3>
         <div class="proj-links">
           <a class="ext" href="https://yanghyunw00.github.io/project/calc/" target="_blank" rel="noreferrer">open live app</a>
           <a class="ext" href="https://youtu.be/-McA1GMFBq0" target="_blank" rel="noreferrer">watch demo video</a>
@@ -734,15 +747,15 @@
       </div>
       <figure>
         <div class="shots">
-          <a href="img/math_main.jpeg" target="_blank" rel="noreferrer"><img src="img/math_main.jpeg" alt="MathCalc — main calculator view" loading="lazy"></a>
-          <a href="img/math_3d.jpeg" target="_blank" rel="noreferrer"><img src="img/math_3d.jpeg" alt="MathCalc — 3D visualization" loading="lazy"></a>
+          <a href="img/math_main.jpeg" target="_blank" rel="noreferrer"><img src="img/math_main.jpeg" alt="Graphics Calculator — main calculator view" loading="lazy"></a>
+          <a href="img/math_3d.jpeg" target="_blank" rel="noreferrer"><img src="img/math_3d.jpeg" alt="Graphics Calculator — 3D visualization" loading="lazy"></a>
         </div>
-        <figcaption>fig. mathcalc — main view &amp; 3D visualization (click to open)</figcaption>
+        <figcaption>fig. graphics calculator — main view &amp; 3D visualization (click to open)</figcaption>
       </figure>
       <details class="proj" open>
         <summary><span class="pbox" aria-hidden="true"></span><span class="plabel"></span></summary>
         <div class="proj-body">
-          <p class="lead">A single-page math toolkit that shows its work. It covers the linear-algebra and calculus operations I kept reaching for during coursework, and renders every intermediate step as a proper formula instead of a final answer.</p>
+          <p class="lead">A single-page math toolkit that shows its work, built to make my Computer Graphics coursework easier to get through. It covers the linear-algebra and calculus operations I kept reaching for, and renders every intermediate step as a proper formula instead of a final answer.</p>
           <p>Four calculators — matrix, calculus, vector, and 3D graphics — sharing one step-by-step solver and KaTeX rendering. Full Korean / English toggle across the UI, solution steps, and error messages.</p>
           <ul>
             <li>Implemented matrix routines (determinant, inverse, rank, LU, SVD, eigenvalues) with per-row-operation step output</li>
