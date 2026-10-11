@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Depth Buffer &amp; Post-Processing Pipeline — Hyunwoo Yang</title>
+<meta name="description" content="DigiPen CS200 Computer Graphics I — depth buffer rendering and a chained post-processing pipeline in C++/OpenGL/ImGui, with a live demo." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:      #F4F2ED;
+    --ink:     #14120E;
+    --ink2:    #45423B;
+    --ink3:    #837D71;
+    --accent:  #C8451A;
+    --border:  rgba(20,18,14,0.16);
+    --rule:    rgba(20,18,14,0.30);
+    --mark:    #A79A82;
+    --sel:     #E3DDCE;
+  }
+
+  html { font-size: 15px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Space Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+    line-height: 1.6;
+    letter-spacing: -0.02em;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: var(--accent); text-decoration: none; }
+
+  .wrap { max-width: 760px; margin: 0 auto; padding: 60px 28px 120px; }
+
+  .back { display: inline-block; color: var(--ink3); border-bottom: 1px solid currentColor; font-size: 12.5px; }
+  .back:hover { color: var(--ink); }
+
+  .crumb { color: var(--ink3); font-size: 12px; margin-top: 22px; }
+
+  .rule { border: 0; border-top: 1px solid var(--rule); margin: 22px 0 34px; }
+  .rule.tight { margin: 18px 0 26px; }
+
+  h1 { font-size: 24px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.25; margin-top: 6px; }
+  .tagline { color: var(--ink2); margin-top: 4px; font-size: 13.5px; }
+  .mk { color: var(--mark); font-weight: 400; }
+
+  h2 { font-size: 16px; font-weight: 700; letter-spacing: -0.01em; margin-top: 38px; margin-bottom: 4px; }
+
+  .meta {
+    display: flex; flex-wrap: wrap; gap: 3px 26px;
+    font-size: 12px; color: var(--ink2); margin: 16px 0 6px;
+  }
+  .meta span { display: inline-flex; gap: 8px; }
+  .meta i { color: var(--ink3); font-style: normal; }
+  .meta i::after { content: ":"; }
+
+  p { margin: 10px 0; }
+  p.lead { color: var(--ink2); }
+
+  ul { list-style: none; margin: 12px 0; }
+  li { position: relative; padding-left: 20px; margin: 5px 0; }
+  li::before { content: "\2013"; position: absolute; left: 0; color: var(--mark); }
+  li > ul { margin: 6px 0 2px 20px; }
+
+  .demo-frame {
+    margin-top: 10px;
+    border: 1px solid var(--border);
+    background: var(--sel);
+    overflow: hidden;
+  }
+  .demo-frame iframe {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border: none;
+  }
+  .demo-note { color: var(--ink3); font-size: 11.5px; margin-top: 8px; }
+
+  .foot {
+    margin-top: 60px;
+    padding-top: 20px;
+    border-top: 1px solid var(--rule);
+    font-size: 11.5px;
+    color: var(--ink3);
+  }
+
+  @media (max-width: 640px) {
+    .wrap { padding: 40px 20px 90px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a class="back" href="../index.html#work">&larr; back to portfolio</a>
+  <div class="crumb">yanghyunw00.github.io / portfolio.txt / academic / post-processing.txt</div>
+
+  <h1>Depth Buffer &amp; Post-Processing Pipeline</h1>
+  <div class="tagline">DigiPen CS200 Computer Graphics I</div>
+  <div class="meta">
+    <span><i>course</i> DigiPen CS200</span>
+    <span><i>stack</i> C++ &middot; OpenGL &middot; ImGui</span>
+  </div>
+
+  <h2><span class="mk">#</span> Overview</h2>
+  <hr class="rule tight" />
+  <p class="lead">This assignment is a from-scratch project (no starter code) implementing depth buffer rendering and a multi-stage post-processing pipeline over a custom 2D diorama scene. Opaque and transparent objects are rendered with different depth-test rules, the scene is rendered into an MSAA offscreen framebuffer, and a chain of full-screen shader passes applies gamma correction, chromatic aberration, sharpening, and a distance-based dilation (bloom-like) effect.</p>
+
+  <h2><span class="mk">#</span> Tasks Completed</h2>
+  <hr class="rule tight" />
+  <ul>
+    <li>Implemented a draw-order system for opaque objects in DrawOpaqueObjects() (DemoScene.cpp) that collects water/terrain/seaweed/fish quads into a vector and reorders them across three selectable modes — Front-to-Back (ascending), Back-to-Front (descending), and Random (std::mt19937 shuffle) — toggled live via ImGui radio buttons for side-by-side comparison.</li>
+    <li>Implemented depth-tested opaque rendering by enabling GL_DEPTH_TEST / glDepthFunc(GL_LESS) and glDepthMask(GL_TRUE), passing each quad's depth value through an aDepth vertex attribute so instanced.vert writes it directly to gl_Position.z (instanced-renderer based).</li>
+    <li>Implemented painter's-algorithm transparent rendering in DrawTransparentObjects() — every frame, bubble objects (alpha &asymp; 0.7, 0xFFFFFFB2) are sorted back-to-front by depth with std::sort, then drawn with GL_SRC_ALPHA / GL_ONE_MINUS_SRC_ALPHA blending under glDepthMask(GL_FALSE) + glDepthFunc(GL_LESS).</li>
+    <li>Implemented an MSAA offscreen render target (OffscreenFramebuffer) as two FBOs — a multisampled renderbuffer FBO (glRenderbufferStorageMultisample, configurable up to GL_MAX_SAMPLES in 2&times;/4&times;/8&times;... steps) and a resolve FBO with an RGBA8 color texture plus a DEPTH_COMPONENT24 texture — resolving MSAA into a regular texture every frame via glBlitFramebuffer.</li>
+    <li>Implemented a modular post-processing pipeline (PostProcessingPipeline) where each PostProcessingEffect owns its own framebuffer and draws a 3-vertex full-screen triangle, chaining one effect's output texture into the next effect's input in a ping-pong structure.</li>
+    <li>Implemented four post-processing shaders:
+      <ul>
+        <li>Gamma Correction — pow(color.rgb, vec3(uGamma)) (default 2.2), placed last in the chain.</li>
+        <li>Chromatic Aberration — offsets the UV per R/G/B channel (0.009 / 0.006 / &minus;0.006) along the direction vector from a focus point, with focus X/Y adjustable via ImGui sliders (0&ndash;1).</li>
+        <li>Sharpen — a 5-tap convolution kernel (center weight amount&times;4+1, neighbor weight &minus;amount, amount=0.8) implementing unsharp masking.</li>
+        <li>Dilation (bloom-like spread) — scans a circular neighborhood (distance &le; size) for the sample with the highest luminance (dot(rgb, vec3(0.3, 0.59, 0.11))), then blends it with the original via smoothstep(0.2, 0.5, maxLuma), with radius/step controlled by ImGui sliders (0&ndash;10).</li>
+      </ul>
+    </li>
+    <li>Implemented the ImGui control panel — draw-order radio buttons, an FPS counter (util::FPS), a draw-call counter, an MSAA on/off checkbox with a sample-count combo box (a power-of-two list built from GL_MAX_SAMPLES), per-effect enable checkboxes, and per-effect parameter sliders (gamma 0.5&ndash;4.0, chromatic aberration focus 0&ndash;1, dilation parameters 0&ndash;10).</li>
+    <li>Designed a 2D underwater diorama scene (DemoScene) — a 100&times;30 tile sand/background grid, 100 seaweed decorations, fish sprites scalable from 500 up to 50,000 (randomly placed with depth in [-1, 1]), and up to 10,000 swaying bubble particles — sized so the depth-sort performance difference is noticeable at 5,000+ objects with VSync off.</li>
+  </ul>
+
+  <h2><span class="mk">#</span> Reflection</h2>
+  <hr class="rule tight" />
+  <p>Previous assignments always came with starter code, but this one required designing framebuffer management, depth/blend state transitions, and the post-processing chaining structure entirely from scratch, so the harder question was less "what to build" and more "how to keep the state from breaking." In particular, it took time to understand why the opaque pass writes depth with glDepthMask(GL_TRUE), while the transparent pass turns depth writes off with glDepthMask(GL_FALSE) but keeps depth testing on — transparent objects need to be occluded by already-drawn opaque objects, but must not corrupt the depth buffer against each other. Resolving an MSAA framebuffer into a regular texture (glBlitFramebuffer), and chaining one post-processing effect's output into the next effect's input through a ping-pong framebuffer structure, were both concepts I was handling for the first time and made debugging tricky — but isolating each stage and displaying its texture directly on screen to verify it made the whole pipeline's flow clear.</p>
+
+  <h2><span class="mk">#</span> Demo</h2>
+  <hr class="rule tight" />
+  <div class="demo-frame">
+    <iframe src="cs200_fun.html" title="Post Processing live demo" loading="lazy"></iframe>
+  </div>
+  <p class="demo-note">Live WebAssembly build — interact with it directly in the frame above.</p>
+
+  <div class="foot">
+    <a class="back" href="../index.html#work">&larr; back to portfolio</a>
+  </div>
+
+</div>
+</body>
+</html>
