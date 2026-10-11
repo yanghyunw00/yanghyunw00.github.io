@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Gradient Noise — Hyunwoo Yang</title>
+<meta name="description" content="DigiPen CS250 Computer Graphics — Perlin gradient noise in GLSL, with a live demo." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:      #F4F2ED;
+    --ink:     #14120E;
+    --ink2:    #45423B;
+    --ink3:    #837D71;
+    --accent:  #C8451A;
+    --border:  rgba(20,18,14,0.16);
+    --rule:    rgba(20,18,14,0.30);
+    --mark:    #A79A82;
+    --sel:     #E3DDCE;
+  }
+
+  html { font-size: 15px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Space Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+    line-height: 1.6;
+    letter-spacing: -0.02em;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: var(--accent); text-decoration: none; }
+
+  .wrap { max-width: 760px; margin: 0 auto; padding: 60px 28px 120px; }
+
+  .back { display: inline-block; color: var(--ink3); border-bottom: 1px solid currentColor; font-size: 12.5px; }
+  .back:hover { color: var(--ink); }
+
+  .crumb { color: var(--ink3); font-size: 12px; margin-top: 22px; }
+
+  .rule { border: 0; border-top: 1px solid var(--rule); margin: 22px 0 34px; }
+  .rule.tight { margin: 18px 0 26px; }
+
+  h1 { font-size: 24px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.25; margin-top: 6px; }
+  .tagline { color: var(--ink2); margin-top: 4px; font-size: 13.5px; }
+  .mk { color: var(--mark); font-weight: 400; }
+
+  h2 { font-size: 16px; font-weight: 700; letter-spacing: -0.01em; margin-top: 38px; margin-bottom: 4px; }
+
+  .meta {
+    display: flex; flex-wrap: wrap; gap: 3px 26px;
+    font-size: 12px; color: var(--ink2); margin: 16px 0 6px;
+  }
+  .meta span { display: inline-flex; gap: 8px; }
+  .meta i { color: var(--ink3); font-style: normal; }
+  .meta i::after { content: ":"; }
+
+  p { margin: 10px 0; }
+  p.lead { color: var(--ink2); }
+
+  ul { list-style: none; margin: 12px 0; }
+  li { position: relative; padding-left: 20px; margin: 5px 0; }
+  li::before { content: "\2013"; position: absolute; left: 0; color: var(--mark); }
+
+  .demo-frame {
+    margin-top: 10px;
+    border: 1px solid var(--border);
+    background: var(--sel);
+    overflow: hidden;
+  }
+  .demo-frame iframe {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border: none;
+  }
+  .demo-note { color: var(--ink3); font-size: 11.5px; margin-top: 8px; }
+
+  .foot {
+    margin-top: 60px;
+    padding-top: 20px;
+    border-top: 1px solid var(--rule);
+    font-size: 11.5px;
+    color: var(--ink3);
+  }
+
+  @media (max-width: 640px) {
+    .wrap { padding: 40px 20px 90px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a class="back" href="../index.html#work">&larr; back to portfolio</a>
+  <div class="crumb">yanghyunw00.github.io / portfolio.txt / academic / gradient-noise.txt</div>
+
+  <h1>Gradient Noise</h1>
+  <div class="tagline">DigiPen CS250 Computer Graphics</div>
+  <div class="meta">
+    <span><i>course</i> DigiPen CS250</span>
+    <span><i>stack</i> C++ &middot; OpenGL &middot; GLSL</span>
+  </div>
+
+  <h2><span class="mk">#</span> Overview</h2>
+  <hr class="rule tight" />
+  <p class="lead">This assignment implements Improved 3D Perlin Gradient Noise entirely in GLSL, rendering a 2D slice of the noise into an offscreen R32F framebuffer which is then visualized either as a screen-space textured quad or as a height-displaced 3D surface. Unlike value noise, gradient noise assigns one of 12 fixed direction vectors to each lattice point and dots them against the offset vectors, then blends the results with a quintic fade curve to eliminate derivative discontinuities at grid boundaries.</p>
+
+  <h2><span class="mk">#</span> Tasks Completed</h2>
+  <hr class="rule tight" />
+  <ul>
+    <li>Extended Texture and Framebuffer to support configurable color formats (RGBA8, RGBA32F, R32F) so the noise framebuffer can store raw floating point values.</li>
+    <li>Implemented gen_gradient_noise.frag with a hardcoded permutation table and 12 fixed gradient vectors; the hash folds x, y, z coordinates through cascading permutation lookups, then trilinearly interpolates eight corner dot-products.</li>
+    <li>Implemented five noise patterns: Plain Gradient, Fractal Sum, Turbulence (absolute-value layering), Marble (cosine wave distorted by turbulence), and Wood (fractional repetition of scaled gradient noise).</li>
+    <li>Implemented surface.vert to displace a plane mesh in the z direction by sampling the noise texture and reused simple.frag to color the surface with the same noise values.</li>
+  </ul>
+
+  <h2><span class="mk">#</span> Reflection</h2>
+  <hr class="rule tight" />
+  <p>The biggest conceptual shift from value noise was moving the noise computation onto the GPU and working with gradient vectors instead of random scalar values. Understanding why exactly 12 directions are used took time, and it was not obvious at first why using more directions would not simply be better. The quintic fade curve was also new — linear interpolation produced visible grid artifacts, and seeing them disappear after switching to the 6t&#8309; - 15t&#8308; + 10t&#179; formula made the math feel concrete. Rendering into an R32F framebuffer instead of uploading CPU data each frame was a cleaner approach overall, and seeing the marble and turbulence patterns emerge from just sign and modulation changes on the same underlying noise was satisfying.</p>
+
+  <h2><span class="mk">#</span> Demo</h2>
+  <hr class="rule tight" />
+  <div class="demo-frame">
+    <iframe src="../../resume/project/hw5/index.html?start=gradient" title="Gradient Noise live demo" loading="lazy"></iframe>
+  </div>
+  <p class="demo-note">Live WebAssembly build — interact with it directly in the frame above.</p>
+
+  <div class="foot">
+    <a class="back" href="../index.html#work">&larr; back to portfolio</a>
+  </div>
+
+</div>
+</body>
+</html>

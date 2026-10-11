@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Procedural Geometric Modeling — Hyunwoo Yang</title>
+<meta name="description" content="DigiPen CS250 Computer Graphics — procedural mesh generation in C++/OpenGL, with a live demo." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:      #F4F2ED;
+    --ink:     #14120E;
+    --ink2:    #45423B;
+    --ink3:    #837D71;
+    --accent:  #C8451A;
+    --border:  rgba(20,18,14,0.16);
+    --rule:    rgba(20,18,14,0.30);
+    --mark:    #A79A82;
+    --sel:     #E3DDCE;
+  }
+
+  html { font-size: 15px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Space Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+    line-height: 1.6;
+    letter-spacing: -0.02em;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: var(--accent); text-decoration: none; }
+
+  .wrap { max-width: 760px; margin: 0 auto; padding: 60px 28px 120px; }
+
+  .back { display: inline-block; color: var(--ink3); border-bottom: 1px solid currentColor; font-size: 12.5px; }
+  .back:hover { color: var(--ink); }
+
+  .crumb { color: var(--ink3); font-size: 12px; margin-top: 22px; }
+
+  .rule { border: 0; border-top: 1px solid var(--rule); margin: 22px 0 34px; }
+  .rule.tight { margin: 18px 0 26px; }
+
+  h1 { font-size: 24px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.25; margin-top: 6px; }
+  .tagline { color: var(--ink2); margin-top: 4px; font-size: 13.5px; }
+  .mk { color: var(--mark); font-weight: 400; }
+
+  h2 { font-size: 16px; font-weight: 700; letter-spacing: -0.01em; margin-top: 38px; margin-bottom: 4px; }
+
+  .meta {
+    display: flex; flex-wrap: wrap; gap: 3px 26px;
+    font-size: 12px; color: var(--ink2); margin: 16px 0 6px;
+  }
+  .meta span { display: inline-flex; gap: 8px; }
+  .meta i { color: var(--ink3); font-style: normal; }
+  .meta i::after { content: ":"; }
+
+  p { margin: 10px 0; }
+  p.lead { color: var(--ink2); }
+
+  ul { list-style: none; margin: 12px 0; }
+  li { position: relative; padding-left: 20px; margin: 5px 0; }
+  li::before { content: "\2013"; position: absolute; left: 0; color: var(--mark); }
+
+  .demo-frame {
+    margin-top: 10px;
+    border: 1px solid var(--border);
+    background: var(--sel);
+    overflow: hidden;
+  }
+  .demo-frame iframe {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border: none;
+  }
+  .demo-note { color: var(--ink3); font-size: 11.5px; margin-top: 8px; }
+
+  .foot {
+    margin-top: 60px;
+    padding-top: 20px;
+    border-top: 1px solid var(--rule);
+    font-size: 11.5px;
+    color: var(--ink3);
+  }
+
+  @media (max-width: 640px) {
+    .wrap { padding: 40px 20px 90px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a class="back" href="../index.html#work">&larr; back to portfolio</a>
+  <div class="crumb">yanghyunw00.github.io / portfolio.txt / academic / meshes.txt</div>
+
+  <h1>Procedural Geometric Modeling</h1>
+  <div class="tagline">Meshes &middot; DigiPen CS250 Computer Graphics</div>
+  <div class="meta">
+    <span><i>course</i> DigiPen CS250</span>
+    <span><i>stack</i> C++ &middot; OpenGL</span>
+  </div>
+
+  <h2><span class="mk">#</span> Overview</h2>
+  <hr class="rule tight" />
+  <p class="lead">This assignment implements procedural mesh generation in C++ to render multiple 3D shapes using OpenGL. The core mesh building logic was written from scratch in Mesh.cpp, generating vertex and index data for a plane, cube, sphere, torus, cylinder, and cone. Each shape supports three rendering modes: textured, wireframe, and normal visualization, all driven by a shared index buffer pattern.</p>
+
+  <h2><span class="mk">#</span> Tasks Completed</h2>
+  <hr class="rule tight" />
+  <ul>
+    <li>Implemented create_plane_vertices() to generate a grid of vertices with correct position, normal, and UV coordinates by iterating over stacks and slices.</li>
+    <li>Implemented build_index_buffer() to produce triangle indices by splitting each quad into two triangles using a stride based pointer system.</li>
+    <li>Implemented convert_to_lines_pattern() to convert triangle indices into line indices for wireframe rendering.</li>
+    <li>Implemented all six 3D shapes — Plane, Cube, Sphere, Torus, Cylinder, and Cone. Implemented add_cap() to handle the top and bottom caps of the cylinder and cone.</li>
+  </ul>
+
+  <h2><span class="mk">#</span> Reflection</h2>
+  <hr class="rule tight" />
+  <p>This assignment taught me how 3D geometry is built procedurally from mathematical patterns. The most challenging part was convert_to_lines_pattern() where understanding how a group of 6 indices maps to 4 edges for wireframe rendering required careful thought. Rather than blindly following the pattern, working through each pointer index manually made the logic click. Seeing the same index buffer reused across the sphere, torus, cylinder, and cone also reinforced how powerful a single well-designed function can be.</p>
+
+  <h2><span class="mk">#</span> Demo</h2>
+  <hr class="rule tight" />
+  <div class="demo-frame">
+    <iframe src="../../resume/project/hw2/index.html?start=meshes" title="Procedural Geometric Modeling live demo" loading="lazy"></iframe>
+  </div>
+  <p class="demo-note">Live WebAssembly build — interact with it directly in the frame above.</p>
+
+  <div class="foot">
+    <a class="back" href="../index.html#work">&larr; back to portfolio</a>
+  </div>
+
+</div>
+</body>
+</html>
