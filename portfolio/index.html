@@ -81,6 +81,24 @@
   }
   .toc a.sub { padding-left: 26px; font-size: 11.5px; }
   .toc a:hover { color: var(--ink); }
+
+  .toc-item { display: flex; align-items: center; }
+  .toc-item > a { flex: 1 1 auto; min-width: 0; }
+  .toc-toggle {
+    flex: 0 0 auto;
+    background: none;
+    border: 0;
+    color: var(--ink3);
+    font-size: 10px;
+    cursor: pointer;
+    padding: 2px 8px;
+    line-height: 1;
+    font-family: inherit;
+  }
+  .toc-toggle:hover { color: var(--ink); }
+  .toc-toggle::before { content: "\2212"; }
+  .toc-toggle[aria-expanded="false"]::before { content: "+"; }
+  .toc-subgroup.collapsed { display: none; }
   .toc a.active {
     color: var(--accent);
     border-left-color: var(--accent);
@@ -464,11 +482,6 @@
     <a href="#p-mathcalc" class="sub">Graphics Calculator</a>
     <a href="#p-hangout-timer" class="sub">Hangout Timer</a>
     <a href="#academic" class="sub">Graphics Work (Academic)</a>
-    <a href="#p-meshes" class="sub">Meshes</a>
-    <a href="#p-shadow" class="sub">Shadow Mapping</a>
-    <a href="#p-value-noise" class="sub">Value Noise</a>
-    <a href="#p-gradient-noise" class="sub">Gradient Noise</a>
-    <a href="#p-post-processing" class="sub">Post Processing</a>
     <a href="#about">03 &nbsp;About</a>
     <a href="#education" class="sub">Education</a>
     <a href="#skills" class="sub">Skills</a>
@@ -882,7 +895,7 @@
           </div>
           <div class="featured-title">Gradient Noise</div>
         </a>
-        <a href="academic/post-processing.html" id="p-post-processing" style="grid-column: 1 / -1;">
+        <a href="academic/post-processing.html" id="p-post-processing">
           <div class="featured-img">
             <img src="img/academic/post_processing.jpg" alt="Depth Buffer &amp; Post-Processing Pipeline demo" loading="lazy">
           </div>
@@ -966,6 +979,52 @@
 </div>
 
 <script>
+  (function () {
+    // group each top-level TOC entry with the .sub links that follow it,
+    // so the sub-list can be collapsed — expanded by default.
+    var toc = document.querySelector('.toc');
+    var kids = Array.prototype.slice.call(toc.children);
+    var i = 0;
+    while (i < kids.length) {
+      var el = kids[i];
+      if (el.tagName === 'A' && !el.classList.contains('sub')) {
+        var subs = [];
+        var j = i + 1;
+        while (j < kids.length && kids[j].tagName === 'A' && kids[j].classList.contains('sub')) {
+          subs.push(kids[j]);
+          j++;
+        }
+        if (subs.length > 0) {
+          var item = document.createElement('div');
+          item.className = 'toc-item';
+          el.parentNode.insertBefore(item, el);
+          item.appendChild(el);
+
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'toc-toggle';
+          btn.setAttribute('aria-expanded', 'true');
+          btn.setAttribute('aria-label', 'collapse ' + el.textContent.trim());
+          item.appendChild(btn);
+
+          var group = document.createElement('div');
+          group.className = 'toc-subgroup';
+          item.parentNode.insertBefore(group, subs[0]);
+          subs.forEach(function (s) { group.appendChild(s); });
+
+          btn.addEventListener('click', function () {
+            var expanded = btn.getAttribute('aria-expanded') === 'true';
+            btn.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+            group.classList.toggle('collapsed', expanded);
+          });
+        }
+        i = j;
+      } else {
+        i++;
+      }
+    }
+  })();
+
   (function () {
     var links = {};
     document.querySelectorAll('.toc a').forEach(function (a) {
