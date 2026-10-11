@@ -233,7 +233,52 @@
     transition: transform 0.25s ease;
   }
   .shots a:hover img { transform: scale(1.04); }
+  .shots a { cursor: zoom-in; }
   figcaption { font-size: 11px; color: var(--ink3); margin-top: 8px; }
+
+  /* lightbox — screenshots open in-page instead of a new tab */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(20,18,14,0.85);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 50px;
+    z-index: 100;
+    cursor: zoom-out;
+  }
+  .lightbox.open { display: flex; }
+  .lightbox img {
+    max-width: 100%;
+    max-height: 100%;
+    border: 1px solid var(--border);
+    box-shadow: 0 24px 64px rgba(0,0,0,0.45);
+    cursor: default;
+  }
+  .lightbox-close {
+    position: fixed;
+    top: 18px;
+    right: 24px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--bg);
+    font-size: 24px;
+    line-height: 1;
+    background: none;
+    border: 1px solid rgba(244,242,237,0.3);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 101;
+  }
+  .lightbox-close:hover { background: rgba(244,242,237,0.12); }
+
+  @media (max-width: 640px) {
+    .lightbox { padding: 24px; }
+  }
 
   /* featured work — two big tiles, shown right under Hello for immediate impact */
   .featured {
@@ -418,7 +463,12 @@
     <a href="#p-legacy-of-dragons" class="sub">Legacy of Dragons</a>
     <a href="#p-mathcalc" class="sub">Graphics Calculator</a>
     <a href="#p-hangout-timer" class="sub">Hangout Timer</a>
-    <a href="#academic" class="sub">Academic</a>
+    <a href="#academic" class="sub">Graphics Work (Academic)</a>
+    <a href="#p-meshes" class="sub">Meshes</a>
+    <a href="#p-shadow" class="sub">Shadow Mapping</a>
+    <a href="#p-value-noise" class="sub">Value Noise</a>
+    <a href="#p-gradient-noise" class="sub">Gradient Noise</a>
+    <a href="#p-post-processing" class="sub">Post Processing</a>
     <a href="#about">03 &nbsp;About</a>
     <a href="#education" class="sub">Education</a>
     <a href="#skills" class="sub">Skills</a>
@@ -808,31 +858,31 @@
       <div class="group-label" id="academic">Graphics Work (Academic)</div>
       <p class="lead">DigiPen CS250 Computer Graphics assignments in C++ / OpenGL, each with a live in-browser demo.</p>
       <div class="featured">
-        <a href="academic/meshes.html">
+        <a href="academic/meshes.html" id="p-meshes">
           <div class="featured-img">
             <img src="img/academic/meshes.jpg" alt="Procedural Geometric Modeling — mesh demo" loading="lazy">
           </div>
           <div class="featured-title">Meshes</div>
         </a>
-        <a href="academic/shadow.html">
+        <a href="academic/shadow.html" id="p-shadow">
           <div class="featured-img">
             <img src="img/academic/shadow.jpg" alt="Shadow Mapping demo" loading="lazy">
           </div>
           <div class="featured-title">Shadow Mapping</div>
         </a>
-        <a href="academic/value-noise.html">
+        <a href="academic/value-noise.html" id="p-value-noise">
           <div class="featured-img">
             <img src="img/academic/value-noise.jpg" alt="Value Noise demo" loading="lazy">
           </div>
           <div class="featured-title">Value Noise</div>
         </a>
-        <a href="academic/gradient-noise.html">
+        <a href="academic/gradient-noise.html" id="p-gradient-noise">
           <div class="featured-img">
             <img src="img/academic/gradient-noise.jpg" alt="Gradient Noise demo" loading="lazy">
           </div>
           <div class="featured-title">Gradient Noise</div>
         </a>
-        <a href="academic/post-processing.html" style="grid-column: 1 / -1;">
+        <a href="academic/post-processing.html" id="p-post-processing" style="grid-column: 1 / -1;">
           <div class="featured-img">
             <img src="img/academic/post_processing.jpg" alt="Depth Buffer &amp; Post-Processing Pipeline demo" loading="lazy">
           </div>
@@ -910,6 +960,11 @@
   </main>
 </div>
 
+<div class="lightbox" id="lightbox" aria-hidden="true">
+  <button type="button" class="lightbox-close" aria-label="close">&times;</button>
+  <img src="" alt="">
+</div>
+
 <script>
   (function () {
     var links = {};
@@ -963,6 +1018,42 @@
       if (mq.addEventListener) mq.addEventListener('change', onChange);
       else if (mq.addListener) mq.addListener(onChange);
     }
+  })();
+
+  (function () {
+    var lb = document.getElementById('lightbox');
+    var lbImg = lb.querySelector('img');
+    var closeBtn = lb.querySelector('.lightbox-close');
+
+    function openLightbox(src, alt) {
+      lbImg.src = src;
+      lbImg.alt = alt || '';
+      lb.classList.add('open');
+      lb.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLightbox() {
+      lb.classList.remove('open');
+      lb.setAttribute('aria-hidden', 'true');
+      lbImg.src = '';
+      document.body.style.overflow = '';
+    }
+
+    document.querySelectorAll('.shots a').forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        e.preventDefault();
+        var img = a.querySelector('img');
+        openLightbox(a.getAttribute('href'), img ? img.alt : '');
+      });
+    });
+
+    lb.addEventListener('click', function (e) {
+      if (e.target === lb) closeLightbox();
+    });
+    closeBtn.addEventListener('click', closeLightbox);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && lb.classList.contains('open')) closeLightbox();
+    });
   })();
 </script>
 </body>
