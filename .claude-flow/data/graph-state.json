@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "updatedAt": 1791713490663,
+  "nodeCount": 3,
+  "contentFingerprint": "62cd6578_3a5215f9_146",
+  "nodes": {
+    "insight-1791713490662-7yvv": {
+      "id": "insight-1791713490662-7yvv",
+      "category": "insights",
+      "confidence": 0.5,
+      "accessCount": 0,
+      "createdAt": 1791713490662
+    },
+    "insight-1791713490662-pvyu": {
+      "id": "insight-1791713490662-pvyu",
+      "category": "insights",
+      "confidence": 0.5,
+      "accessCount": 0,
+      "createdAt": 1791713490662
+    },
+    "insight-1791713490662-jxfu": {
+      "id": "insight-1791713490662-jxfu",
+      "category": "insights",
+      "confidence": 0.5,
+      "accessCount": 0,
+      "createdAt": 1791713490662
+    }
+  },
+  "edges": [
+    {
+      "sourceId": "insight-1791713490662-7yvv",
+      "targetId": "insight-1791713490662-pvyu",
+      "type": "similar",
+      "weight": 0.8405797101449275
+    },
+    {
+      "sourceId": "insight-1791713490662-7yvv",
+      "targetId": "insight-1791713490662-jxfu",
+      "type": "similar",
+      "weight": 0.6470588235294118
+    },
+    {
+      "sourceId": "insight-1791713490662-pvyu",
+      "targetId": "insight-1791713490662-jxfu",
+      "type": "similar",
+      "weight": 0.7625
+    }
+  ],
+  "pageRanks": {
+    "insight-1791713490662-7yvv": 0.19757959373228626,
+    "insight-1791713490662-pvyu": 0.28155110874039796,
+    "insight-1791713490662-jxfu": 0.5208692975273159
+  }
+}
