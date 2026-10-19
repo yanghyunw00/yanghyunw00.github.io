@@ -115,5 +115,44 @@
         "accessCount": 0
       }
     ]
+  },
+  {
+    "timestamp": 1792027525801,
+    "nodes": 3,
+    "edges": 3,
+    "pageRankSum": 1,
+    "confidences": [
+      0.485,
+      0.485,
+      0.485
+    ],
+    "accessCounts": [
+      0,
+      0,
+      0
+    ],
+    "topPatterns": [
+      {
+        "id": "insight-1791713490662-jxfu",
+        "summary": "Frequently edited: post-processing.html (4x)",
+        "confidence": 0.485,
+        "pageRank": 0.5208692975273159,
+        "accessCount": 0
+      },
+      {
+        "id": "insight-1791713490662-pvyu",
+        "summary": "Frequently edited: index.html (14x)",
+        "confidence": 0.485,
+        "pageRank": 0.28155110874039796,
+        "accessCount": 0
+      },
+      {
+        "id": "insight-1791713490662-7yvv",
+        "summary": "Frequently edited: index.html (12x)",
+        "confidence": 0.485,
+        "pageRank": 0.19757959373228626,
+        "accessCount": 0
+      }
+    ]
   }
 ]
