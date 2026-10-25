@@ -1,0 +1,15 @@
+{
+  "id": "session-1792892467982",
+  "startedAt": "2026-10-25T01:41:07.982Z",
+  "cwd": "/Users/yang/Desktop/Yang/Github/github.io/yanghyunw00.github.io",
+  "context": {},
+  "metrics": {
+    "edits": 0,
+    "commands": 0,
+    "tasks": 0,
+    "errors": 0
+  },
+  "restoredAt": "2026-10-25T01:41:08.543Z",
+  "endedAt": "2026-10-25T01:41:09.569Z",
+  "duration": 1588
+}
