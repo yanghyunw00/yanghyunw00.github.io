@@ -1,13 +1,13 @@
 {
   "version": 1,
-  "computedAt": 1792901977811,
+  "computedAt": 1792915303515,
   "entries": [
     {
       "id": "insight-1791713490662-jxfu",
       "content": "File /Users/yang/Desktop/Yang/Github/github.io/yanghyunw00.github.io/portfolio/academic/post-processing.html was edited 4 times this session — likely a hot path worth monitoring.",
       "summary": "Frequently edited: post-processing.html (4x)",
       "category": "insights",
-      "confidence": 0.435,
+      "confidence": 0.5,
       "pageRank": 0.5208692975273159,
       "accessCount": 0,
       "words": [
@@ -43,7 +43,7 @@
       "content": "File /Users/yang/Desktop/Yang/Github/github.io/yanghyunw00.github.io/portfolio/index.html was edited 14 times this session — likely a hot path worth monitoring.",
       "summary": "Frequently edited: index.html (14x)",
       "category": "insights",
-      "confidence": 0.435,
+      "confidence": 0.5,
       "pageRank": 0.28155110874039796,
       "accessCount": 0,
       "words": [
@@ -79,7 +79,7 @@
       "content": "File /Users/yang/Desktop/Yang/Github/github.io/yanghyunw00.github.io/resume2/index.html was edited 12 times this session — likely a hot path worth monitoring.",
       "summary": "Frequently edited: index.html (12x)",
       "category": "insights",
-      "confidence": 0.435,
+      "confidence": 0.5,
       "pageRank": 0.19757959373228626,
       "accessCount": 0,
       "words": [
