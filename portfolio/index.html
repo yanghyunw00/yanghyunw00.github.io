@@ -875,8 +875,8 @@ const PROJECTS = [
 // one glance per project: what I did, the change it made, and when
 const OVERVIEW = {
   'crazy-futsal':       {tags:['game','web','multiplayer'], span:[202610,202610], did:'Built a 2–4 player browser soccer game and fixed its WebRTC netcode stutter.', diff:[['-','2,583 bytes per state message'],['+','763 bytes per state message']]},
-  'igy':                {tags:['game','engine','team'], span:[202509,202606], did:'Tech Lead on a custom C++/OpenGL engine: instanced renderer, A* rewrite, agent AI.', diff:[['-','9,256 draw calls per frame'],['+','11 draw calls per frame']]},
-  'lostguns':           {tags:['game','multiplayer'], span:[202601,202603], did:'Rebuilt a mobile shooter in Unity with online play and rewind lag compensation.', diff:[['-','hits on targets that looked dodged'],['+','server rewind to the shooter\'s view']]},
+  'igy':                {tags:['game','engine','team'], span:[202509,202606], did:'Tech Lead on a custom C++/OpenGL engine: instanced renderer, A* rewrite, agent AI.', diff:[['-','179ms pathfinding frame spike'],['+','111ms projected frame spike']]},
+  'lostguns':           {tags:['game','multiplayer'], span:[202601,202603], did:'Rebuilt a mobile shooter in Unity with online play and rewind lag compensation.', diff:[['-','hits on targets that looked dodged'],['+','server rewind to the shooter\'s view'],['+','up to 8-player online matches']]},
   'minigames':          {tags:['game','algorithms'], span:[202507,202507], did:'Two Raylib games: flow-field enemies and a backtracking Sudoku generator.', diff:[['-','O(enemies × grid) per frame'],['+','O(grid) per frame']]},
   'doctor-water':       {tags:['game','team'], span:[202303,202306], did:'Boss patterns, enemy attacks, and 5 weapons in a custom C++ engine.', diff:[['+','Microdegree Expo Best Award 2023']]},
   'legacy-of-dragons':  {tags:['game','team'], span:[202209,202212], did:'Tech Lead for a 4-person team: wave system, 6 enemy patterns, 5 weapons.', diff:[['+','6 enemy attack patterns'],['+','5 weapons']]},
