@@ -7,98 +7,91 @@
 <meta name="description" content="DigiPen CS250 Computer Graphics — procedural value noise in C++/OpenGL, with a live demo." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script>try{const t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root{color-scheme:light;
+  --paper:#FFFFFF;--chrome:#F5F6F8;--chrome-2:#ECEEF1;--rule:#E2E5E9;
+  --ink:#1D2228;--ink-2:#4A525C;--dim:#8A929C;--line-hi:#F2F6FC;--sel:#D6E6FF;
+  --blue:#0A5FDB;--gut:#B5BBC3;--hash:#C3C8CF;--str:#2F7D32;
+  --mono:'Geist Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+  --sans:'Geist',ui-sans-serif,system-ui,-apple-system,sans-serif;
+  --gutter:64px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  color-scheme:dark;
+  --paper:#1E1F22;--chrome:#18191B;--chrome-2:#2B2D31;--rule:#2E3035;
+  --ink:#DCDFE4;--ink-2:#B4B9C1;--dim:#7D838C;--line-hi:#26282C;--sel:#23395B;
+  --blue:#3B8EEA;--gut:#565B63;--hash:#4A4F57;--str:#9CCB8A;}}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --paper:#1E1F22;--chrome:#18191B;--chrome-2:#2B2D31;--rule:#2E3035;
+  --ink:#DCDFE4;--ink-2:#B4B9C1;--dim:#7D838C;--line-hi:#26282C;--sel:#23395B;
+  --blue:#3B8EEA;--gut:#565B63;--hash:#4A4F57;--str:#9CCB8A;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--paper);color:var(--ink);font:15px/1.65 var(--sans);-webkit-font-smoothing:antialiased}
+::selection{background:var(--sel)}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:3px}
 
-  :root {
-    --bg:      #F4F2ED;
-    --ink:     #14120E;
-    --ink2:    #45423B;
-    --ink3:    #837D71;
-    --accent:  #C8451A;
-    --border:  rgba(20,18,14,0.16);
-    --rule:    rgba(20,18,14,0.30);
-    --mark:    #A79A82;
-    --sel:     #E3DDCE;
-  }
+/* editor chrome: a tab bar with the file path */
+.bar{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:14px;height:40px;padding:0 16px;
+  background:var(--chrome);border-bottom:1px solid var(--rule);font:12.5px/1 var(--mono);color:var(--dim);white-space:nowrap;overflow:hidden}
+.bar .back{color:var(--ink-2);border:1px solid var(--rule);background:var(--paper);padding:6px 10px;border-radius:6px}
+.bar .back:hover{color:var(--blue);border-color:var(--blue);text-decoration:none}
+.bar .path b{font-weight:400;color:var(--ink)}
+.bar .ic{color:#3D6FD0;font:600 9.5px/1 var(--mono);margin-right:4px}
 
-  html { font-size: 15px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+/* document with line numbers, like the portfolio editor */
+.wrap{max-width:calc(860px + var(--gutter));margin:0 auto;padding:36px 32px 120px var(--gutter);counter-reset:ln}
+.wrap h1,.wrap h2,.wrap p,.wrap li,.wrap .meta,.wrap .tagline{counter-increment:ln;position:relative}
+.wrap h1::before,.wrap h2::before,.wrap p::before,.wrap li::before,.wrap .meta::before,.wrap .tagline::before{
+  content:counter(ln);position:absolute;left:calc(-1 * var(--gutter));width:44px;text-align:right;top:.35em;
+  font:400 12px/1.4 var(--mono);color:var(--gut);letter-spacing:0;user-select:none}
+.wrap .demo-frame::before{top:4px}
+.wrap li::before{left:calc(-1 * var(--gutter) - 22px)}
+.wrap li li::before{left:calc(-1 * var(--gutter) - 42px)}
+.crumb,.rule{display:none}
 
-  body {
-    background: var(--bg);
-    color: var(--ink);
-    font-family: 'Space Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
-    line-height: 1.6;
-    letter-spacing: -0.02em;
-    -webkit-font-smoothing: antialiased;
-  }
+h1{font:500 clamp(30px,5vw,50px)/1.1 var(--mono);letter-spacing:-.045em;margin-top:4px}
+h1::after{content:"";display:inline-block;width:.08em;height:.85em;background:var(--blue);margin-left:.08em;vertical-align:-.04em;animation:blink 1.1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+@media (prefers-reduced-motion: reduce){h1::after{animation:none}}
+.tagline{color:var(--ink-2);margin-top:10px;font-size:16px}
+.meta{display:flex;flex-wrap:wrap;gap:4px 22px;font:12.5px/1.6 var(--mono);color:var(--ink-2);margin:12px 0 26px}
+.meta span{display:inline-flex;gap:8px}
+.meta i{color:var(--dim);font-style:normal}
+.meta i::after{content:":"}
+h2{font:500 21px/1.3 var(--mono);letter-spacing:-.02em;margin:44px 0 10px}
+.mk{color:var(--hash);font-weight:400;margin-right:.2em}
+p{margin:10px 0;color:var(--ink-2);max-width:72ch}
+p.lead{color:var(--ink)}
+ul{list-style:none;margin:10px 0;max-width:72ch}
+li{position:relative;padding-left:22px;margin:0 0 9px;color:var(--ink-2)}
+li::after{content:"-";position:absolute;left:4px;top:0;font-family:var(--mono);color:var(--gut)}
+li > ul{margin:6px 0 2px}
 
-  a { color: var(--accent); text-decoration: none; }
+/* the live demo sits on top, like the screenshots on project pages */
+.demo-frame{margin-top:4px;border:1px solid var(--rule);border-radius:8px;overflow:hidden;background:#000}
+.demo-frame iframe{display:block;width:100%;aspect-ratio:4/3;border:0}
+.demo-note{font:12px/1.5 var(--mono);color:var(--dim);margin-top:8px}
+.demo-note::before{display:none}
+.wrap .demo-note{counter-increment:none}
+.foot{margin-top:64px;padding-top:18px;border-top:1px solid var(--rule);font:12.5px var(--mono)}
+.foot .back{color:var(--ink-2)}
 
-  .wrap { max-width: 760px; margin: 0 auto; padding: 60px 28px 120px; }
-
-  .back { display: inline-block; color: var(--ink3); border-bottom: 1px solid currentColor; font-size: 12.5px; }
-  .back:hover { color: var(--ink); }
-
-  .crumb { color: var(--ink3); font-size: 12px; margin-top: 22px; }
-
-  .rule { border: 0; border-top: 1px solid var(--rule); margin: 22px 0 34px; }
-  .rule.tight { margin: 18px 0 26px; }
-
-  h1 { font-size: 24px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.25; margin-top: 6px; }
-  .tagline { color: var(--ink2); margin-top: 4px; font-size: 13.5px; }
-  .mk { color: var(--mark); font-weight: 400; }
-
-  h2 { font-size: 16px; font-weight: 700; letter-spacing: -0.01em; margin-top: 38px; margin-bottom: 4px; }
-
-  .meta {
-    display: flex; flex-wrap: wrap; gap: 3px 26px;
-    font-size: 12px; color: var(--ink2); margin: 16px 0 6px;
-  }
-  .meta span { display: inline-flex; gap: 8px; }
-  .meta i { color: var(--ink3); font-style: normal; }
-  .meta i::after { content: ":"; }
-
-  p { margin: 10px 0; }
-  p.lead { color: var(--ink2); }
-
-  ul { list-style: none; margin: 12px 0; }
-  li { position: relative; padding-left: 20px; margin: 5px 0; }
-  li::before { content: "\2013"; position: absolute; left: 0; color: var(--mark); }
-
-  .demo-frame {
-    margin-top: 10px;
-    border: 1px solid var(--border);
-    background: var(--sel);
-    overflow: hidden;
-  }
-  .demo-frame iframe {
-    display: block;
-    width: 100%;
-    aspect-ratio: 4 / 3;
-    border: none;
-  }
-  .demo-note { color: var(--ink3); font-size: 11.5px; margin-top: 8px; }
-
-  .foot {
-    margin-top: 60px;
-    padding-top: 20px;
-    border-top: 1px solid var(--rule);
-    font-size: 11.5px;
-    color: var(--ink3);
-  }
-
-  @media (max-width: 640px) {
-    .wrap { padding: 40px 20px 90px; }
-  }
+@media (max-width:700px){
+  :root{--gutter:40px}
+  .wrap{padding:24px 16px 90px var(--gutter)}
+  .wrap h1::before,.wrap h2::before,.wrap p::before,.wrap li::before,.wrap .meta::before,.wrap .tagline::before,.wrap .demo-frame::before{width:28px;font-size:11px}
+  .bar .path{overflow:hidden;text-overflow:ellipsis}
+}
 </style>
 </head>
 <body>
+<header class="bar"><a class="back" href="../index.html#/projects/graphics/value-noise.cpp" onclick="if (history.length > 1) { history.back(); return false; }">&larr; portfolio</a><span class="path">portfolio › projects › graphics › <span class="ic">C++</span><b>value-noise.cpp</b></span></header>
 <div class="wrap">
-
-  <a class="back" href="../index.html#work" onclick="if (history.length > 1) { history.back(); return false; }">&larr; back to portfolio</a>
-  <div class="crumb">yanghyunw00.github.io / portfolio.txt / academic / value-noise.txt</div>
 
   <h1>Value Noise</h1>
   <div class="tagline">DigiPen CS250 Computer Graphics</div>
@@ -106,6 +99,12 @@
     <span><i>course</i> DigiPen CS250</span>
     <span><i>stack</i> C++ &middot; OpenGL &middot; ImGui</span>
   </div>
+
+  <div class="demo-frame">
+    <iframe src="demos/hw4/index.html?start=value" title="Value Noise live demo" loading="lazy"></iframe>
+  </div>
+  <p class="demo-note">// live WebAssembly build: click inside the frame to interact</p>
+
 
   <h2><span class="mk">#</span> Overview</h2>
   <hr class="rule tight" />
@@ -123,15 +122,8 @@
   <hr class="rule tight" />
   <p>This assignment was less about the rendering pipeline and more about the math and data structures behind procedural generation, so most of the difficulty came from understanding new vocabulary rather than OpenGL itself. The hardest concept was the permutation hash, since the idea that one shuffled table could deterministically produce pseudo-random values for any coordinate was not intuitive at first. It also took time to understand how the bitwise mask creates seamless tiling, which only became clear once the tiling scale was set higher. Working through each piece concretely instead of treating the noise as a black box made the whole system eventually make sense.</p>
 
-  <h2><span class="mk">#</span> Demo</h2>
-  <hr class="rule tight" />
-  <div class="demo-frame">
-    <iframe src="demos/hw4/index.html?start=value" title="Value Noise live demo" loading="lazy"></iframe>
-  </div>
-  <p class="demo-note">Live WebAssembly build — interact with it directly in the frame above.</p>
-
   <div class="foot">
-    <a class="back" href="../index.html#work" onclick="if (history.length > 1) { history.back(); return false; }">&larr; back to portfolio</a>
+    <a class="back" href="../index.html#/projects/graphics/value-noise.cpp" onclick="if (history.length > 1) { history.back(); return false; }">&larr; portfolio</a>
   </div>
 
 </div>

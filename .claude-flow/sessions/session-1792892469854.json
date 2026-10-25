@@ -1,0 +1,20 @@
+{
+  "id": "session-1792892469854",
+  "startedAt": "2026-10-25T01:41:09.854Z",
+  "cwd": "/Users/yang/Desktop/Yang/Github/github.io/yanghyunw00.github.io",
+  "context": {
+    "lastMatchedPatterns": [
+      "insight-1791713490662-jxfu",
+      "insight-1791713490662-pvyu"
+    ]
+  },
+  "metrics": {
+    "edits": 4,
+    "commands": 0,
+    "tasks": 0,
+    "errors": 0
+  },
+  "updatedAt": "2026-10-25T01:42:47.180Z",
+  "endedAt": "2026-10-25T01:48:51.262Z",
+  "duration": 461410
+}
