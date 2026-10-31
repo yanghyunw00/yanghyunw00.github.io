@@ -279,28 +279,38 @@ li[data-collapsed] > ul{display:none}
 .doc[data-kind="academic-index"] .acad{grid-template-columns:repeat(3,minmax(0,1fr));gap:20px 18px;margin-top:20px}
 .doc[data-kind="academic-index"] .acad img{aspect-ratio:16/9}
 .doc[data-kind="academic-index"] .acad span{font:500 15px/1.4 var(--sans);margin-top:10px}
-.doc[data-kind="skills"]{max-width:1120px;padding-bottom:64px}
-.skill-table{width:100%;border-collapse:collapse;table-layout:fixed;margin:24px 0;font-size:16px;line-height:1.6}
-.skill-table caption{text-align:left;font-size:15px;color:var(--ink-2);padding-bottom:14px}
-.skill-table th,.skill-table td{text-align:left;vertical-align:top;padding:16px;border-bottom:1px solid var(--rule);overflow-wrap:anywhere}
-.skill-table thead th{font:500 13px/1.5 var(--mono);color:var(--dim);background:var(--chrome)}
-.skill-table th:first-child{width:26%}
-.skill-table tbody th{font-weight:600;color:var(--ink)}
+.doc[data-kind="skills"]{max-width:1440px;padding-top:16px;padding-right:28px;padding-bottom:16px}
+.doc[data-kind="skills"] .h1{font-size:32px;margin:0 0 16px}
+.skills-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 28px;align-items:start}
+.skill-table{width:100%;border-collapse:collapse;table-layout:fixed;margin:0;font-size:16px;line-height:1.5}
+.skill-table th,.skill-table td{text-align:left;vertical-align:top;padding:10px 0;border-bottom:1px solid var(--rule);overflow-wrap:anywhere}
+.skill-table th{width:112px;padding-right:14px;font-size:14px;font-weight:600;color:var(--ink)}
+.skill-table tr:first-child th,.skill-table tr:first-child td{border-top:1px solid var(--rule)}
 .skill-table td{color:var(--ink-2)}
-.skill-table ul{display:flex;flex-wrap:wrap;gap:6px 20px;list-style:none;margin:0;padding:0}
-.skill-table li{max-width:100%}
+.skill-table ul{display:inline;list-style:none;margin:0;padding:0}
+.skill-table li{display:inline}
+.skill-table li:not(:last-child)::after{content:" · ";color:var(--dim)}
 .skill-table .skill-focus{color:var(--ink);font-weight:600}
+@container (max-width:780px){
+  .skills-grid{grid-template-columns:1fr;gap:0}
+  .skills-grid .skill-table + .skill-table tr:first-child th,.skills-grid .skill-table + .skill-table tr:first-child td{border-top:0}
+}
 @container (max-width:560px){
   .doc[data-kind="academic-index"] .acad{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .skill-table th,.skill-table td{padding:12px 8px}
-  .skill-table th:first-child{width:32%}
-  .skill-table ul{gap:8px 14px}
+  .skill-table th{width:100px;padding-right:12px}
 }
 @container (max-width:340px){
   .doc[data-kind="academic-index"] .acad{grid-template-columns:1fr}
-  .skill-table,.skill-table tbody,.skill-table tr,.skill-table tbody th,.skill-table td{display:block;width:100%}
-  .skill-table thead{display:none}
-  .skill-table tbody th{width:100%;border-bottom:0;padding-bottom:0}
+  .skill-table,.skill-table tbody,.skill-table tr,.skill-table th,.skill-table td{display:block;width:100%}
+  .skill-table th{border-bottom:0;padding-bottom:0}
+  .skill-table td{padding-top:4px}
+  .skill-table tr:first-child td{border-top:0}
+}
+@media (min-width:861px) and (max-height:850px){
+  .doc[data-kind="skills"]{padding-top:12px;padding-bottom:12px}
+  .doc[data-kind="skills"] .h1{font-size:28px;margin-bottom:12px}
+  .skill-table{font-size:15px;line-height:1.45}
+  .skill-table th,.skill-table td{padding-top:7px;padding-bottom:7px}
 }
 .h1,.h2,.h3{text-wrap:balance}
 .contacts a{overflow-wrap:anywhere;min-width:0}
@@ -1067,7 +1077,7 @@ const R = {
     const cards = ORDER.map(id=>byId[id]);
     return `
       <h1 class="h1 ln split hero-name" id="heroName" aria-label="Hyunwoo Yang"><span class="hash" aria-hidden="true">#</span>${split('Hyunwoo Yang')}<span class="caret" aria-hidden="true"></span></h1>
-      <p class="lede ln" style="margin-bottom:2px">Software Engineer in Redmond, WA.</p>
+      <p class="lede ln" style="margin-bottom:2px">Software Engineer & Graphics Programmer in Redmond, WA.</p>
       <p class="lede ln">Building fun and reliable software, from games to real-world products.</p>
       <div class="contacts ln"><a href="${LINKS.github}" target="_blank" rel="noopener">github.com/yanghyunw00</a><a href="${LINKS.linkedin}" target="_blank" rel="noopener">linkedin.com/in/hyunw00</a><a href="${LINKS.email}">hyunwoo.yang@digipen.edu</a><a href="${LINKS.resume}" target="_blank" rel="noopener">Resume.pdf</a></div>
       ${h2('Projects','projects')}
@@ -1078,7 +1088,7 @@ const R = {
       ${timeline()}
       <div class="hello">
         <div>
-          ${h2('Hello','hello')}          ${p("I'm a Computer Science student at DigiPen focused on software engineering. I build games, web apps, and developer tools, with an emphasis on reliability and performance. Gameplay programming is another area I enjoy, alongside custom engines and low-level graphics with Vulkan.")}
+          ${h2('Hello','hello')}          ${p("I'm a Computer Science student at DigiPen focused on software engineering. I build games, web apps, and developer tools, with an emphasis on reliability and performance. Graphics programming is another area I enjoy, including custom engines and low-level graphics with Vulkan.")}
           ${p("I really enjoy working as part of a team, and right now I'm looking to grow my network and connect with more people in the industry. Feel free to reach out for any reason — I'd love to connect!")}
         </div>
         <figure class="portrait"><img src="img/portrait.jpg" alt="Portrait of Hyunwoo Yang"><figcaption>portrait.jpg</figcaption></figure>
@@ -1141,23 +1151,22 @@ const R = {
   },
   skills(){
     const groups = [
-      ['Languages', ['C / C++', 'C#', 'JavaScript / TypeScript', 'GLSL', 'Assembly', 'SQL', 'HTML / CSS']],
-      ['Game engines', ['Custom Engine', 'Unity', 'Unreal', 'Godot']],
-      ['Graphics', ['OpenGL', 'Vulkan', 'SDL2', 'Raylib', 'Three.js', 'RenderDoc']],
-      ['Web & networking', ['React 19', 'WebRTC', 'Math.js', 'Vite']],
-      ['Development tools', ['Git / GitHub', 'Perforce', 'CMake', 'Docker', 'Linux', 'MySQL', 'DragonBones']],
-      ['Programming', ['Data Structures & Algorithms', 'OOP', 'Multithreading (job system)', 'Performance Profiling & Optimization']],
-      ['Game systems', ['Rendering Pipeline', 'GPU Instancing', 'Pathfinding & AI (A*, FSM)', 'Networking & Multiplayer']],
-      ['Collaboration', ['Teamwork & Collaboration', 'Problem-Solving', 'Creativity', 'Communication', 'Growth Mindset']]
+      ['Languages', ['C / C++', 'C#', 'Python', 'JavaScript / TypeScript', 'SQL', 'GLSL', 'Assembly', 'HTML / CSS']],
+      ['Web & APIs', ['React 19', 'Next.js', 'Node.js', 'Express', '.NET', 'REST APIs', 'JSON', 'WebRTC']],
+      ['Data & cloud', ['MySQL', 'Redis', 'MongoDB', 'Supabase', 'Firebase', 'Cloudflare / D1', 'GitHub Pages']],
+      ['Engines', ['Custom Engine', 'Unity', 'Unreal', 'Godot']],
+      ['Graphics & math', ['OpenGL', 'Vulkan', 'SDL2', 'Raylib', 'Three.js', 'Math.js', 'Nerdamer', 'KaTeX', 'Linear Algebra']],
+      ['Tools', ['RenderDoc', 'Vite', 'CMake', 'DragonBones', 'Trello']],
+      ['Systems', ['Data Structures & Algorithms', 'Object-Oriented Programming', 'Multithreading', 'Job System / Thread Pool']],
+      ['Quality', ['Automated Testing', 'Debugging', 'Performance Profiling & Optimization', 'Data Analysis']],
+      ['Game systems', ['Rendering Pipeline', 'GPU Instancing', 'Pathfinding & AI (A*, FSM)', 'Network Programming', 'Multiplayer / Lag Compensation']],
+      ['Delivery', ['Git / GitHub', 'Perforce', 'Version Control', 'CI/CD', 'Docker', 'Linux']],
+      ['AI & agents', ['AI Coding Tools', 'Claude Code', 'Claude API', 'LLM Prompting', 'Multi-Agent Workflows', 'Ruflo', 'Skill Authoring']],
+      ['Collaboration', ['Team Leadership', 'Teamwork', 'Communication', 'Problem-Solving', 'Creativity', 'Growth Mindset']]
     ];
     const focus = new Set(['C / C++', 'C#', 'Custom Engine', 'Unity', 'OpenGL']);
-    return `${h1('Skills')}
-      ${p('Software engineering across applications, tools, and games, with additional experience in gameplay programming and real-time graphics.')}
-      <table class="skill-table">
-        <caption>Skills grouped by field. Bold items are used in my featured game projects.</caption>
-        <thead><tr><th scope="col">Field</th><th scope="col">Technologies & skills</th></tr></thead>
-        <tbody>${groups.map(([name,items])=>`<tr><th scope="row">${esc(name)}</th><td><ul>${items.map(item=>`<li${focus.has(item)?' class="skill-focus"':''}>${esc(item)}</li>`).join('')}</ul></td></tr>`).join('')}</tbody>
-      </table>`;
+    const table = (rows,label) => `<table class="skill-table"><caption class="sr">${label}</caption><tbody>${rows.map(([name,items])=>`<tr><th scope="row">${esc(name)}</th><td><ul>${items.map(item=>`<li${focus.has(item)?' class="skill-focus"':''}>${esc(item)}</li>`).join('')}</ul></td></tr>`).join('')}</tbody></table>`;
+    return `${h1('Skills')}<div class="skills-grid">${table(groups.slice(0,6),'Languages, platforms, and tools')}${table(groups.slice(6),'Engineering, delivery, and collaboration')}</div>`;
   },
   leadership(){
     const e = (who,when,txt) => `<div class="entry ln"><div class="who">${esc(who)}</div><div class="when">${esc(when)}</div><p>${esc(txt)}</p></div>`;
@@ -1570,7 +1579,7 @@ const COMMANDS = {
     if (t!=='dark' && t!=='light') return print('theme: use theme dark or theme light','err');
     setTheme(t); print(`<span class="ok">Switched to ${t} mode.</span>`);
   },
-  whoami(){ print('Hyunwoo Yang. Software engineer, CS (RTIS) at DigiPen, Redmond WA. Also interested in gameplay programming.\nOpen to work. <button class="link" data-term="open contact.md">contact.md</button>'); },
+  whoami(){ print('Hyunwoo Yang. Software engineer, CS (RTIS) at DigiPen, Redmond WA. Also focused on graphics programming.\nOpen to work. <button class="link" data-term="open contact.md">contact.md</button>'); },
   resume(){ window.open(LINKS.resume,'_blank','noopener'); },
   email(){ print(`<a href="${LINKS.email}">hyunwoo.yang@digipen.edu</a>`); location.href = LINKS.email; },
   github(){ print(`<a href="${LINKS.github}" target="_blank" rel="noopener">${LINKS.github}</a>`); window.open(LINKS.github,'_blank','noopener'); },
