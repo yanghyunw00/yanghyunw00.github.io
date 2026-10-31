@@ -449,6 +449,7 @@ button.tl-row:hover .tl-bar,.tl-row.hl .tl-bar{opacity:1}
 /* terminal panel */
 .panel{border-top:1px solid var(--rule);height:var(--panel);display:grid;grid-template-rows:32px minmax(0,1fr);background:var(--paper);position:relative}
 .panel.closed{height:32px}
+.panel[hidden]{display:none}
 .panel.closed .term{display:none}
 .grip{position:absolute;left:0;right:0;top:-3px;height:6px;cursor:ns-resize;z-index:2}
 .grip:hover,.grip.drag{background:rgba(10,95,219,.25)}
@@ -613,7 +614,8 @@ dialog::backdrop{background:rgba(29,34,40,.18)}
         <span class="on">TERMINAL</span><span class="hide-sm">zsh</span>
         <div class="tools">
           <button id="clearBtn" title="Clear terminal" aria-label="Clear terminal"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="m6.5 17.5 11-11"/></svg></button>
-          <button id="collapseBtn" title="Hide terminal" aria-label="Hide terminal" aria-expanded="true"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
+          <button id="collapseBtn" title="Collapse terminal" aria-label="Collapse terminal" aria-expanded="true"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
+          <button id="closeTermBtn" title="Close terminal" aria-label="Close terminal"><svg viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
         </div>
       </div>
       <div class="term" id="term">
@@ -907,10 +909,9 @@ const ROOT = dir('portfolio', [
     dir('graphics', [file('README.md','academic-index'), ...ACADEMIC.map(a=>file(a.file,'academic',a))])
   ]),
   file('about.md','about'),
-  file('skills.hpp','skills'),
-  file('leadership.log','leadership'),
-  file('contact.cpp','contact'),
-  file('resume.pdf','resume')
+  file('skills.md','skills'),
+  file('leadership.md','leadership'),
+  file('contact.md','contact')
 ]);
 
 // parent links + paths
@@ -1094,21 +1095,14 @@ const R = {
         <p>B.S. in Computer Science. Dual-degree program with DigiPen Institute of Technology.</p></div>`;
   },
   skills(){
-    const row = (k, arr) => [`  <span class="k">constexpr</span> <span class="t">std::array</span> <span class="f">${k}</span> {`, ...arr.map((x,i)=>`    ${S(x)}${i<arr.length-1?',':''}`), `  };`];
+    const section = (title, items) => `${h2(title)}${p(items.join(' · '))}`;
     return `${h1('Skills')}
-      ${code([
-        '<span class="c">// skills.hpp</span>',
-        '<span class="k">#pragma once</span>',
-        '<span class="k">#include</span> <span class="s">&lt;array&gt;</span>',
-        '',
-        '<span class="k">namespace</span> <span class="t">hyunwoo::skills</span> {',
-        ...row('languages',['C / C++','C#','JavaScript / TypeScript','GLSL','Assembly','SQL','HTML / CSS']),
-        ...row('engines',['Custom Engine','Unity','Unreal','Godot']),
-        ...row('libraries',['OpenGL','Vulkan','SDL2','Raylib','React 19','Three.js','Math.js','WebRTC']),
-        ...row('tools',['Docker','MySQL','Linux','Git','GitHub','Perforce','CMake','RenderDoc','Vite','DragonBones']),
-        ...row('concepts',['Data Structures & Algorithms','OOP','Rendering Pipeline','GPU Instancing','Pathfinding & AI (A*, FSM)','Networking & Multiplayer','Performance Profiling & Optimization','Multithreading (job system)']),
-        ...row('softSkills',['Teamwork & Collaboration','Problem-Solving','Creativity','Communication','Growth Mindset']),
-        '}'])}`;
+      ${section('Languages',['C / C++','C#','JavaScript / TypeScript','GLSL','Assembly','SQL','HTML / CSS'])}
+      ${section('Engines',['Custom Engine','Unity','Unreal','Godot'])}
+      ${section('Libraries',['OpenGL','Vulkan','SDL2','Raylib','React 19','Three.js','Math.js','WebRTC'])}
+      ${section('Tools',['Docker','MySQL','Linux','Git','GitHub','Perforce','CMake','RenderDoc','Vite','DragonBones'])}
+      ${section('Concepts',['Data Structures & Algorithms','OOP','Rendering Pipeline','GPU Instancing','Pathfinding & AI (A*, FSM)','Networking & Multiplayer','Performance Profiling & Optimization','Multithreading (job system)'])}
+      ${section('Soft skills',['Teamwork & Collaboration','Problem-Solving','Creativity','Communication','Growth Mindset'])}`;
   },
   leadership(){
     const e = (who,when,txt) => `<div class="entry ln"><div class="who">${esc(who)}</div><div class="when">${esc(when)}</div><p>${esc(txt)}</p></div>`;
@@ -1118,32 +1112,16 @@ const R = {
       ${e('Daegu Futsal Team, Captain','Mar 2025 — Jul 2026, Daegu, KR','Captain of a futsal team based in Daegu, South Korea.')}`;
   },
   contact(){
-    return `${code([
-        '<span class="c">// contact.cpp</span>',
-        '<span class="c">// Feel free to reach out for any reason. I\'d love to connect.</span>',
-        '<span class="k">#include</span> <span class="s">&lt;string_view&gt;</span>',
-        '',
-        '<span class="k">namespace</span> <span class="t">hyunwoo::contact</span> {',
-        `  <span class="k">constexpr</span> <span class="t">std::string_view</span> <span class="f">email</span>    = ${S('hyunwoo.yang@digipen.edu')};`,
-        `  <span class="k">constexpr</span> <span class="t">std::string_view</span> <span class="f">github</span>   = ${S('github.com/yanghyunw00')};`,
-        `  <span class="k">constexpr</span> <span class="t">std::string_view</span> <span class="f">linkedin</span> = ${S('linkedin.com/in/hyunw00')};`,
-        `  <span class="k">constexpr</span> <span class="t">std::string_view</span> <span class="f">resume</span>   = ${S('docs/Resume.pdf')};`,
-        '}'])}
-      ${h1('Contact')}
+    return `      ${h1('Contact')}
       ${p('Feel free to reach out for any reason — I\'d love to connect.')}
       <dl class="kv ln">
         <dt>email</dt><dd><a href="${LINKS.email}">hyunwoo.yang@digipen.edu</a></dd>
         <dt>github</dt><dd><a href="${LINKS.github}" target="_blank" rel="noopener">github.com/yanghyunw00</a></dd>
         <dt>linkedin</dt><dd><a href="${LINKS.linkedin}" target="_blank" rel="noopener">linkedin.com/in/hyunw00</a></dd>
-        <dt>resume</dt><dd><a href="${LINKS.resume}" target="_blank" rel="noopener">docs/Resume.pdf</a></dd>
+        <dt>resume</dt><dd><a href="${LINKS.resume}" target="_blank" rel="noopener">View resume ↗</a></dd>
       </dl>`;
   },
-  resume(){
-    return `${lens([{l:'open in new tab',h:LINKS.resume}])}
-      ${h1('Resume')}
-      <iframe class="pdfview ln" src="${LINKS.resume}" title="Resume PDF"></iframe>
-      <p class="cap">The preview didn't load? <a href="${LINKS.resume}" target="_blank" rel="noopener">Open Resume.pdf</a></p>`;
-  }
+
 };
 const render = f => R[f.kind](f.data);
 
@@ -1537,8 +1515,8 @@ const COMMANDS = {
     if (t!=='dark' && t!=='light') return print('theme: use theme dark or theme light','err');
     setTheme(t); print(`<span class="ok">Switched to ${t} mode.</span>`);
   },
-  whoami(){ print('Hyunwoo Yang. Gameplay programmer, CS (RTIS) at DigiPen, Redmond WA.\nOpen to work. <button class="link" data-term="open contact.cpp">contact.cpp</button>'); },
-  resume(){ openFile(byPath('resume.pdf')); },
+  whoami(){ print('Hyunwoo Yang. Gameplay programmer, CS (RTIS) at DigiPen, Redmond WA.\nOpen to work. <button class="link" data-term="open contact.md">contact.md</button>'); },
+  resume(){ window.open(LINKS.resume,'_blank','noopener'); },
   email(){ print(`<a href="${LINKS.email}">hyunwoo.yang@digipen.edu</a>`); location.href = LINKS.email; },
   github(){ print(`<a href="${LINKS.github}" target="_blank" rel="noopener">${LINKS.github}</a>`); window.open(LINKS.github,'_blank','noopener'); },
   linkedin(){ print(`<a href="${LINKS.linkedin}" target="_blank" rel="noopener">${LINKS.linkedin}</a>`); window.open(LINKS.linkedin,'_blank','noopener'); },
@@ -1558,7 +1536,7 @@ function runCommand(raw, echo=true){
   const [cmd, ...args] = line.split(/\s+/);
   const fn = COMMANDS[cmd.toLowerCase()];
   if (fn) fn(args); else print(`zsh: command not found: ${esc(cmd)}. Type <button class="link" data-term="help">help</button> to see what works.`,'err');
-  if ($('#panel').classList.contains('closed')) togglePanel(true);
+  if ($('#panel').hidden || $('#panel').classList.contains('closed')) togglePanel(true);
 }
 tin.addEventListener('keydown', e=>{
   if (e.key==='Enter'){ const v = tin.value; tin.value=''; runCommand(v); }
@@ -1580,12 +1558,17 @@ term.addEventListener('click', e=>{
   const b = e.target.closest('[data-term]'); if (b){ runCommand(b.dataset.term); return; }
   if (!e.target.closest('a') && !getSelection().toString()) tin.focus({preventScroll:true});
 });
-$('#clearBtn').addEventListener('click',()=>{ out.innerHTML=''; tin.focus(); });
+$('#clearBtn').addEventListener('click',()=>{ out.innerHTML=''; togglePanel(true); });
+$('#closeTermBtn').addEventListener('click',()=>{ $('#panel').hidden=true; $('#termToggle').setAttribute('aria-expanded','false'); syncMinimap(); });
 
 function togglePanel(force){
-  const p = $('#panel'); const open = force ?? p.classList.contains('closed');
+  const p = $('#panel'); const open = force ?? (p.hidden || p.classList.contains('closed'));
+  p.hidden = false;
+  $('#termToggle').setAttribute('aria-expanded', String(open));
   p.classList.toggle('closed', !open);
-  $('#collapseBtn').setAttribute('aria-expanded', open);
+  $('#collapseBtn').setAttribute('aria-expanded', String(open));
+  $('#collapseBtn').setAttribute('aria-label', open ? 'Collapse terminal' : 'Expand terminal');
+  $('#collapseBtn').title = open ? 'Collapse terminal' : 'Expand terminal';
   $('#collapseBtn').innerHTML = open ? '<svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>' : '<svg viewBox="0 0 24 24"><path d="m6 15 6-6 6 6"/></svg>';
   if (open) tin.focus({preventScroll:true});
   syncMinimap();
@@ -1598,7 +1581,7 @@ $('#termToggle').addEventListener('click',()=>togglePanel());
 // drag to resize the panel
 (()=>{ const g=$('#grip'); let y0,h0;
   g.addEventListener('pointerdown',e=>{ y0=e.clientY; h0=$('#panel').offsetHeight; g.setPointerCapture(e.pointerId); g.classList.add('drag'); });
-  g.addEventListener('pointermove',e=>{ if(!g.classList.contains('drag'))return; const h=Math.min(innerHeight*.7, Math.max(90, h0+(y0-e.clientY))); document.documentElement.style.setProperty('--panel',h+'px'); $('#panel').classList.remove('closed'); syncMinimap(); });
+  g.addEventListener('pointermove',e=>{ if(!g.classList.contains('drag'))return; const h=Math.min(innerHeight*.7, Math.max(90, h0+(y0-e.clientY))); document.documentElement.style.setProperty('--panel',h+'px'); togglePanel(true); syncMinimap(); });
   g.addEventListener('pointerup',()=>g.classList.remove('drag'));
 })();
 
@@ -1617,7 +1600,7 @@ const PAL_CMDS = [
   {name:'> Toggle dark mode', act:()=>setTheme(isDark() ? 'light' : 'dark')},
   {name:'> Toggle terminal', act:()=>togglePanel()},
   {name:'> Toggle side bar', act:()=>app.classList.toggle('no-side')},
-  {name:'> Open resume', act:()=>openFile(byPath('resume.pdf'))},
+  {name:'> Open resume', act:()=>window.open(LINKS.resume,'_blank','noopener')},
   {name:'> Rebuild portfolio', act:()=>replayBuild()},
   {name:'> Email Hyunwoo', act:()=>location.href=LINKS.email}
 ];
@@ -1654,7 +1637,7 @@ const BUILD = [
   ['$ cmake --build ./portfolio --target hyunwoo','cmd'],
   ...allFiles.filter(f=>f.kind==='project').map(f=>[`Building ${f.ext==='cpp'?'CXX':f.ext==='cs'?'C#':f.ext==='html'?'HTML':'JS'} object projects/${f.parent.name}/${f.name}.o`]),
   ['Building CXX object projects/graphics (5 demos)'],
-  ['Linking about.md skills.hpp contact.cpp leadership.log'],
+  ['Linking about.md skills.md contact.md leadership.md'],
   ['Linking hyunwoo']
 ];
 function buildLines(){
