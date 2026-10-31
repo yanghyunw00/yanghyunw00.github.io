@@ -1,27 +1,27 @@
 {
   "version": 1,
-  "updatedAt": 1793258057859,
+  "updatedAt": 1793426312876,
   "nodeCount": 3,
   "contentFingerprint": "62cd6578_3a5215f9_146",
   "nodes": {
     "insight-1791713490662-7yvv": {
       "id": "insight-1791713490662-7yvv",
       "category": "insights",
-      "confidence": 0.32999999999999996,
+      "confidence": 0.5,
       "accessCount": 0,
       "createdAt": 1791713490662
     },
     "insight-1791713490662-pvyu": {
       "id": "insight-1791713490662-pvyu",
       "category": "insights",
-      "confidence": 0.32999999999999996,
+      "confidence": 0.5,
       "accessCount": 0,
       "createdAt": 1791713490662
     },
     "insight-1791713490662-jxfu": {
       "id": "insight-1791713490662-jxfu",
       "category": "insights",
-      "confidence": 0.32999999999999996,
+      "confidence": 0.5,
       "accessCount": 0,
       "createdAt": 1791713490662
     }

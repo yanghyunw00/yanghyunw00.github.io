@@ -166,8 +166,8 @@ kbd{font:500 11px/1 var(--mono);padding:2px 5px;border:1px solid var(--rule);bor
 .tree{list-style:none;margin:0;padding:0 0 16px}
 .tree ul{list-style:none;margin:0;padding:0}
 .node{
-  display:flex;align-items:center;gap:6px;width:100%;height:24px;
-  padding-left:calc(10px + var(--d,0) * 14px);padding-right:10px;
+  display:flex;align-items:center;gap:6px;width:calc(100% - 12px);height:24px;margin-inline:6px;border-radius:6px;
+  padding-left:calc(4px + var(--d,0) * 14px);padding-right:10px;
   color:var(--ink-2);text-align:left;white-space:nowrap;position:relative;
 }
 .node:hover{background:var(--chrome-2);color:var(--ink)}
@@ -176,7 +176,7 @@ kbd{font:500 11px/1 var(--mono);padding:2px 5px;border:1px solid var(--rule);bor
 .node[aria-expanded="false"] .tw{rotate:-90deg}
 li[data-collapsed] > ul{display:none}
 .ic{font:600 9.5px/1 var(--mono);width:22px;text-align:center;letter-spacing:-.02em;flex:none}
-.ic.cpp{color:#3D6FD0}.ic.js{color:#B58A00}.ic.cs{color:#7E3FB8}.ic.md{color:#3E8DA8}
+.ic.ts,.ic.tsx{color:#3178C6}.ic.cpp{color:#3D6FD0}.ic.js{color:#B58A00}.ic.cs{color:#7E3FB8}.ic.md{color:#3E8DA8}
 .ic.json{color:#B07A00}.ic.sh{color:#2F7D32}.ic.pdf{color:#C23B2A}.ic.html{color:#D35A1F}.ic.log{color:var(--dim)}
 .ic.dir{color:var(--dim)}
 .node .label{overflow:hidden;text-overflow:ellipsis}
@@ -673,10 +673,10 @@ const LINKS = {
 
 const PROJECTS = [
 {
-  id:'crazy-futsal', file:'crazy-futsal.cpp', lang:'cpp', group:'games',
+  id:'crazy-futsal', file:'crazy-futsal.ts', lang:'ts', group:'games',
   title:'Crazy Futsal', sort:202610, when:'Oct 2026',
   role:'Solo Developer', team:'Solo', year:'Oct 2026',
-  stack:['JavaScript','WebRTC','Web Worker','Cloudflare Workers + D1'],
+  stack:['TypeScript','WebRTC','Web Worker','Cloudflare Workers + D1'],
   links:[{l:'play the game',h:'https://crazy-futsal.pages.dev/',run:'Play'}],
   gallery:[['img/crazyfutsal.jpeg','crazy futsal: lobby'],['img/crazyfutsal_gameplay.jpeg','crazy futsal: gameplay']],
   summary:'Browser soccer for 2 to 4 players with WebRTC netcode',
@@ -690,7 +690,7 @@ const PROJECTS = [
       'Matches are best-of-three sets (first to 3 goals per set), with team randomization via a provably balanced coin flip, 15 selectable portraits, 11 emotes, and in-room voice chat'
     ]],
     ['Real-Time Multiplayer Architecture',[
-      'Built and published a cross-device browser game with HTML, CSS, and JavaScript, using a hosted API with a Cloudflare D1 database for rooms, sign-in, and saved character records',
+      'Built and published a cross-device browser game with HTML, CSS, and TypeScript, using a hosted API with a Cloudflare D1 database for rooms, sign-in, and saved character records',
       'Implemented a 60 Hz host simulation in a Web Worker with WebRTC DataChannels set to unordered delivery with zero retransmits, replacing an earlier database-polling transport that capped each client at 20 exchanges per second'
     ]],
     ['Diagnosing & Fixing Multiplayer Stutter',[
@@ -749,7 +749,7 @@ const PROJECTS = [
   ]
 },
 {
-  id:'lostguns', file:'lostguns.cpp', lang:'cpp', group:'games',
+  id:'lostguns', file:'lostguns.cs', lang:'cs', group:'games',
   title:'LostGuns', sort:202603, when:'Jan 2026 — Mar 2026',
   role:'Solo Developer', team:'Solo', year:'Jan 2026 — Mar 2026',
   stack:['Unity','C#','Netcode for GameObjects','Unity Relay'],
@@ -835,10 +835,10 @@ const PROJECTS = [
   ]
 },
 {
-  id:'graphics-calculator', file:'graphics-calculator.cpp', lang:'cpp', group:'web',
+  id:'graphics-calculator', file:'graphics-calculator.tsx', lang:'tsx', group:'web',
   title:'Graphics Calculator', sort:202609, when:'Jun — Sep 2026',
   role:'Solo Developer', team:'Solo', year:'Jun – Sep 2026',
-  stack:['React','Vite','Three.js','math.js','KaTeX'],
+  stack:['TypeScript','React','Vite','Three.js','math.js','KaTeX'],
   links:[{l:'open live app',h:'https://yanghyunw00.github.io/project/calc/',run:'Open app'},{l:'watch demo video',h:'https://youtu.be/-McA1GMFBq0'}],
   gallery:[['img/math_3d.jpeg','graphics calculator: 3D visualization'],['img/math_main.jpeg','graphics calculator: main view']],
   summary:'Step-by-step matrix, calculus, vector & 3D graphics toolkit, built to make Computer Graphics coursework easier',
@@ -854,10 +854,10 @@ const PROJECTS = [
   ]]]
 },
 {
-  id:'hangout-timer', file:'hangout-timer.cpp', lang:'cpp', group:'web',
+  id:'hangout-timer', file:'hangout-timer.js', lang:'js', group:'web',
   title:'Hangout Timer', sort:202509, when:'Sep 2025',
   role:'Full-Stack Developer', team:'Solo', year:'Sep 2025',
-  stack:['Web'],
+  stack:['JavaScript','Firebase'],
   links:[{l:'open live demo',h:'https://yanghyunw00.github.io/project/timer/',run:'Open demo'}],
   gallery:[['img/gallery-hangout-timer-0.webp','hangout timer: screenshot 1'],['img/gallery-hangout-timer-1.webp','hangout timer: screenshot 2'],['img/gallery-hangout-timer-2.webp','hangout timer: screenshot 3']],
   summary:'Shared Pomodoro rooms for late-night study sessions',
@@ -892,8 +892,8 @@ const ACADEMIC = [
 ];
 
 /* ═════════ virtual file system ═════════ */
-const LANG = {md:'Markdown',cpp:'C++',js:'JavaScript',cs:'C#',html:'HTML',json:'JSON',sh:'Shell Script',pdf:'PDF',log:'Log'};
-const ICON = {md:'M↓',cpp:'C++',js:'JS',cs:'C#',html:'<>',json:'{}',sh:'$_',pdf:'PDF',log:'≡'};
+const LANG = {md:'Markdown',cpp:'C++',js:'JavaScript',ts:'TypeScript',tsx:'TypeScript React',cs:'C#',html:'HTML',json:'JSON',sh:'Shell Script',pdf:'PDF',log:'Log'};
+const ICON = {md:'M↓',cpp:'C++',js:'JS',ts:'TS',tsx:'TS',cs:'C#',html:'<>',json:'{}',sh:'$_',pdf:'PDF',log:'≡'};
 const extOf = f => f.split('.').pop() === 'hpp' ? 'cpp' : f.split('.').pop();
 
 const dir = (name, children) => ({type:'dir', name, children});
