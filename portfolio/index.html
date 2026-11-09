@@ -730,6 +730,50 @@ const LINKS = {
 
 const PROJECTS = [
 {
+  id:'par-from-home', file:'par-from-home.cs', lang:'cs', group:'games',
+  title:'Par From Home', sort:202611, when:'Oct 2026 — Nov 2026',
+  role:'DevOps · Backend · Integration', team:'Team of 4 (Team 4k Games)', year:'Oct 25 — Nov 7, 2026 (2-week game jam)',
+  stack:['Unity','C#','GitHub Actions','game-ci','itch.io (butler)','Cloudflare Workers + D1'],
+  links:[{l:'play on itch.io',h:'https://itch.io/jam/thatgamejam02/rate/5241344',run:'Play'},{l:'watch gameplay',h:'https://youtu.be/yzMt5QCSwOg'}],
+  gallery:[['img/par_gameLogo.jpeg','par from home: three regions'],['img/par_gameplay.jpeg','par from home: sky region'],['img/par_gameplay2.jpeg','par from home: canyon region'],['img/par_mainmenu.jpeg','par from home: main menu'],['img/par_scoreboard.jpeg','par from home: ranking']],
+  summary:'Unity golf game from a 2-week jam, with auto-deploy to itch.io and a serverless leaderboard',
+  intro:['Par From Home is a 2D golf game made for thatgamejam #02 by a team of four in two weeks. A tiny golf ball goes looking for mom: pull back, aim, and let go. Every run builds a new course out of hand-made sections across three regions, with Easy, Medium, and Hard levels.',
+         'I was the DevOps and integration owner. I built the pipeline that ships every push to main to itch.io, the serverless leaderboard behind the ranking screen, and merged the teammates\' branches into main. I also built the scoreboard UI, tutorial, options, and sound.'],
+  sections:[
+    ['CI/CD — GitHub Actions to itch.io',[
+      'Built two workflows (109 lines total). test.yml runs the Unity test runner on every PR and main push (46 lines); deploy.yml builds WebGL and pushes it to the itch.io webgl channel with butler on every main push (63 lines)',
+      'Cached Unity\'s Library folder keyed on a hash of Assets/** and Packages/**, with separate build and test keys and a restore-keys fallback, to skip the slowest step in Unity CI (asset import)',
+      'Kept all 5 secrets (Unity license, email, password, itch API key, game ID) out of the code, and checked out with Git LFS in both workflows',
+      'Fixed real CI failures one at a time: Unity license activation, a switch from the itch upload action to butler, an always-red CI before tests existed (continue-on-error), and runner disk exhaustion (freeing dotnet, Android, GHC, and CodeQL directories and pruning Docker images before the build)'
+    ]],
+    ['Version control',[
+      'Created the ci/itch-deploy branch and merged the DY, Jaeyong, and joon_nam branches into main, about 31 of the project\'s 36 merges',
+      'Wrote a 32-line .gitattributes: 15 Unity text types (cs, unity, prefab, meta) pinned to LF and 11 binary types (png, wav, ttf) excluded from conversion, so Mac and Windows teammates stopped producing spurious .meta diffs',
+      'Cleaned .gitignore for Unity-generated folders, IDE files, and Wrangler output',
+      'Configured the WebGL build settings and URP settings (8 files)'
+    ]],
+    ['Leaderboard backend — Cloudflare Workers + D1',[
+      'Built a serverless leaderboard in about 233 lines: a Worker (187 lines), a 26-line schema with 2 tables and 3 indexes, and a 13-line wrangler config',
+      'Exposed 3 endpoints: POST /api/runs to submit a run, GET /api/runs for overall rankings by time or strokes, and GET /api/regions for per-region best times',
+      'Validated input at the boundary: 32 KB body cap (413), 1-12 character Unicode names, 1-200 regions, 300 ms to 6 hours per region, and 1-999 strokes per region. Totals are computed on the server from the region records instead of trusting the client',
+      'Made paging stable with id ASC as the last sort key, capped limit at 50 and offset at 100,000, and added around=name to jump to a player\'s own page and return their rank (myRank). Per-region rankings keep each player\'s best time with GROUP BY and MIN',
+      'Wrote each run and its region times with a single DB.batch insert to cut round trips'
+    ]],
+    ['Unity client',[
+      'Wrote the Score module: 5 C# files, about 842 lines (LeaderboardClient, ScoreboardUI, RunRecorder, RunRecord, LeaderboardSettings), with a 10-second request timeout over UnityWebRequest coroutines',
+      'Added an offline fallback: if the server URL is empty or the request fails, the same ranking UI is fed from the last 50 records in PlayerPrefs, so a server outage never blocks the game',
+      'Built the leaderboard in one commit on Oct 31 (29 files, +3,008 lines), then improved the server (+65 lines) and client (about +120 lines) on Nov 7'
+    ]],
+    ['Gameplay features',[
+      'Built the options menu (master mute, BGM, SFX), narration and ending dialogue, credits, tutorial, pause menu, intro camera, and the play-to-cutscene flow',
+      'Added sound effects for click, swing, hole-in, and dialogue; 25 audio files are mine'
+    ]],
+    ['Team',[
+      'Jaeyong Lee: procedural generation, levels, scenes, backgrounds. Dongyun Lee: ball physics and shooting, special tiles, particles, shaders. Hyeonjoon Nam: art, camera, cutscenes, ending'
+    ]]
+  ]
+},
+{
   id:'crazy-futsal', file:'crazy-futsal.ts', lang:'ts', group:'games',
   title:'Crazy Futsal', sort:202610, when:'Oct 2026',
   role:'Solo Developer', team:'Solo', year:'Oct 2026',
@@ -931,6 +975,7 @@ const PROJECTS = [
 
 // one glance per project: what I did, the change it made, and when
 const OVERVIEW = {
+  'par-from-home':      {tags:['game','team'], span:[202610,202611], did:'DevOps on a 4-person Unity jam game: auto-deploy pipeline to itch.io and a Cloudflare Workers leaderboard.', diff:[['+','every main push auto-deployed to itch.io'],['+','3 API endpoints on Workers + D1']]},
   'crazy-futsal':       {tags:['game','web','multiplayer'], span:[202610,202610], did:'Built a 2–4 player browser soccer game and fixed its WebRTC netcode stutter.', diff:[['-','2,583 bytes per state message'],['+','763 bytes per state message']]},
   'igy':                {tags:['game','engine','team'], span:[202509,202606], did:'Tech Lead on a custom C++/OpenGL engine: instanced renderer, A* rewrite, agent AI.', diff:[['-','179ms pathfinding frame spike'],['+','111ms projected frame spike']]},
   'lostguns':           {tags:['game','multiplayer'], span:[202601,202603], did:'Rebuilt a mobile shooter in Unity with online play and rewind lag compensation.', diff:[['-','hits on targets that looked dodged'],['+','server rewind to the shooter\'s view'],['+','up to 8-player online matches']]},
@@ -1065,7 +1110,7 @@ const lens = links => `<div class="lens">${links.map((k,i)=>`${i?'<span aria-hid
 const R = {
   readme(){
     const TAGS = ['all','game','web','multiplayer','engine','graphics','team'];
-    const ORDER = ['igy','graphics-calculator','lostguns','graphics','crazy-futsal','hangout-timer','minigames','doctor-water','legacy-of-dragons'];
+    const ORDER = ['par-from-home','igy','graphics-calculator','lostguns','graphics','crazy-futsal','hangout-timer','minigames','doctor-water','legacy-of-dragons'];
     const byId = {};
     PROJECTS.forEach(pj=>{
       const o = OVERVIEW[pj.id], f = allFiles.find(x=>x.data===pj);
