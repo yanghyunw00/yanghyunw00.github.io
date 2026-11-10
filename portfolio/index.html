@@ -741,32 +741,31 @@ const PROJECTS = [
          'I was the DevOps and integration owner. I built the pipeline that ships every push to main to itch.io, the serverless leaderboard behind the ranking screen, and merged the teammates\' branches into main. I also built the scoreboard UI, tutorial, options, and sound.'],
   sections:[
     ['CI/CD — GitHub Actions to itch.io',[
-      'Built two workflows (109 lines total). test.yml runs the Unity test runner on every PR and main push (46 lines); deploy.yml builds WebGL and pushes it to the itch.io webgl channel with butler on every main push (63 lines)',
+      'Built two workflows: test.yml runs the Unity test runner on every PR and main push, and deploy.yml builds WebGL and pushes it to the itch.io webgl channel with butler on every main push',
       'Cached Unity\'s Library folder keyed on a hash of Assets/** and Packages/**, with separate build and test keys and a restore-keys fallback, to skip the slowest step in Unity CI (asset import)',
       'Kept all 5 secrets (Unity license, email, password, itch API key, game ID) out of the code, and checked out with Git LFS in both workflows',
       'Fixed real CI failures one at a time: Unity license activation, a switch from the itch upload action to butler, an always-red CI before tests existed (continue-on-error), and runner disk exhaustion (freeing dotnet, Android, GHC, and CodeQL directories and pruning Docker images before the build)'
     ]],
     ['Version control',[
-      'Created the ci/itch-deploy branch and merged the DY, Jaeyong, and joon_nam branches into main, about 31 of the project\'s 36 merges',
-      'Wrote a 32-line .gitattributes: 15 Unity text types (cs, unity, prefab, meta) pinned to LF and 11 binary types (png, wav, ttf) excluded from conversion, so Mac and Windows teammates stopped producing spurious .meta diffs',
+      'Created the ci/itch-deploy branch and merged the DY, Jaeyong, and joon_nam branches into main as the integration owner',
+      'Wrote a .gitattributes that pins Unity text files (cs, unity, prefab, meta) to LF and keeps binaries (png, wav, ttf) from being converted, so Mac and Windows teammates stopped producing spurious .meta diffs',
       'Cleaned .gitignore for Unity-generated folders, IDE files, and Wrangler output',
-      'Configured the WebGL build settings and URP settings (8 files)'
+      'Configured the WebGL build settings and URP settings'
     ]],
     ['Leaderboard backend — Cloudflare Workers + D1',[
-      'Built a serverless leaderboard in about 233 lines: a Worker (187 lines), a 26-line schema with 2 tables and 3 indexes, and a 13-line wrangler config',
+      'Built a serverless leaderboard on a Cloudflare Worker with a D1 schema of 2 tables and 3 indexes',
       'Exposed 3 endpoints: POST /api/runs to submit a run, GET /api/runs for overall rankings by time or strokes, and GET /api/regions for per-region best times',
       'Validated input at the boundary: 32 KB body cap (413), 1-12 character Unicode names, 1-200 regions, 300 ms to 6 hours per region, and 1-999 strokes per region. Totals are computed on the server from the region records instead of trusting the client',
       'Made paging stable with id ASC as the last sort key, capped limit at 50 and offset at 100,000, and added around=name to jump to a player\'s own page and return their rank (myRank). Per-region rankings keep each player\'s best time with GROUP BY and MIN',
       'Wrote each run and its region times with a single DB.batch insert to cut round trips'
     ]],
     ['Unity client',[
-      'Wrote the Score module: 5 C# files, about 842 lines (LeaderboardClient, ScoreboardUI, RunRecorder, RunRecord, LeaderboardSettings), with a 10-second request timeout over UnityWebRequest coroutines',
-      'Added an offline fallback: if the server URL is empty or the request fails, the same ranking UI is fed from the last 50 records in PlayerPrefs, so a server outage never blocks the game',
-      'Built the leaderboard in one commit on Oct 31 (29 files, +3,008 lines), then improved the server (+65 lines) and client (about +120 lines) on Nov 7'
+      'Wrote the Score module (LeaderboardClient, ScoreboardUI, RunRecorder, RunRecord, LeaderboardSettings), with a 10-second request timeout over UnityWebRequest coroutines',
+      'Added an offline fallback: if the server URL is empty or the request fails, the same ranking UI is fed from the last 50 records in PlayerPrefs, so a server outage never blocks the game'
     ]],
     ['Gameplay features',[
       'Built the options menu (master mute, BGM, SFX), narration and ending dialogue, credits, tutorial, pause menu, intro camera, and the play-to-cutscene flow',
-      'Added sound effects for click, swing, hole-in, and dialogue; 25 audio files are mine'
+      'Added sound effects for click, swing, hole-in, and dialogue'
     ]],
     ['Team',[
       'Jaeyong Lee: procedural generation, levels, scenes, backgrounds. Dongyun Lee: ball physics and shooting, special tiles, particles, shaders. Hyeonjoon Nam: art, camera, cutscenes, ending'
