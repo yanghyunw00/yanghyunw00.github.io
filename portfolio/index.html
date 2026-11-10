@@ -502,13 +502,19 @@ button.tl-row:hover .tl-bar,.tl-row.hl .tl-bar{opacity:1}
 .gb-langs input:checked + span{background:var(--ink);color:var(--paper);border-color:var(--ink)}
 .gb-langs input:focus-visible + span{outline:2px solid var(--blue);outline-offset:2px}
 .gb-board{margin:8px 0 28px;padding:20px 18px 30px;border-radius:10px;border:1px solid var(--rule);background-color:var(--chrome);background-image:radial-gradient(var(--rule) 1px,transparent 1.2px);background-size:20px 20px;min-height:240px}
-.gb-notes{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px 8px;align-items:start}
+.gb-board.gb-pan{position:relative;height:clamp(380px,64vh,580px);padding:0;overflow:hidden;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
+.gb-board.gb-pan:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.gb-board.gb-pan.drag{cursor:grabbing}
+.gb-board.gb-pan::after{content:"";position:absolute;inset:0;z-index:200;pointer-events:none;background:radial-gradient(ellipse at center,transparent 50%,var(--chrome) 100%)}
+.gb-world{position:absolute;left:0;top:0;width:0;height:0}
+.gb-pan .gb-note{position:absolute;left:0;top:0;width:250px;rotate:none;translate:none;transition:none;transform-origin:50% 50%}
+.gb-hint{position:absolute;left:50%;bottom:12px;translate:-50% 0;z-index:201;font:11.5px var(--mono);color:var(--dim);pointer-events:none;transition:opacity .5s}
+.gb-pan.touched .gb-hint{opacity:0}
 .gb-board > .muted{color:var(--dim);margin:0;padding:8px 4px}
 .gb-prev{max-width:520px;padding:6px 0}
 .gb-note{position:relative;z-index:var(--z,1);display:flex;flex-direction:column;min-height:120px;background:var(--paper);color:var(--ink);border:1px solid var(--rule);border-radius:8px;overflow:hidden;
   rotate:var(--rot,0deg);translate:var(--dx,0px) var(--dy,0px);transform:scale(var(--s,1));transform-origin:50% 50%;will-change:transform,opacity;
   box-shadow:0 1px 2px rgba(0,0,0,.08),0 10px 20px -12px rgba(0,0,0,.35);transition:rotate .22s ease,translate .22s ease,box-shadow .22s ease,border-color .22s ease}
-.gb-notes .gb-note:hover,.gb-notes .gb-note:focus-within{rotate:0deg;translate:0 -4px;z-index:30;border-color:var(--blue);box-shadow:0 2px 4px rgba(0,0,0,.12),0 18px 28px -12px rgba(0,0,0,.45)}
 .gb-edit{display:inline;white-space:pre-wrap;overflow-wrap:anywhere;border-bottom:1.5px dashed var(--dim);cursor:text;outline:0;border-radius:2px;padding:0 2px;color:var(--ink)}
 .gb-edit:empty{display:inline-block;min-width:8ch;vertical-align:bottom}
 .gb-edit:empty::before{content:attr(data-ph);color:var(--dim);pointer-events:none}
@@ -1362,36 +1368,87 @@ const GB_LABEL = {python:'Python',java:'Java',javascript:'JavaScript',rust:'Rust
 function gbNote(lang, name, msg, foot, id){
   const l = GB_TPL[lang] ? lang : 'plain';
   const body = l === 'plain' ? `<div class="gb-text"><b>${esc(name)}</b><p>${esc(msg)}</p></div>` : gbCodeHTML(l, name, msg);
-  let st = '';
-  if (id != null){ const h = Math.imul(Number(id) + 7, 2654435761) >>> 0;
-    st = ` style="--rot:${((h % 900)/100 - 4.5).toFixed(2)}deg;--dx:${((h >>> 8) % 17) - 8}px;--dy:${((h >>> 13) % 17) - 8}px;--z:${1 + (h >>> 4) % 9}"`; }
-  return `<article class="gb-note" data-lang="${l}"${st}>${gbHead(l)}${body}<footer>${esc(foot)}</footer></article>`;
+  return `<article class="gb-note" data-lang="${l}">${gbHead(l)}${body}<footer>${esc(foot)}</footer></article>`;
 }
 const gbEntryHTML = en => gbNote(en.lang, en.name, en.message, gbAgo(en.created_at) + ' · ' + (GB_LABEL[en.lang] || 'Note'), en.id);
 
-/* watchOS-style list: notes shrink and fade toward the top and bottom edges, the centered one is full size */
-function gbWatch(){
-  const sc = scroller, reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const update = () => {
-    const notes = doc.querySelectorAll('.gb-note'); if (!notes.length) return;
-    const r = sc.getBoundingClientRect(), cy = r.top + r.height/2, half = r.height/2;
-    notes.forEach(n => {
-      if (reduce){ n.style.removeProperty('--s'); n.style.opacity = ''; return; }
-      const q = n.getBoundingClientRect();
-      const d = Math.abs(q.top + q.height/2 - cy) / half;
-      const t = Math.min(1, Math.max(0, (d - 0.5) / 0.6)), e = t*t*(3 - 2*t);
-      n.style.setProperty('--s', (1 - 0.2*e).toFixed(3));
-      n.style.opacity = (1 - 0.6*e).toFixed(3);
-    });
-  };
-  gbWatch.update = update;
-  if (!sc._gbBound){
-    sc._gbBound = true; let raf = 0;
-    const tick = () => { raf = 0; gbWatch.update(); };
-    const kick = () => { if (!raf) raf = requestAnimationFrame(tick); };
-    sc.addEventListener('scroll', kick, {passive:true}); addEventListener('resize', kick);
+/* Apple Watch home screen: notes sit in a honeycomb you drag around. The one at the center is full size, the edges shrink and fade. */
+function gbHoney(board){
+  const world = board.querySelector('.gb-world'), notes = [...world.children];
+  if (!notes.length) return;
+  const W = 250, GAP = 16, reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let bw = 0, bh = 0, ox = 0, oy = 0, vx = 0, vy = 0, raf = 0, drag = null, pos = [], lim = null, placed = false;
+  const clamp = (v,a,b) => Math.min(b, Math.max(a, v));
+  const ease = t => t*t*(3 - 2*t);
+  const fit = () => { ox = clamp(ox, bw/2 - lim.x1, bw/2 - lim.x0); oy = clamp(oy, bh/2 - lim.y1, bh/2 - lim.y0); };
+  function apply(){
+    for (let i = 0; i < notes.length; i++){
+      const p = pos[i], el = notes[i];
+      const d = Math.hypot((p.cx + ox - bw/2) / (bw*.5), (p.cy + oy - bh/2) / (bh*.5));
+      const t = ease(clamp((d - .35) / 1.1, 0, 1));
+      el.style.transform = `translate(${(p.x + ox).toFixed(1)}px,${(p.y + oy).toFixed(1)}px) scale(${(1 - .5*t).toFixed(3)})`;
+      el.style.opacity = (1 - .65*t).toFixed(3);
+      el.style.zIndex = Math.round((1 - t) * 100);
+      el.style.visibility = d > 2.4 ? 'hidden' : '';
+    }
   }
-  update();
+  function layout(){
+    bw = board.clientWidth; bh = board.clientHeight; if (!bw || !bh) return;
+    const n = notes.length, P = W + GAP, hs = notes.map(el => el.offsetHeight), H = Math.max(...hs) + GAP;
+    const cols = Math.max(1, Math.ceil(Math.sqrt(n * 1.6))), rows = Math.ceil(n / cols), slots = [];
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) slots.push({x: c*P + (r % 2 ? P/2 : 0), y: r*H});
+    const cx = s => s.x + W/2, cy = s => s.y + (H - GAP)/2;
+    const mx = slots.reduce((a,s) => a + cx(s), 0) / slots.length, my = slots.reduce((a,s) => a + cy(s), 0) / slots.length;
+    const dist = s => Math.hypot(cx(s) - mx, (cy(s) - my) * P / H);
+    slots.sort((a,b) => dist(a) - dist(b));                       // newest goes to the middle, older ones spread outward
+    pos = slots.slice(0, n).map((s,i) => ({x: s.x, y: s.y + (H - GAP - hs[i]) / 2, cx: cx(s), cy: cy(s)}));
+    lim = {x0: Math.min(...pos.map(p => p.cx)), x1: Math.max(...pos.map(p => p.cx)), y0: Math.min(...pos.map(p => p.cy)), y1: Math.max(...pos.map(p => p.cy))};
+    if (!placed){ placed = true; ox = bw/2 - pos[0].cx; oy = bh/2 - pos[0].cy; }
+    fit(); apply();
+  }
+  const stop = () => { cancelAnimationFrame(raf); raf = 0; };
+  function glide(){
+    let last = performance.now();
+    const step = now => {
+      const dt = Math.min(32, now - last); last = now;
+      const k = Math.exp(-dt / 380); vx *= k; vy *= k;
+      const px = ox, py = oy; ox += vx * dt; oy += vy * dt; fit();
+      if (ox === px) vx = 0; if (oy === py) vy = 0;
+      apply();
+      raf = Math.abs(vx) + Math.abs(vy) > .02 ? requestAnimationFrame(step) : 0;
+    };
+    raf = requestAnimationFrame(step);
+  }
+  board.addEventListener('pointerdown', e => {
+    if (e.button) return; stop(); vx = vy = 0;
+    drag = {id: e.pointerId, x: e.clientX, y: e.clientY, t: e.timeStamp};
+    board.setPointerCapture(e.pointerId); board.classList.add('drag', 'touched');
+  });
+  board.addEventListener('pointermove', e => {
+    if (!drag || e.pointerId !== drag.id) return;
+    const dt = Math.max(1, e.timeStamp - drag.t), dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+    drag.x = e.clientX; drag.y = e.clientY; drag.t = e.timeStamp;
+    ox += dx; oy += dy; fit(); vx = vx*.4 + dx/dt*.6; vy = vy*.4 + dy/dt*.6; apply();
+  });
+  const release = e => {
+    if (!drag || e.pointerId !== drag.id) return;
+    const fresh = e.timeStamp - drag.t < 80; drag = null; board.classList.remove('drag');
+    if (!reduce && fresh && Math.abs(vx) + Math.abs(vy) > .05) glide();
+  };
+  board.addEventListener('pointerup', release); board.addEventListener('pointercancel', release);
+  board.addEventListener('wheel', e => {                           // trackpad / mouse wheel; lets the page scroll once the edge is reached
+    if (e.ctrlKey) return;
+    const k = e.deltaMode === 1 ? 16 : 1, px = ox, py = oy;
+    stop(); ox -= e.deltaX * k; oy -= e.deltaY * k; fit();
+    if (ox !== px || oy !== py){ e.preventDefault(); board.classList.add('touched'); apply(); }
+  }, {passive: false});
+  board.tabIndex = 0; board.setAttribute('role', 'region'); board.setAttribute('aria-label', 'Guestbook messages, use arrow keys to move around');
+  board.addEventListener('keydown', e => {
+    const m = {ArrowLeft:[80,0], ArrowRight:[-80,0], ArrowUp:[0,80], ArrowDown:[0,-80]}[e.key]; if (!m) return;
+    e.preventDefault(); stop(); ox += m[0]; oy += m[1]; fit(); board.classList.add('touched'); apply();
+  });
+  new ResizeObserver(layout).observe(board);
+  layout();
 }
 async function initGuestbook(){
   const list = $('#gbList'), form = $('#gbForm'), status = $('#gbStatus'), send = $('#gbSend');
@@ -1437,10 +1494,11 @@ async function initGuestbook(){
   const load = async () => {
     try {
       const r = await fetch(GB.api + '/entries'); const j = await r.json();
-      list.innerHTML = j.entries.length
-        ? '<div class="gb-notes">' + j.entries.map(gbEntryHTML).join('') + '</div>'
-        : '<p class="muted">No messages yet. Be the first!</p>';
-      gbWatch();
+      if (j.entries.length){
+        list.classList.add('gb-pan');
+        list.innerHTML = '<div class="gb-world">' + j.entries.map(gbEntryHTML).join('') + '</div><div class="gb-hint">drag to explore</div>';
+        gbHoney(list);
+      } else { list.classList.remove('gb-pan'); list.innerHTML = '<p class="muted">No messages yet. Be the first!</p>'; }
     } catch { list.innerHTML = '<p class="muted">Could not load messages.</p>'; }
   };
   load();
