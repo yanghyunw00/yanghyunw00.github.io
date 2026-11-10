@@ -1364,7 +1364,7 @@ function gbNote(lang, name, msg, foot, id){
   const body = l === 'plain' ? `<div class="gb-text"><b>${esc(name)}</b><p>${esc(msg)}</p></div>` : gbCodeHTML(l, name, msg);
   let st = '';
   if (id != null){ const h = Math.imul(Number(id) + 7, 2654435761) >>> 0;
-    st = ` style="--rot:${((h % 900)/100 - 4.5).toFixed(2)}deg;--dx:${((h >> 8) % 17) - 8}px;--dy:${((h >> 13) % 17) - 8}px;--z:${1 + (h >> 4) % 9}"`; }
+    st = ` style="--rot:${((h % 900)/100 - 4.5).toFixed(2)}deg;--dx:${((h >>> 8) % 17) - 8}px;--dy:${((h >>> 13) % 17) - 8}px;--z:${1 + (h >>> 4) % 9}"`; }
   return `<article class="gb-note" data-lang="${l}"${st}>${gbHead(l)}${body}<footer>${esc(foot)}</footer></article>`;
 }
 const gbEntryHTML = en => gbNote(en.lang, en.name, en.message, gbAgo(en.created_at) + ' · ' + (GB_LABEL[en.lang] || 'Note'), en.id);
