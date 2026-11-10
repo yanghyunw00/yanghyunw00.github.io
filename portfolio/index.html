@@ -161,6 +161,10 @@ kbd{font:500 11px/1 var(--mono);padding:2px 5px;border:1px solid var(--rule);bor
 
 /* sidebar */
 .side{grid-area:side;background:var(--chrome);border-right:1px solid var(--rule);overflow:auto;min-width:0;font:400 14px/1 var(--mono)}
+.side-grip{grid-area:side;justify-self:end;align-self:stretch;width:6px;margin-right:-3px;cursor:ew-resize;z-index:5;touch-action:none}
+.side-grip:hover,.side-grip.drag{background:rgba(10,95,219,.25)}
+.app.no-side .side-grip{display:none}
+body.resizing-side{cursor:ew-resize;user-select:none}
 .side h2{margin:0;padding:12px 16px 8px;font:500 11px/1 var(--mono);color:var(--dim);letter-spacing:.06em}
 .view[hidden]{display:none}
 .tree{list-style:none;margin:0;padding:0 0 16px}
@@ -176,6 +180,7 @@ kbd{font:500 11px/1 var(--mono);padding:2px 5px;border:1px solid var(--rule);bor
 .node[aria-expanded="false"] .tw{rotate:-90deg}
 li[data-collapsed] > ul{display:none}
 .ic{font:600 11px/1 var(--mono);width:22px;text-align:center;letter-spacing:-.02em;flex:none}
+.node[data-path="guestbook.md"] .ic,.node[data-path="guestbook.md"] .label{color:var(--num)}
 .ic.ts,.ic.tsx{color:#3178C6}.ic.cpp{color:#3D6FD0}.ic.js{color:#B58A00}.ic.cs{color:#7E3FB8}.ic.md{color:#3E8DA8}
 .ic.json{color:#B07A00}.ic.sh{color:#2F7D32}.ic.pdf{color:#C23B2A}.ic.html{color:#D35A1F}.ic.log{color:var(--dim)}
 .ic.dir{color:var(--dim)}
@@ -478,6 +483,52 @@ button.tl-row:hover .tl-bar,.tl-row.hl .tl-bar{opacity:1}
 .entry .when{font:14px/1.6 var(--sans);color:var(--dim)}
 .entry p{margin:4px 0 0;color:var(--ink-2);max-width:68ch}
 
+/* guestbook */
+.gb-form{display:grid;gap:10px;max-width:68ch;margin:8px 0 28px}
+.gb-form input[type=text],.gb-form textarea{width:100%;font:15px/1.5 var(--sans);padding:9px 12px;border:1px solid var(--rule);border-radius:6px;background:var(--paper);color:var(--ink);resize:vertical}
+.gb-form textarea{min-height:96px}
+.gb-form .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.gb-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.gb-send{font:500 14px/1 var(--mono);padding:9px 16px;border-radius:6px;background:var(--blue);color:#fff}
+.gb-send:disabled{opacity:.5;cursor:default}
+.gb-count{font:12px var(--mono);color:var(--dim);margin-left:auto}
+.gb-status{font:13.5px/1.5 var(--sans);color:var(--ink-2)}
+.gb-status.err{color:#C93A3A}.gb-status.ok{color:#2E8B57}
+.gb-langs{display:flex;flex-wrap:wrap;gap:6px;border:0;padding:0;margin:0}
+.gb-langs legend{font:12px var(--mono);color:var(--dim);margin-bottom:6px;padding:0}
+.gb-langs label{position:relative}
+.gb-langs input{position:absolute;opacity:0;inset:0;cursor:pointer}
+.gb-langs span{display:inline-block;font:13px/1 var(--mono);padding:7px 11px;border:1px solid var(--rule);border-radius:999px;color:var(--ink-2)}
+.gb-langs input:checked + span{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.gb-langs input:focus-visible + span{outline:2px solid var(--blue);outline-offset:2px}
+.gb-board{margin:8px 0 28px;padding:20px 18px 30px;border-radius:10px;border:1px solid var(--rule);background-color:var(--chrome);background-image:radial-gradient(var(--rule) 1px,transparent 1.2px);background-size:20px 20px;min-height:240px}
+.gb-notes{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px 8px;align-items:start}
+.gb-board > .muted{color:var(--dim);margin:0;padding:8px 4px}
+.gb-prev{max-width:520px;padding:6px 0}
+.gb-note{position:relative;z-index:var(--z,1);display:flex;flex-direction:column;min-height:120px;background:var(--paper);color:var(--ink);border:1px solid var(--rule);border-radius:8px;overflow:hidden;
+  rotate:var(--rot,0deg);translate:var(--dx,0px) var(--dy,0px);transform:scale(var(--s,1));transform-origin:50% 50%;will-change:transform,opacity;
+  box-shadow:0 1px 2px rgba(0,0,0,.08),0 10px 20px -12px rgba(0,0,0,.35);transition:rotate .22s ease,translate .22s ease,box-shadow .22s ease,border-color .22s ease}
+.gb-notes .gb-note:hover,.gb-notes .gb-note:focus-within{rotate:0deg;translate:0 -4px;z-index:30;border-color:var(--blue);box-shadow:0 2px 4px rgba(0,0,0,.12),0 18px 28px -12px rgba(0,0,0,.45)}
+.gb-edit{display:inline;white-space:pre-wrap;overflow-wrap:anywhere;border-bottom:1.5px dashed var(--dim);cursor:text;outline:0;border-radius:2px;padding:0 2px;color:var(--ink)}
+.gb-edit:empty{display:inline-block;min-width:8ch;vertical-align:bottom}
+.gb-edit:empty::before{content:attr(data-ph);color:var(--dim);pointer-events:none}
+.gb-edit:hover{background:var(--chrome-2)}
+.gb-edit:focus{background:var(--sel);border-bottom:1.5px solid var(--blue)}
+.gb-prev .row,.gb-prev .gb-text{cursor:text}
+.gb-note header{display:flex;align-items:center;gap:8px;height:30px;padding:0 12px;background:var(--chrome);border-bottom:1px solid var(--rule);font:12px/1 var(--mono);color:var(--dim)}
+.gb-note header i{width:8px;height:8px;border-radius:50%;background:var(--blue);opacity:.8}
+.gb-note pre{counter-reset:gl;margin:0;padding:10px 0 4px;font:12px/1.65 var(--mono);color:var(--ink);white-space:pre-wrap;overflow-wrap:anywhere}
+.gb-note .row{display:block;position:relative;padding:0 12px 0 36px;counter-increment:gl}
+.gb-note .row::before{content:counter(gl);position:absolute;left:0;width:24px;text-align:right;color:var(--gut)}
+.gb-note .gb-text{padding:12px 14px 4px;font:14px/1.55 var(--sans)}
+.gb-note .gb-text b{display:block;font-weight:600;margin-bottom:3px}
+.gb-note .gb-text p{margin:0;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--ink-2)}
+.gb-note footer{margin-top:auto;padding:8px 14px 10px;font:11px var(--mono);color:var(--dim)}
+@media (prefers-reduced-motion:reduce){.gb-note{will-change:auto;transition:none}}
+.gb-list .muted{color:var(--dim)}
+.gb-list .entry .who{font-size:16px}
+.gb-list .entry p{white-space:pre-wrap;overflow-wrap:anywhere}
+
 .pdfview{width:100%;height:calc(100dvh - 380px);min-height:420px;border:1px solid var(--rule);border-radius:12px;margin:8px 0}
 
 /* minimap */
@@ -570,6 +621,7 @@ dialog::backdrop{background:rgba(29,34,40,.18)}
   :root{--gutter:44px;--panel:200px}
   .app,.app.no-side{grid-template-columns:0 0 minmax(0,1fr)}
   .act{visibility:hidden}
+  .side-grip{display:none}
   .side{position:fixed;top:36px;bottom:24px;left:0;width:min(84vw,300px);z-index:20;box-shadow:12px 0 30px -12px rgba(20,30,50,.25);translate:-105% 0;transition:translate .22s ease-out;visibility:visible!important}
   .app.drawer .side{translate:0 0}
   .menu-btn{display:flex}
@@ -651,6 +703,7 @@ dialog::backdrop{background:rgba(29,34,40,.18)}
       <ul class="gitlog" id="gitlog"></ul>
     </section>
   </aside>
+  <div class="side-grip" id="sideGrip" aria-hidden="true"></div>
 
   <main class="main">
     <div class="tabs" id="tabs" role="tablist" aria-label="Open files">
@@ -1010,6 +1063,7 @@ const ROOT = dir('portfolio', [
   file('about.md','about'),
   file('skills.md','skills'),
   file('leadership.md','leadership'),
+  file('guestbook.md','guestbook'),
   file('contact.md','contact')
 ]);
 
@@ -1197,14 +1251,14 @@ const R = {
     const groups = [
       ['Languages', ['C / C++', 'C#', 'Python', 'JavaScript / TypeScript', 'SQL', 'GLSL', 'Assembly', 'HTML / CSS']],
       ['Web & APIs', ['React 19', 'Next.js', 'Node.js', 'Express', '.NET', 'REST APIs', 'JSON', 'WebRTC']],
-      ['Data & cloud', ['MySQL', 'Redis', 'MongoDB', 'Supabase', 'Firebase', 'Cloudflare / D1', 'GitHub Pages']],
+      ['Data & cloud', ['SQL', 'MySQL', 'Redis', 'MongoDB', 'Supabase', 'Firebase', 'Cloudflare / D1', 'GitHub Pages']],
       ['Engines', ['Custom Engine', 'Unity', 'Unreal', 'Godot']],
       ['Graphics & math', ['OpenGL', 'Vulkan', 'SDL2', 'Raylib', 'Three.js', 'Math.js', 'Nerdamer', 'KaTeX', 'Linear Algebra']],
       ['Tools', ['RenderDoc', 'Vite', 'CMake', 'DragonBones', 'Trello']],
-      ['Systems', ['Data Structures & Algorithms', 'Object-Oriented Programming', 'Multithreading', 'Job System / Thread Pool']],
+      ['Systems', ['Data Structures & Algorithms', 'Object-Oriented Programming', 'Operating Systems', 'Multithreading', 'Job System / Thread Pool']],
       ['Quality', ['Automated Testing', 'Debugging', 'Performance Profiling & Optimization', 'Data Analysis']],
       ['Game systems', ['Rendering Pipeline', 'GPU Instancing', 'Pathfinding & AI (A*, FSM)', 'Network Programming', 'Multiplayer / Lag Compensation']],
-      ['Delivery', ['Git / GitHub', 'Perforce', 'Version Control', 'CI/CD', 'Docker', 'Linux']],
+      ['Delivery', ['Git / GitHub', 'Perforce', 'Jira', 'Version Control', 'CI/CD', 'Docker', 'Linux']],
       ['AI & agents', ['AI Coding Tools', 'Claude Code', 'Claude API', 'LLM Prompting', 'Multi-Agent Workflows', 'Ruflo', 'Skill Authoring']],
       ['Collaboration', ['Team Leadership', 'Teamwork', 'Communication', 'Problem-Solving', 'Creativity', 'Growth Mindset']]
     ];
@@ -1213,11 +1267,26 @@ const R = {
     return `${h1('Skills')}<div class="skills-grid">${table(groups.slice(0,6),'Languages, platforms, and tools')}${table(groups.slice(6),'Engineering, delivery, and collaboration')}</div>`;
   },
   leadership(){
-    const e = (who,when,txt) => `<div class="entry ln"><div class="who">${esc(who)}</div><div class="when">${esc(when)}</div><p>${esc(txt)}</p></div>`;
+    const e = (who,when,txt,href) => `<div class="entry ln"><div class="who">${esc(who)}</div><div class="when">${metrics(when)}</div><p>${metrics(txt)}</p>${href?`<p><a href="${esc(href)}" target="_blank" rel="noopener">${esc(href.replace(/^https?:\/\//,'').replace(/\/$/,''))} ↗</a></p>`:''}</div>`;
     return `${h1('Leadership')}
-      ${e('Military Service, Leader','Aug 2023 — Feb 2025, Daegu, KR','Completed mandatory military service with an honorable discharge at the rank of Sergeant. Served as squad leader of a mortar unit, responsible for training and coordinating a team of soldiers during operations.')}
+      ${e('Seattle Code & Coffee, Volunteer','Oct 2026 — Present, Seattle, WA','Collect feedback and help prepare events for a Seattle developer meetup, then join a monthly meeting after each event to review how it went.','https://seattlecodeandcoffee.framer.website/')}
+      ${e('Software Engineering Career Club, President','Oct 2026 — Present, DigiPen Institute of Technology','Founded a DigiPen-approved student club where members practice LeetCode problems and study the book Refactoring together.')}
+      ${e('Daegu Futsal Team, Captain','Mar 2025 — Jul 2026, Daegu, KR','Captain of a futsal team based in Daegu, South Korea.')}
       ${e('Linkers, Fundraising Volunteer','Feb 2025 — Aug 2025, Daegu, KR','Collaborated with World Vision to provide aid to vulnerable populations. Fostered community engagement to support fundraising initiatives.')}
-      ${e('Daegu Futsal Team, Captain','Mar 2025 — Jul 2026, Daegu, KR','Captain of a futsal team based in Daegu, South Korea.')}`;
+      ${e('Military Service, Leader','Aug 2023 — Feb 2025, Daegu, KR','Completed mandatory military service with an honorable discharge at the rank of Sergeant. Served as squad leader of a mortar unit, responsible for training and coordinating a team of soldiers during operations.')}`;
+  },
+  guestbook(){
+    return `${h1('Guestbook')}
+      ${p('Leave a note, a hello, or feedback. New messages appear after I approve them.')}
+      <form class="gb-form ln" id="gbForm" autocomplete="off">
+        <fieldset class="gb-langs" id="gbLangs"><legend>Pick your language</legend>${[['python','Python'],['java','Java'],['javascript','JavaScript'],['rust','Rust'],['cpp','C++'],['c','C'],['plain',"I'm not a developer"]].map(([v,l],i)=>`<label><input type="radio" name="gbLang" value="${v}"${i===0?' checked':''}><span>${esc(l)}</span></label>`).join('')}</fieldset>
+        <input type="text" class="hp" id="gbHp" tabindex="-1" aria-hidden="true" autocomplete="off">
+        <div class="gb-prev" id="gbPrev"></div>
+        <div id="gbTs"></div>
+        <div class="gb-row"><button class="gb-send" id="gbSend" type="submit">Sign guestbook</button><span class="gb-status" id="gbStatus" role="status"></span><span class="gb-count" id="gbCount">0/300</span></div>
+      </form>
+      ${h2('Messages')}
+      <div class="gb-list gb-board" id="gbList"><p class="muted">Loading…</p></div>`;
   },
   contact(){
     return `      ${h1('Contact')}
@@ -1233,6 +1302,164 @@ const R = {
 };
 const render = f => R[f.kind](f.data);
 
+/* ═════════ guestbook ═════════ */
+const GB = {
+  api: 'https://guestbook-api.jtpgns2015.workers.dev',              // e.g. 'https://guestbook-api.<you>.workers.dev'  (see guestbook-worker/README.md)
+  turnstileSiteKey: ''  // optional Cloudflare Turnstile site key
+};
+function gbAgo(sec){
+  const d = Math.floor(Date.now()/1000) - sec;
+  if (d < 60) return 'just now';
+  if (d < 3600) return Math.floor(d/60) + ' min ago';
+  if (d < 86400) return Math.floor(d/3600) + ' h ago';
+  if (d < 86400*30) return Math.floor(d/86400) + ' days ago';
+  return new Date(sec*1000).toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'});
+}
+const GB_TPL = {
+  python:     {kw:[],                              t:(n,m)=>[`name = ${n}`,`message = ${m}`]},
+  java:       {kw:['public','class','static','void','String'], t:(n,m)=>['public class Guest {','    public static void main(String[] args) {',`        String name = ${n};`,`        String message = ${m};`,'    }','}']},
+  javascript: {kw:['const'],                       t:(n,m)=>[`const name = ${n};`,`const message = ${m};`]},
+  rust:       {kw:['fn','let'],                    t:(n,m)=>['fn main() {',`    let name = ${n};`,`    let message = ${m};`,'}']},
+  cpp:        {kw:['int','main','std','string','return'], t:(n,m)=>['#include <string>','','int main() {',`    std::string name = ${n};`,`    std::string message = ${m};`,'    return 0;','}']},
+  c:          {kw:['int','void','const','char','return'], t:(n,m)=>['int main(void) {',`    const char *name = ${n};`,`    const char *message = ${m};`,'    return 0;','}']}
+};
+const gbLit = t => '"' + String(t).replace(/\\/g,'\\\\').replace(/"/g,'\\"').replace(/\r?\n/g,'\\n') + '"';
+function gbHL(line, kw){
+  const re = new RegExp('("(?:[^"\\\\]|\\\\.)*"|`[^`]*`)|(^\\s*#\\w+)|\\b(' + (kw.length ? kw.join('|') : '(?!)') + ')\\b|(\\b\\d+\\b)', 'g');
+  let out = '', last = 0, m;
+  while ((m = re.exec(line))){
+    if (!m[0]){ re.lastIndex++; continue; }
+    out += esc(line.slice(last, m.index));
+    const cls = m[1] ? 's' : m[2] ? 'k' : m[3] ? 'k' : 'n';
+    out += `<span class="${cls}">${esc(m[0])}</span>`;
+    last = m.index + m[0].length;
+  }
+  return out + esc(line.slice(last));
+}
+function gbCodeHTML(lang, name, msg){
+  const tpl = GB_TPL[lang]; if (!tpl) return '';
+  const lines = tpl.t(gbLit(name), gbLit(msg));
+  return `<pre aria-label="${esc(lang)} code">${lines.map(l=>`<span class="row">${gbHL(l, tpl.kw) || ' '}</span>`).join('')}</pre>`;
+}
+const GB_EDIT = {
+  name: '<span class="gb-edit" contenteditable="true" role="textbox" aria-label="Your name" data-f="name" data-ph="your name" spellcheck="false"></span>',
+  msg:  '<span class="gb-edit" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Your message" data-f="msg" data-ph="your message" spellcheck="false"></span>'
+};
+function gbEditNote(lang){
+  const l = GB_TPL[lang] ? lang : 'plain';
+  let body;
+  if (l === 'plain') body = `<div class="gb-text"><b>${GB_EDIT.name}</b><p>${GB_EDIT.msg}</p></div>`;
+  else {
+    const tpl = GB_TPL[l];
+    body = `<pre aria-label="${esc(l)} code">${tpl.t('"@@N@@"','"@@M@@"').map(x=>`<span class="row">${gbHL(x, tpl.kw) || ' '}</span>`).join('')}</pre>`
+      .replace('@@N@@', GB_EDIT.name).replace('@@M@@', GB_EDIT.msg);
+  }
+  return `<article class="gb-note" data-lang="${l}">${gbHead(l)}${body}<footer>click the dashed spots and type</footer></article>`;
+}
+const GB_FILE = {python:'guest.py',java:'Guest.java',javascript:'guest.js',rust:'guest.rs',cpp:'guest.cpp',c:'guest.c',plain:'note.md'};
+const gbHead = l => `<header><i></i>${esc(GB_FILE[l])}</header>`;
+const GB_LABEL = {python:'Python',java:'Java',javascript:'JavaScript',rust:'Rust',cpp:'C++',c:'C',plain:'Note'};
+function gbNote(lang, name, msg, foot, id){
+  const l = GB_TPL[lang] ? lang : 'plain';
+  const body = l === 'plain' ? `<div class="gb-text"><b>${esc(name)}</b><p>${esc(msg)}</p></div>` : gbCodeHTML(l, name, msg);
+  let st = '';
+  if (id != null){ const h = Math.imul(Number(id) + 7, 2654435761) >>> 0;
+    st = ` style="--rot:${((h % 900)/100 - 4.5).toFixed(2)}deg;--dx:${((h >> 8) % 17) - 8}px;--dy:${((h >> 13) % 17) - 8}px;--z:${1 + (h >> 4) % 9}"`; }
+  return `<article class="gb-note" data-lang="${l}"${st}>${gbHead(l)}${body}<footer>${esc(foot)}</footer></article>`;
+}
+const gbEntryHTML = en => gbNote(en.lang, en.name, en.message, gbAgo(en.created_at) + ' · ' + (GB_LABEL[en.lang] || 'Note'), en.id);
+
+/* watchOS-style list: notes shrink and fade toward the top and bottom edges, the centered one is full size */
+function gbWatch(){
+  const sc = scroller, reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const update = () => {
+    const notes = doc.querySelectorAll('.gb-note'); if (!notes.length) return;
+    const r = sc.getBoundingClientRect(), cy = r.top + r.height/2, half = r.height/2;
+    notes.forEach(n => {
+      if (reduce){ n.style.removeProperty('--s'); n.style.opacity = ''; return; }
+      const q = n.getBoundingClientRect();
+      const d = Math.abs(q.top + q.height/2 - cy) / half;
+      const t = Math.min(1, Math.max(0, (d - 0.5) / 0.6)), e = t*t*(3 - 2*t);
+      n.style.setProperty('--s', (1 - 0.2*e).toFixed(3));
+      n.style.opacity = (1 - 0.6*e).toFixed(3);
+    });
+  };
+  gbWatch.update = update;
+  if (!sc._gbBound){
+    sc._gbBound = true; let raf = 0;
+    const tick = () => { raf = 0; gbWatch.update(); };
+    const kick = () => { if (!raf) raf = requestAnimationFrame(tick); };
+    sc.addEventListener('scroll', kick, {passive:true}); addEventListener('resize', kick);
+  }
+  update();
+}
+async function initGuestbook(){
+  const list = $('#gbList'), form = $('#gbForm'), status = $('#gbStatus'), send = $('#gbSend');
+  const count = $('#gbCount'), box = $('#gbPrev');
+  const say = (t,cls='') => { status.textContent = t; status.className = 'gb-status ' + cls; };
+  const curLang = () => (form.querySelector('input[name=gbLang]:checked') || {}).value || 'plain';
+  const MAX = {name:30, msg:300}, S = {name:'', msg:''};
+  const editor = () => {
+    box.innerHTML = gbEditNote(curLang());
+    box.querySelectorAll('.gb-edit').forEach(el => { el.textContent = S[el.dataset.f]; });
+    count.textContent = S.msg.length + '/300';
+  };
+  box.addEventListener('input', e => {
+    const el = e.target.closest('.gb-edit'); if (!el) return;
+    const f = el.dataset.f; let t = el.textContent;
+    if (t.length > MAX[f]){ t = t.slice(0, MAX[f]); el.textContent = t;
+      const r = document.createRange(); r.selectNodeContents(el); r.collapse(false); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); }
+    S[f] = t; if (f === 'msg') count.textContent = t.length + '/300';
+  });
+  box.addEventListener('keydown', e => {
+    const el = e.target.closest('.gb-edit'); if (!el || e.isComposing) return;
+    if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)){ e.preventDefault(); form.requestSubmit(); }
+    else if (e.key === 'Enter'){ e.preventDefault(); if (el.dataset.f === 'name') box.querySelector('[data-f=msg]').focus(); else document.execCommand('insertText', false, '\n'); }
+  });
+  box.addEventListener('click', e => {
+    if (e.target.closest('.gb-edit')) return;
+    const holder = e.target.closest('.row, .gb-text b, .gb-text p'); const el = holder && holder.querySelector('.gb-edit');
+    if (el){ el.focus(); const r = document.createRange(); r.selectNodeContents(el); r.collapse(false); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); }
+  });
+  box.addEventListener('paste', e => { if (!e.target.closest('.gb-edit')) return; e.preventDefault(); document.execCommand('insertText', false, (e.clipboardData.getData('text/plain') || '').replace(/\r/g,'')); });
+  form.addEventListener('change', e => { if (e.target.name === 'gbLang') editor(); });
+  editor();
+  if (!GB.api){
+    list.innerHTML = '<p class="muted">The guestbook is not connected yet.</p>';
+    send.disabled = true; say('Guestbook is not connected yet.'); return;
+  }
+  let token = '';
+  if (GB.turnstileSiteKey){
+    const mount = () => window.turnstile && window.turnstile.render('#gbTs', { sitekey: GB.turnstileSiteKey, callback: t => { token = t; }, 'expired-callback': () => { token = ''; } });
+    if (window.turnstile) mount();
+    else { const sc = document.createElement('script'); sc.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit'; sc.async = true; sc.onload = mount; document.head.appendChild(sc); }
+  }
+  const load = async () => {
+    try {
+      const r = await fetch(GB.api + '/entries'); const j = await r.json();
+      list.innerHTML = j.entries.length
+        ? '<div class="gb-notes">' + j.entries.map(gbEntryHTML).join('') + '</div>'
+        : '<p class="muted">No messages yet. Be the first!</p>';
+      gbWatch();
+    } catch { list.innerHTML = '<p class="muted">Could not load messages.</p>'; }
+  };
+  load();
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    if (!S.name.trim() || !S.msg.trim()) return say('Fill in both dashed spots first.', 'err');
+    if (GB.turnstileSiteKey && !token) return say('Please complete the check first.', 'err');
+    send.disabled = true; say('Sending…');
+    try {
+      const r = await fetch(GB.api + '/entries', { method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ name: S.name, message: S.msg, lang: curLang(), website: $('#gbHp').value, token }) });
+      const j = await r.json().catch(()=>({}));
+      if (r.ok){ S.name = ''; S.msg = ''; editor(); say('Thanks! Your message will show up after approval.', 'ok'); if (window.turnstile) window.turnstile.reset(); token = ''; }
+      else say(j.error === 'rate_limited' ? 'Too many messages. Please try again later.' : j.error === 'captcha_failed' ? 'Check failed. Please try again.' : 'Could not send. Please check your input.', 'err');
+    } catch { say('Network error. Please try again.', 'err'); }
+    send.disabled = false;
+  });
+}
+
 /* ═════════ editor state ═════════ */
 const app = $('#app'), doc = $('#doc'), scroller = $('#scroller');
 let openTabs = [], current = null;
@@ -1244,6 +1471,7 @@ function openFile(f, {push=true, echo=false, focusLine=null} = {}){
   if (typeof fxSwitch === 'function') fxSwitch(null);
   doc.dataset.kind = f.kind;
   doc.innerHTML = render(f);
+  if (f.kind==='guestbook') initGuestbook();
   scroller.scrollTop = 0;
   renderTabs(); renderCrumbs(); markTree(); buildMinimap();
   $('#langName').textContent = LANG[f.ext] || 'Plain Text';
@@ -1565,6 +1793,7 @@ const COMMANDS = {
   pwd              print where you are
   tree             show every file
   git log          projects, newest first
+  guestbook        open the guestbook
   run              open the live build or video for the current file
   make             rebuild the portfolio
   theme dark|light switch the color theme
@@ -1629,6 +1858,7 @@ const COMMANDS = {
   github(){ print(`<a href="${LINKS.github}" target="_blank" rel="noopener">${LINKS.github}</a>`); window.open(LINKS.github,'_blank','noopener'); },
   linkedin(){ print(`<a href="${LINKS.linkedin}" target="_blank" rel="noopener">${LINKS.linkedin}</a>`); window.open(LINKS.linkedin,'_blank','noopener'); },
   clear(){ out.innerHTML=''; },
+  guestbook(){ const f = byPath('guestbook.md'); print('Opening guestbook.md'); openFile(f); },
   sudo(args){
     if (args.join(' ').toLowerCase().startsWith('hire')) { print('<span class="ok">Permission granted.</span> Opening a new email to Hyunwoo.'); setTimeout(()=>location.href=LINKS.email, 500); }
     else print('sudo: you can only run "sudo hire hyunwoo" here.','err');
@@ -1686,6 +1916,15 @@ document.querySelector('.phead').addEventListener('click', e=>{ if (!e.target.cl
 $('#runBtn').addEventListener('click',()=>{ termEcho('run'); COMMANDS.run(); });
 $('#termToggle').addEventListener('click',()=>togglePanel());
 
+// drag to resize the sidebar
+(()=>{ const g=$('#sideGrip'); let x0,w0;
+  try{ const w=parseInt(localStorage.getItem('sideW')); if(w>=160) document.documentElement.style.setProperty('--side',w+'px'); }catch(e){}
+  g.addEventListener('pointerdown',e=>{ x0=e.clientX; w0=$('#side').offsetWidth; g.setPointerCapture(e.pointerId); g.classList.add('drag'); document.body.classList.add('resizing-side'); });
+  g.addEventListener('pointermove',e=>{ if(!g.classList.contains('drag'))return; const w=Math.round(Math.min(innerWidth*.6, Math.max(160, w0+(e.clientX-x0)))); document.documentElement.style.setProperty('--side',w+'px'); });
+  const end=()=>{ if(!g.classList.contains('drag'))return; g.classList.remove('drag'); document.body.classList.remove('resizing-side'); try{localStorage.setItem('sideW',parseInt(getComputedStyle(document.documentElement).getPropertyValue('--side')));}catch(e){} };
+  g.addEventListener('pointerup',end); g.addEventListener('pointercancel',end);
+  g.addEventListener('dblclick',()=>{ document.documentElement.style.removeProperty('--side'); try{localStorage.removeItem('sideW');}catch(e){} });
+})();
 // drag to resize the panel
 (()=>{ const g=$('#grip'); let y0,h0;
   g.addEventListener('pointerdown',e=>{ y0=e.clientY; h0=$('#panel').offsetHeight; g.setPointerCapture(e.pointerId); g.classList.add('drag'); });
@@ -1745,7 +1984,7 @@ const BUILD = [
   ['$ cmake --build ./portfolio --target hyunwoo','cmd'],
   ...allFiles.filter(f=>f.kind==='project').map(f=>[`Building ${f.ext==='cpp'?'CXX':f.ext==='cs'?'C#':f.ext==='html'?'HTML':'JS'} object projects/${f.parent.name}/${f.name}.o`]),
   ['Building CXX object projects/graphics (5 demos)'],
-  ['Linking about.md skills.md contact.md leadership.md'],
+  ['Linking about.md skills.md contact.md leadership.md guestbook.md'],
   ['Linking hyunwoo']
 ];
 function buildLines(){
